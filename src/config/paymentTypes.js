@@ -3,12 +3,12 @@ const allPaymentTypes = {
   BOLETO: 'boleto',
   CREDITO: 'cartão de crédito',
   DEBITO: 'cartão de débito',
-}
+};
 
-const paymentsTypes = Object.keys(allPaymentTypes);
-const paymentsStrings = new Map(Object.entries(paymentsTypes));
+const paymentTypes = Object.keys(allPaymentTypes);
+const paymentStrings = new Map(Object.entries(paymentTypes));
 
 module.exports = {
-  paymentsTypes,
-  paymentsStrings,
-}
+  paymentTypes,
+  paymentStrings,
+};
