@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
 const BandMemberSchema = mongoose.Schema({
-    bandId: {
+    artistId: {
         type: mongoose.Types.ObjectId,
-        ref: 'Band',
+        ref: 'Artist',
         required: true
       },
     personId: {

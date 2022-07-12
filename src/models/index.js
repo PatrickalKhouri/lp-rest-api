@@ -1,6 +1,6 @@
 module.exports.Token = require('./token.model');
 module.exports.User = require('./user.model');
-module.exports.Band = require('./band.model');
+module.exports.Band = require('./artist.model');
 module.exports.Label = require('./label.model');
 module.exports.Person = require('./person.model');
 module.exports.ShoppingSession = require('./shoppingSession.model');

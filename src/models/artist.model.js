@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 
-const BandSchema = mongoose.Schema({
+const ArtistSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -19,9 +19,9 @@ const BandSchema = mongoose.Schema({
       },
 })
 
-BandSchema.plugin(toJSON);
-BandSchema.plugin(paginate);
+ArtistSchema.plugin(toJSON);
+ArtistSchema.plugin(paginate);
 
-const Band = mongoose.model('Band', BandSchema);
+const Artist = mongoose.model('Artist', ArtistSchema);
 
-module.exports = Band;
+module.exports = Artist;
