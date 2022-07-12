@@ -8,6 +8,7 @@ const userAddressSchema = mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
+    required: true
   },
   streetName: {
     type: String,
