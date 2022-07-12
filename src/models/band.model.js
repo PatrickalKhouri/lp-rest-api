@@ -18,7 +18,7 @@ const BandSchema = mongoose.Schema({
         ref: 'Label',
       },
 })
-    
+
 BandSchema.plugin(toJSON);
 BandSchema.plugin(paginate);
 

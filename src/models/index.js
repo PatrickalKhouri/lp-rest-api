@@ -6,3 +6,4 @@ module.exports.Person = require('./person.model');
 module.exports.ShoppingSession = require('./shoppingSession.model');
 module.exports.UserAddress = require('./userAddress.model');
 module.exports.UserPayment = require('./userPayment.model');
+module.exports.BandMembers = require('./bandMembers.model');
