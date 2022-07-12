@@ -21,7 +21,6 @@ const PersonSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: countriesLong,
-        trim: true,
     },
     humanGenre: {
         type: String,
