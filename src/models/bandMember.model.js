@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const BandMemberSchema = mongoose.Schema({
+const bandMemberSchema = mongoose.Schema({
     artistId: {
         type: mongoose.Types.ObjectId,
         ref: 'Artist',
@@ -12,12 +12,16 @@ const BandMemberSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Person',
         required: true
-      },
-})
+      }
+    },
+    {
+      timestamps: true,   
+    }
+  )
 
-BandMemberSchema.plugin(toJSON);
-BandMemberSchema.plugin(paginate);
+bandMemberSchema.plugin(toJSON);
+bandMemberSchema.plugin(paginate);
 
-const BandMember = mongoose.model('BandMembers', BandMemberSchema);
+const BandMember = mongoose.model('BandMembers', bandMemberSchema);
 
 module.exports = BandMember;

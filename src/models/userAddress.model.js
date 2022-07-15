@@ -22,7 +22,7 @@ const userAddressSchema = mongoose.Schema({
   },
   compelement: {
     type: String,
-    trim: true,z
+    trim: true,
   },
   postalCode: {
     type: String,

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 
-const LabelSchema = mongoose.Schema({
+const labelSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -12,12 +12,16 @@ const LabelSchema = mongoose.Schema({
     country: {
         type: String,
         enum: countriesLong,        
-    }
-})
+	}
+},
+{
+timestamps: true,   
+}
+)
     
-LabelSchema.plugin(toJSON);
-LabelSchema.plugin(paginate);
+labelSchema.plugin(toJSON);
+labelSchema.plugin(paginate);
 
-const Label = mongoose.model('Label', LabelSchema);
+const Label = mongoose.model('Label', labelSchema);
 
 module.exports = Label;

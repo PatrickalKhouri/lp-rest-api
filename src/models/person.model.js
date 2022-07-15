@@ -4,7 +4,7 @@ const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 const { humanGenres } = require('../config/humanGenres');
 
-const PersonSchema = mongoose.Schema({
+const personSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -26,12 +26,16 @@ const PersonSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: humanGenres,
+	}
+    },
+    {
+    timestamps: true,   
     }
-})
+)
 
-PersonSchema.plugin(toJSON);
-PersonSchema.plugin(paginate);
+personSchema.plugin(toJSON);
+personSchema.plugin(paginate);
 
-const Person = mongoose.model('Person', PersonSchema);
+const Person = mongoose.model('Person', personSchema);
 
 module.exports = Person;

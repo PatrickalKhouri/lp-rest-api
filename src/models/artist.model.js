@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 
-const ArtistSchema = mongoose.Schema({
+const artistSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -16,12 +16,16 @@ const ArtistSchema = mongoose.Schema({
     labelId: {
         type: mongoose.Types.ObjectId,
         ref: 'Label',
-      },
-})
+	}
+    },
+    {
+    timestamps: true,   
+    }
+)
 
-ArtistSchema.plugin(toJSON);
-ArtistSchema.plugin(paginate);
+artistSchema.plugin(toJSON);
+artistSchema.plugin(paginate);
 
-const Artist = mongoose.model('Artist', ArtistSchema);
+const Artist = mongoose.model('Artist', artistSchema);
 
 module.exports = Artist;

@@ -25,8 +25,12 @@ const userPaymentSchema = mongoose.Schema({
     type: String,
     enum: paymentProviders,
     trim: true,
+	}
   },
-  });
+  {
+    timestamps: true,   
+  }
+)
 
 userPaymentSchema.plugin(toJSON);
 userPaymentSchema.plugin(paginate);

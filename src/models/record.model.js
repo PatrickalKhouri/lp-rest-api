@@ -4,7 +4,7 @@ const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 const { languages } = require('../config/languages');
 
-const RecordSchema = mongoose.Schema({
+const recordSchema = mongoose.Schema({
     artistId: {
         type: mongoose.Types.ObjectId,
         ref: 'Artist',
@@ -39,12 +39,16 @@ const RecordSchema = mongoose.Schema({
         type: Number,
         required: true,
         min: 0
+        }
+    },
+    {
+    timestamps: true,   
     }
-})
+)
     
-RecordSchema.plugin(toJSON);
-RecordSchema.plugin(paginate);
+recordSchema.plugin(toJSON);
+recordSchema.plugin(paginate);
 
-const Record = mongoose.model('Record', RecordSchema);
+const Record = mongoose.model('Record', recordSchema);
 
 module.exports = Record;
