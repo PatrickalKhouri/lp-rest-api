@@ -15,7 +15,8 @@ const shoppingSessionSchema = mongoose.Schema({
   },
   {
     timestamps: true,
-})
+  }
+)
 
 shoppingSessionSchema.plugin(toJSON);
 shoppingSessionSchema.plugin(paginate);

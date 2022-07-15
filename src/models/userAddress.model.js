@@ -2,11 +2,13 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { states } = require('../config/states');
+const { countriesLong } = require('../config/countries');
 
 const userAddressSchema = mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
+    required: true
   },
   streetName: {
     type: String,
@@ -41,6 +43,7 @@ const userAddressSchema = mongoose.Schema({
   country: {
     type: String,
     required: true,
+    enum: countriesLong,
     trim: true,
   },
 	},

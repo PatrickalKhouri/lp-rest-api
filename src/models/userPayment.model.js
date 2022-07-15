@@ -8,6 +8,7 @@ const userPaymentSchema = mongoose.Schema({
   userId: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
+    required: true
   },
   accountNumber: {
     type: String,
@@ -24,8 +25,12 @@ const userPaymentSchema = mongoose.Schema({
     type: String,
     enum: paymentProviders,
     trim: true,
+	}
   },
-  });
+  {
+    timestamps: true,   
+  }
+)
 
 userPaymentSchema.plugin(toJSON);
 userPaymentSchema.plugin(paginate);

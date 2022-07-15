@@ -1,0 +1,57 @@
+/* eslint-disable prettier/prettier */
+const mongoose = require('mongoose');
+const { toJSON, paginate } = require('./plugins');
+const { albumTypesString } = require('../config/albumTypes');
+
+const albumSchema = mongoose.Schema({
+  userId: {
+		type: mongoose.Types.ObjectId,
+		ref: 'User',
+		required: true
+  },
+	recordId: {
+		type: mongoose.Types.ObjectId,
+		ref: 'Record',
+		required: true
+	},
+	description: {
+		type: String,
+		required: true,
+		min: 10,
+		max: 2000
+	},
+  stock: {
+    type: Number,
+    min: 0,
+    required: true,
+  },
+	year: {
+		type: Number,
+		min: 1800,
+	},
+	new: {
+		type: Boolean,
+		required: true
+	},
+	price: {
+		type: Number,
+		min: 0,
+		required: true
+	},
+	type: {
+		type: String,
+		required: true,
+		enum: albumTypesString
+	}
+	},
+	{
+    timestamps: true,   
+  }
+)
+
+albumSchema.plugin(toJSON);
+albumSchema.plugin(paginate);
+
+const Album = mongoose.model('Album', albumSchema);
+
+module.exports = Album;
