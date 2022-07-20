@@ -1,8 +1,8 @@
 const allPaymentTypes = {
-  PIX: 'pix',
-  BOLETO: 'boleto',
-  CREDITO: 'cartão de crédito',
-  DEBITO: 'cartão de débito',
+  PIX: 'Pix',
+  BOLETO: 'Boleto',
+  CREDITO: 'Cartão de Crédito',
+  DEBITO: 'Cartão de Débito',
 };
 
 const paymentTypes = Object.keys(allPaymentTypes);
