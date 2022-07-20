@@ -10,6 +10,8 @@ describe('User Payment model', () => {
         accountNumber: faker.finance.account(),
         paymentType: 'PIX',
         provider: 'Visa',
+        createdAt: faker.datatype.datetime(),
+        modifiedAt: faker.datatype.datetime(),
       };
     });
 
