@@ -15,7 +15,7 @@ const recordSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    release_year: {
+    releaseYear: {
         type: Number,
         required: true,
         min: 1800,
@@ -38,7 +38,7 @@ const recordSchema = mongoose.Schema({
     numberOfTracks: {
         type: Number,
         required: true,
-        min: 0
+        min: 1
         }
     },
     {
