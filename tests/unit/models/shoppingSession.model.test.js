@@ -13,7 +13,7 @@ describe('Shopping Session model', () => {
       };
     });
 
-    test('should correctly validate a valid User Payment', async () => {
+    test('should correctly validate a valid Shopping Session', async () => {
       await expect(new ShoppingSession(newShoppingSession).validate()).resolves.toBeUndefined();
     });
 
