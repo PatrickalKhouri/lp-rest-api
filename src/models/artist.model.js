@@ -26,6 +26,8 @@ const artistSchema = mongoose.Schema({
 artistSchema.plugin(toJSON);
 artistSchema.plugin(paginate);
 
+artistSchema.index({ name: 1, country: 1}, { unique: true})
+
 const Artist = mongoose.model('Artist', artistSchema);
 
 module.exports = Artist;
