@@ -1,6 +1,8 @@
 const faker = require('faker');
 const { Record } = require('../../../src/models');
 
+
+// AINDA FALTA A DURAÇÃO
 describe('Record model', () => {
   describe('Record validation', () => {
     let newRecord;

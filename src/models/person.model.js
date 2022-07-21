@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
-const { humanGenres } = require('../config/humanGenres');
+const { genders } = require('../config/genders');
 
 const personSchema = mongoose.Schema({
     name: {
@@ -22,10 +22,10 @@ const personSchema = mongoose.Schema({
         required: true,
         enum: countriesLong,
     },
-    humanGenre: {
+    gender: {
         type: String,
         required: true,
-        enum: humanGenres,
+        enum: genders,
 	}
     },
     {
