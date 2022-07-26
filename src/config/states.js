@@ -30,7 +30,7 @@ const allBrazilStates = {
 };
 
 const states = Object.keys(allBrazilStates);
-const statesStrings = new Map(Object.entries(states));
+const statesStrings = Object.values(allBrazilStates);;
 
 module.exports = {
 	states,

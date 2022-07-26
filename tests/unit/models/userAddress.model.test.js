@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { UserAddress } = require('../../../src/models');
 
 describe('User Address model', () => {
@@ -6,7 +7,7 @@ describe('User Address model', () => {
     let newUserAddress;
     beforeEach(() => {
       newUserAddress = {
-        userId: faker.datatype.uuid(),
+        userId: mongoose.Types.ObjectId(),
         streetName: faker.address.street(),
         streetNumber: faker.address.buildingNumber(),
         postalCode: faker.address.zipCode(),

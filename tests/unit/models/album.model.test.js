@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { Album } = require('../../../src/models');
 
 describe('Album model', () => {
@@ -6,8 +7,8 @@ describe('Album model', () => {
     let newAlbum;
     beforeEach(() => {
       newAlbum = {
-        userId: faker.datatype.uuid(),
-        recordId: faker.datatype.uuid(),
+        userId: mongoose.Types.ObjectId(),
+        recordId: mongoose.Types.ObjectId(),
         description: faker.lorem.lines(),
         stock: faker.finance.amount(0, 50, 2),
         year: faker.finance.amount(1800, 2022, 0),

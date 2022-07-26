@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { Record } = require('../../../src/models');
 
 describe('Record model', () => {
@@ -6,7 +7,7 @@ describe('Record model', () => {
     let newRecord;
     beforeEach(() => {
       newRecord = {
-        artistId: faker.datatype.uuid(),
+        artistId: mongoose.Types.ObjectId(),
         name: faker.music.songName(),
         releaseYear: faker.finance.amount(1800, 2023, 0),
         country: faker.address.country(),

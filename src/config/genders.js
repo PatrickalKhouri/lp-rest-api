@@ -6,7 +6,7 @@ const allGenders = {
 }
 
 const gendersShort = Object.keys(allGenders);
-const genders = new Map(Object.entries(gendersShort));
+const genders = Object.values(allGenders);
 
 module.exports = {
   gendersShort,

@@ -1,4 +1,4 @@
-const faker = require('faker');
+const mongoose = require('mongoose');
 const { RecordGenre } = require('../../../src/models');
 
 describe('Record Genre model', () => {
@@ -6,8 +6,8 @@ describe('Record Genre model', () => {
     let newrecordGenre;
     beforeEach(() => {
       newrecordGenre = {
-        genreID: faker.datatype.uuid(),
-        recordID: faker.datatype.uuid(),
+        genreId: mongoose.Types.ObjectId(),
+        recordId: mongoose.Types.ObjectId(),
       };
     });
 

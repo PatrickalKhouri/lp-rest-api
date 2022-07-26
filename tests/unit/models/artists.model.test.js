@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { Artist } = require('../../../src/models');
 
 describe('Artist model', () => {
@@ -8,7 +9,7 @@ describe('Artist model', () => {
       newArtist = {
         name: faker.name.findName(),
         country: faker.address.country(),
-        labelId: faker.datatype.uuid(),
+        labelId: mongoose.Types.ObjectId(),
       };
     });
 

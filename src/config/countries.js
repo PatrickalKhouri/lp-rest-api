@@ -248,7 +248,7 @@ const allCountries = {
 }
 
 const countries = Object.keys(allCountries);
-const countriesLong = new Map(Object.entries(countries));
+const countriesLong = Object.values(allCountries);
 
 module.exports = {
   countries,

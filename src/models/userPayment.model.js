@@ -37,6 +37,6 @@ userPaymentSchema.plugin(paginate);
 
 userPaymentSchema.index({accountNumber : 1, provider: 1}, {unique: true})
 
-const UserPayment = mongoose.model('User', userPaymentSchema);
+const UserPayment = mongoose.model('UserPayment', userPaymentSchema);
 
 module.exports = UserPayment;

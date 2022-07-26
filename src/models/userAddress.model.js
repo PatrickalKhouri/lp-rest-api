@@ -60,6 +60,6 @@ const userAddressSchema = mongoose.Schema({
 userAddressSchema.plugin(toJSON);
 userAddressSchema.plugin(paginate);
 
-const UserAddress = mongoose.model('User', userAddressSchema);
+const UserAddress = mongoose.model('UserAddress', userAddressSchema);
 
 module.exports = UserAddress;

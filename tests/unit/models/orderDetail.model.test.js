@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { OrderDetail } = require('../../../src/models');
 
 describe('Order Detail model', () => {
@@ -6,8 +7,8 @@ describe('Order Detail model', () => {
     let newOrderDetail;
     beforeEach(() => {
       newOrderDetail = {
-        userId: faker.datatype.uuid(),
-        paymentId: faker.datatype.uuid(),
+        userId: mongoose.Types.ObjectId(),
+        paymentId: mongoose.Types.ObjectId(),
         quantity: faker.finance.amount(0, 50, 2),
       };
     });
