@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
+const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 const { states } = require('../config/states');
 const { countriesLong } = require('../config/countries');
@@ -20,7 +21,7 @@ const userAddressSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
-  compelement: {
+  complement: {
     type: String,
     trim: true,
   },
@@ -28,6 +29,11 @@ const userAddressSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    validate(value) {
+      if (!value.match(/^[0-9]{5}-[0-9]{3}$/)) {
+        throw new Error('CEP Inválido');
+      }
+    },
   },
   city: {
     type: String,

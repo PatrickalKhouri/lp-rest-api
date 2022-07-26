@@ -2,30 +2,31 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const orderDetailsSchema = mongoose.Schema({
-    userId: {
+const orderItemSchema = mongoose.Schema({
+    orderId: {
         type: mongoose.Types.ObjectId,
-        ref: 'User',
+        ref: 'OrderDetails',
         required: true
     },
-    paymentId: {
+    albumId: {
         type: mongoose.Types.ObjectId,
-        ref: 'UserPayment',
+        ref: 'Album',
         required: true        
     },
-    total : {
+    quantity: {
         type: Number,
-        min: 0
-    }
+        min: 0,
+        // max - estoque
+    },
     },
     {
     timestamps: true,   
     }
 )
     
-orderDetailsSchema.plugin(toJSON);
-orderDetailsSchema.plugin(paginate);
+orderItemSchema.plugin(toJSON);
+orderItemSchema.plugin(paginate);
 
-const OrderDetails = mongoose.model('OrderDetails', orderDetailsSchema);
+const OrderItem = mongoose.model('OrderItem', orderItemSchema);
 
-module.exports = OrderDetails;
+module.exports = OrderItem;

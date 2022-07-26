@@ -46,7 +46,10 @@ const albumSchema = mongoose.Schema({
 	},
 	{
     timestamps: true,   
-  }
+  	},
+	{ 
+	typeKey: '$type'
+	}
 )
 
 albumSchema.plugin(toJSON);

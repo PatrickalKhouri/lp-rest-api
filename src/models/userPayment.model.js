@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { paymentTypes } = require('../config/paymentTypes');
-const { paymentProviders } = require('../config/paymentProviders');
+const { paymentStrings } = require('../config/paymentTypes');
+const { paymentProvidersStrings } = require('../config/paymentProviders');
 
 const userPaymentSchema = mongoose.Schema({
   userId: {
@@ -17,13 +17,13 @@ const userPaymentSchema = mongoose.Schema({
   },
   paymentType: {
     type: String,
-    enum: paymentTypes,
+    enum: paymentStrings,
     required: true,
     trim: true,
   },
   provider: {
     type: String,
-    enum: paymentProviders,
+    enum: paymentProvidersStrings,
     trim: true,
 	}
   },
@@ -34,6 +34,8 @@ const userPaymentSchema = mongoose.Schema({
 
 userPaymentSchema.plugin(toJSON);
 userPaymentSchema.plugin(paginate);
+
+userPaymentSchema.index({accountNumber : 1, provider: 1}, {unique: true})
 
 const UserPayment = mongoose.model('User', userPaymentSchema);
 

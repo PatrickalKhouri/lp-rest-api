@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { allMusicGenres } = require('../config/musicGenres');
 
-const musicGenreSchema = mongoose.Schema({
+const genreSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -15,9 +15,9 @@ const musicGenreSchema = mongoose.Schema({
     }
 )
     
-musicGenreSchema.plugin(toJSON);
-musicGenreSchema.plugin(paginate);
+genreSchema.plugin(toJSON);
+genreSchema.plugin(paginate);
 
-const MusicGenre = mongoose.model('MusicGenre', musicGenreSchema);
+const Genre = mongoose.model('MusicGenre', genreSchema);
 
-module.exports = MusicGenre;
+module.exports = Genre;
