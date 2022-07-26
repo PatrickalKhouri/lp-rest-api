@@ -26,9 +26,13 @@ const recordSchema = mongoose.Schema({
         enum: countriesLong,        
     },
     duration: {
-        type: Date,
+        type: String,
         required: true,
-        min: 0
+        validate(value) {
+            if (!value.match(/^(([0-9]?[0-9][0-9]|[0-9]):([0-5][0-9]))$/)) {
+              throw new Error('Duração está com o formato inválido');
+            }
+        },
     },
     language: {
         type: String,
