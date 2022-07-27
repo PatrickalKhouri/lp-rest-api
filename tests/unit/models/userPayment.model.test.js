@@ -9,7 +9,7 @@ describe('User Payment model', () => {
       newUserPayment = {
         userId: mongoose.Types.ObjectId(),
         accountNumber: faker.finance.account(),
-        paymentType: 'PIX',
+        paymentType: 'Pix',
         provider: 'Visa',
         createdAt: faker.datatype.datetime(),
         modifiedAt: faker.datatype.datetime(),

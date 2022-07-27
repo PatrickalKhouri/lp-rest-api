@@ -9,7 +9,7 @@ describe('Order Detail model', () => {
       newOrderDetail = {
         userId: mongoose.Types.ObjectId(),
         paymentId: mongoose.Types.ObjectId(),
-        quantity: faker.finance.amount(0, 50, 2),
+        total: faker.finance.amount(0, 50, 2),
       };
     });
 
@@ -17,8 +17,8 @@ describe('Order Detail model', () => {
       await expect(new OrderDetail(newOrderDetail).validate()).resolves.toBeUndefined();
     });
 
-    test('Quantity cant be below 0', async () => {
-      newOrderDetail.quantity = -1;
+    test('Total cant be below 0', async () => {
+      newOrderDetail.total = -1;
       await expect(new OrderDetail(newOrderDetail).validate()).rejects.toThrow();
     });
   });

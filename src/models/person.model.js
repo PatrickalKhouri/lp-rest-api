@@ -11,7 +11,9 @@ const personSchema = mongoose.Schema({
         trim: true,
     },
     dateOfBirth: {
-        type: String,
+        type: Date,
+        min: '1900-01-01',
+        max: new Date(),
     },
     alive: {
         type: Boolean,

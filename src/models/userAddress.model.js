@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
-const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 const { states } = require('../config/states');
 const { countriesLong } = require('../config/countries');
