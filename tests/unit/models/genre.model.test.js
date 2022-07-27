@@ -6,7 +6,7 @@ describe('Genre model', () => {
     let newGenre;
     beforeEach(() => {
       newGenre = {
-        name: faker.music.genre(),
+        name: 'classical',
       };
     });
 

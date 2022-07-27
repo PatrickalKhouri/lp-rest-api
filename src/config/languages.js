@@ -219,7 +219,7 @@ const allLanguages = {
 };
 
 const languages = Object.keys(allLanguages);
-const languaguesShort = new Map(Object.entries(languages));
+const languaguesShort = Object.values(allLanguages);
 
 module.exports = {
   languages,

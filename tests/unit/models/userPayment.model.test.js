@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { UserPayment } = require('../../../src/models');
 
 describe('User Payment model', () => {
@@ -6,9 +7,9 @@ describe('User Payment model', () => {
     let newUserPayment;
     beforeEach(() => {
       newUserPayment = {
-        userId: faker.datatype.uuid(),
+        userId: mongoose.Types.ObjectId(),
         accountNumber: faker.finance.account(),
-        paymentType: 'PIX',
+        paymentType: 'Pix',
         provider: 'Visa',
         createdAt: faker.datatype.datetime(),
         modifiedAt: faker.datatype.datetime(),

@@ -1,13 +1,13 @@
 const allAlbumTypes = {
-  LP: 'lp',
-  EP: 'ep',
-  CD: 'cd',
-  TAPE: 'tape',
-  SINGLE: 'single',
+  lp: 'lp',
+  ep: 'ep',
+  cd: 'cd',
+  tape: 'tape',
+  single: 'single',
 };
 
 const albumTypes = Object.keys(allAlbumTypes);
-const albumTypesString = new Map(Object.entries(albumTypes));
+const albumTypesString = Object.values(allAlbumTypes);
 
 module.exports = {
   albumTypes,

@@ -8,7 +8,7 @@ const allPaymentProviders = {
 };
 
 const paymentProviders = Object.keys(allPaymentProviders);
-const paymentProvidersStrings = new Map(Object.entries(paymentProviders));
+const paymentProvidersStrings = Object.values(allPaymentProviders);
 
 module.exports = {
   paymentProviders,

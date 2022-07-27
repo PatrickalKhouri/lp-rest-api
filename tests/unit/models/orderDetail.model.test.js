@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { OrderDetail } = require('../../../src/models');
 
 describe('Order Detail model', () => {
@@ -6,9 +7,9 @@ describe('Order Detail model', () => {
     let newOrderDetail;
     beforeEach(() => {
       newOrderDetail = {
-        userId: faker.datatype.uuid(),
-        paymentId: faker.datatype.uuid(),
-        quantity: faker.finance.amount(0, 50, 2),
+        userId: mongoose.Types.ObjectId(),
+        paymentId: mongoose.Types.ObjectId(),
+        total: faker.finance.amount(0, 50, 2),
       };
     });
 
@@ -16,8 +17,8 @@ describe('Order Detail model', () => {
       await expect(new OrderDetail(newOrderDetail).validate()).resolves.toBeUndefined();
     });
 
-    test('Quantity cant be below 0', async () => {
-      newOrderDetail.quantity = -1;
+    test('Total cant be below 0', async () => {
+      newOrderDetail.total = -1;
       await expect(new OrderDetail(newOrderDetail).validate()).rejects.toThrow();
     });
   });

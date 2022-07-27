@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
-const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 const { states } = require('../config/states');
 const { countriesLong } = require('../config/countries');
@@ -60,6 +59,6 @@ const userAddressSchema = mongoose.Schema({
 userAddressSchema.plugin(toJSON);
 userAddressSchema.plugin(paginate);
 
-const UserAddress = mongoose.model('User', userAddressSchema);
+const UserAddress = mongoose.model('UserAddress', userAddressSchema);
 
 module.exports = UserAddress;

@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { albumTypesString } = require('../config/albumTypes');
+const { albumTypes } = require('../config/albumTypes');
 
 const albumSchema = mongoose.Schema({
-  userId: {
-		type: mongoose.Types.ObjectId,
-		ref: 'User',
-		required: true
-  },
+	userId: {
+			type: mongoose.Types.ObjectId,
+			ref: 'User',
+			required: true
+	},
 	recordId: {
 		type: mongoose.Types.ObjectId,
 		ref: 'Record',
@@ -20,14 +20,15 @@ const albumSchema = mongoose.Schema({
 		min: 10,
 		max: 2000
 	},
-  stock: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
+	stock: {
+		type: Number,
+		min: 0,
+		required: true,
+	},
 	year: {
 		type: Number,
 		min: 1800,
+		max: new Date().getFullYear()
 	},
 	new: {
 		type: Boolean,
@@ -41,15 +42,12 @@ const albumSchema = mongoose.Schema({
 	type: {
 		type: String,
 		required: true,
-		enum: albumTypesString
+		enum: albumTypes
 	}
 	},
 	{
     timestamps: true,   
   	},
-	{ 
-	typeKey: '$type'
-	}
 )
 
 albumSchema.plugin(toJSON);

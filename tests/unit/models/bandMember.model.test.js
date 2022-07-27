@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { BandMember } = require('../../../src/models');
 
 describe('Band Member model', () => {
@@ -6,8 +7,8 @@ describe('Band Member model', () => {
     let newBandMember;
     beforeEach(() => {
       newBandMember = {
-        artistId: faker.datatype.uuid(),
-        personId: faker.datatype.uuid(),
+        artistId: mongoose.Types.ObjectId(),
+        personId: mongoose.Types.ObjectId(),
         quantity: faker.finance.amount(0, 50, 2),
       };
     });

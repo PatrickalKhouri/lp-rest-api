@@ -18,6 +18,6 @@ const genreSchema = mongoose.Schema({
 genreSchema.plugin(toJSON);
 genreSchema.plugin(paginate);
 
-const Genre = mongoose.model('MusicGenre', genreSchema);
+const Genre = mongoose.model('Genre', genreSchema);
 
 module.exports = Genre;

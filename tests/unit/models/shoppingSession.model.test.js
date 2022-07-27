@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { ShoppingSession } = require('../../../src/models');
 
 describe('Shopping Session model', () => {
@@ -6,7 +7,7 @@ describe('Shopping Session model', () => {
     let newShoppingSession;
     beforeEach(() => {
       newShoppingSession = {
-        userId: faker.datatype.uuid(),
+        userId: mongoose.Types.ObjectId(),
         total: faker.finance.amount(0, 1000, 2),
         createdAt: faker.datatype.datetime(),
         modifiedAt: faker.datatype.datetime(),

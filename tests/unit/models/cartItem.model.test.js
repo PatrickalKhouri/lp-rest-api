@@ -1,4 +1,5 @@
 const faker = require('faker');
+const mongoose = require('mongoose');
 const { CartItem } = require('../../../src/models');
 
 describe('Cart Item model', () => {
@@ -6,8 +7,8 @@ describe('Cart Item model', () => {
     let newCartItem;
     beforeEach(() => {
       newCartItem = {
-        shoppingSessionId: faker.datatype.uuid(),
-        albumId: faker.datatype.uuid(),
+        shoppingSessionId: mongoose.Types.ObjectId(),
+        albumId: mongoose.Types.ObjectId(),
         quantity: faker.finance.amount(0, 50, 2),
       };
     });

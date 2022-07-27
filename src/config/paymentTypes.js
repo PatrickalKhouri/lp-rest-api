@@ -6,7 +6,7 @@ const allPaymentTypes = {
 };
 
 const paymentTypes = Object.keys(allPaymentTypes);
-const paymentStrings = new Map(Object.entries(paymentTypes));
+const paymentStrings = Object.values(allPaymentTypes);
 
 module.exports = {
   paymentTypes,
