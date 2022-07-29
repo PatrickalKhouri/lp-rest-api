@@ -221,161 +221,107 @@ describe('Person routes', () => {
       });
     });
 
-    // PAREI AQUI
-
     test('should limit returned array if limit param is specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
+      await insertPeople([personOne, personTwo]);
 
       const res = await request(app)
         .get('/v1/people')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ limit: 2 })
+        .query({ limit: 1 })
         .send()
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
         results: expect.any(Array),
         page: 1,
-        limit: 2,
+        limit: 1,
         totalPages: 2,
-        totalResults: 3,
+        totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(userOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(userTwo._id.toHexString());
-    });
-
-    test('should return the correct page if page and limit params are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-
-      const res = await request(app)
-        .get('/v1/people')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ page: 2, limit: 2 })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 2,
-        limit: 2,
-        totalPages: 2,
-        totalResults: 3,
-      });
-      expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(admin._id.toHexString());
+      expect(res.body.results[0].id).toBe(personOne._id.toHexString());
     });
   });
 
-  describe('GET /v1/people/:userId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
-      await insertUsers([userOne]);
+  describe('GET /v1/people/:personId', () => {
+    test('should return 200 and the person object if data is ok', async () => {
+      await insertPeople([personOne]);
 
       const res = await request(app)
-        .get(`/v1/people/${userOne._id}`)
+        .get(`/v1/people/${personOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
-        id: userOne._id.toHexString(),
-        email: userOne.email,
-        name: userOne.name,
-        role: userOne.role,
-        isEmailVerified: userOne.isEmailVerified,
+        id: personOne._id.toHexString(),
+        name: personOne.name,
+        dateOfBirth: personOne.dateOfBirth,
+        alive: personOne.alive,
+        nationality: personOne.nationality,
+        gender: personOne.gender,
       });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([userOne]);
+      await insertPeople([personOne]);
 
-      await request(app).get(`/v1/people/${userOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
-    });
-
-    test('should return 403 error if user is trying to get another user', async () => {
-      await insertUsers([userOne, userTwo]);
-
-      await request(app)
-        .get(`/v1/people/${userTwo._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send()
-        .expect(httpStatus.FORBIDDEN);
-    });
-
-    test('should return 200 and the user object if admin is trying to get another user', async () => {
-      await insertUsers([userOne, admin]);
-
-      await request(app)
-        .get(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send()
-        .expect(httpStatus.OK);
+      await request(app).get(`/v1/people/${personOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
     test('should return 400 error if userId is not a valid mongo id', async () => {
-      await insertUsers([admin]);
+      await insertPeople([personOne]);
 
       await request(app)
         .get('/v1/people/invalidId')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
 
     test('should return 404 error if user is not found', async () => {
-      await insertUsers([admin]);
+      await insertPeople([personOne]);
 
       await request(app)
-        .get(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .get(`/v1/people/${personTwo._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
   });
 
-  describe('DELETE /v1/people/:userId', () => {
+  describe('DELETE /v1/people/:personId', () => {
     test('should return 204 if data is ok', async () => {
-      await insertUsers([userOne]);
+      await insertPeople([personOne]);
 
       await request(app)
-        .delete(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .delete(`/v1/people/${personOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NO_CONTENT);
 
-      const dbUser = await User.findById(userOne._id);
-      expect(dbUser).toBeNull();
+      const dbPerson = await Person.findById(personOne._id);
+      expect(dbPerson).toBeNull();
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([userOne]);
+      await insertPeople([personOne]);
 
-      await request(app).delete(`/v1/people/${userOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
+      await request(app).delete(`/v1/people/${personOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to delete another user', async () => {
-      await insertUsers([userOne, userTwo]);
+    test('should return 403 error if user is trying to delete without being Admin', async () => {
+      await insertPeople([personOne]);
 
       await request(app)
-        .delete(`/v1/people/${userTwo._id}`)
+        .delete(`/v1/people/${personOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 204 if admin is trying to delete another user', async () => {
-      await insertUsers([userOne, admin]);
-
-      await request(app)
-        .delete(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send()
-        .expect(httpStatus.NO_CONTENT);
-    });
-
-    test('should return 400 error if userId is not a valid mongo id', async () => {
-      await insertUsers([admin]);
+    test('should return 400 error if personId is not a valid mongo id', async () => {
+      await insertPeople([personOne]);
 
       await request(app)
         .delete('/v1/people/invalidId')
@@ -384,89 +330,83 @@ describe('Person routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if user already is not found', async () => {
-      await insertUsers([admin]);
+    test('should return 404 error if person already is not found', async () => {
+      await insertPeople([personOne]);
 
       await request(app)
-        .delete(`/v1/people/${userOne._id}`)
+        .delete(`/v1/people/${personOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
   });
 
-  describe('PATCH /v1/people/:userId', () => {
+  describe('PATCH /v1/people/:personId', () => {
     test('should return 200 and successfully update user if data is ok', async () => {
-      await insertUsers([userOne]);
+      await insertPeople([personOne]);
       const updateBody = {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-        password: 'newPassword1',
+        name: faker.name.firstName(),
+        alive: faker.datatype.boolean(),
+        nationality: faker.address.country(),
+        dateOfBirth: '1998-07-29T02:25:31.672Z',
       };
 
       const res = await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .patch(`/v1/people/${personOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.OK);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
-        id: userOne._id.toHexString(),
+        id: personOne._id.toHexString(),
         name: updateBody.name,
-        email: updateBody.email,
-        role: 'user',
-        isEmailVerified: false,
+        email: updateBody.alive,
+        nationality: updateBody.nationality,
+        dateOfBirth: updateBody.dateOfBirth,
       });
 
-      const dbUser = await User.findById(userOne._id);
-      expect(dbUser).toBeDefined();
-      expect(dbUser.password).not.toBe(updateBody.password);
-      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user' });
+      const dbPerson = await Person.findById(personOne._id);
+      expect(dbPerson).toBeDefined();
+      expect(dbPerson).toMatchObject({
+        id: personOne._id.toHexString(),
+        name: updateBody.name,
+        email: updateBody.alive,
+        nationality: updateBody.nationality,
+        dateOfBirth: updateBody.dateOfBirth,
+      });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([userOne]);
+      await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
-      await request(app).patch(`/v1/people/${userOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
+      await request(app).patch(`/v1/people/${personOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if user is updating another user', async () => {
-      await insertUsers([userOne, userTwo]);
+    test('should return 403 if trying to update without being and admin', async () => {
+      await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
       await request(app)
-        .patch(`/v1/people/${userTwo._id}`)
+        .patch(`/v1/people/${personOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and successfully update user if admin is updating another user', async () => {
-      await insertUsers([userOne, admin]);
+    test('should return 404 if admin is updating another person that is not found', async () => {
+      await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
       await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.OK);
-    });
-
-    test('should return 404 if admin is updating another user that is not found', async () => {
-      await insertUsers([admin]);
-      const updateBody = { name: faker.name.findName() };
-
-      await request(app)
-        .patch(`/v1/people/${userOne._id}`)
+        .patch(`/v1/people/${personTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.NOT_FOUND);
     });
 
     test('should return 400 error if userId is not a valid mongo id', async () => {
-      await insertUsers([admin]);
+      await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
       await request(app)
@@ -477,67 +417,14 @@ describe('Person routes', () => {
     });
 
     test('should return 400 if email is invalid', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { email: 'invalidEmail' };
+      await insertPeople([personOne]);
+      const updateBody = { dateOfBirth: '3000-07-29T02:25:31.672Z' };
 
       await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
-    });
-
-    test('should return 400 if email is already taken', async () => {
-      await insertUsers([userOne, userTwo]);
-      const updateBody = { email: userTwo.email };
-
-      await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
-    });
-
-    test('should not return 400 if email is my email', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { email: userOne.email };
-
-      await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.OK);
-    });
-
-    test('should return 400 if password length is less than 8 characters', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { password: 'passwo1' };
-
-      await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
-    });
-
-    test('should return 400 if password does not contain both letters and numbers', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { password: 'password' };
-
-      await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
-
-      updateBody.password = '11111111';
-
-      await request(app)
-        .patch(`/v1/people/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .patch(`/v1/people/${personOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
   });
 });
-gi
