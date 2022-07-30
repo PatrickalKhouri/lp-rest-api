@@ -41,9 +41,9 @@ describe('Person routes', () => {
         gender: newPerson.newPerson,
       });
 
-      const dbUser = await Person.findById(res.body.id);
-      expect(dbUser).toBeDefined();
-      expect(dbUser).toMatchObject({
+      const dbPerson = await Person.findById(res.body.id);
+      expect(dbPerson).toBeDefined();
+      expect(dbPerson).toMatchObject({
         name: newPerson.name,
         dateOfBirth: newPerson.dateOfBirth,
         alive: newPerson.alive,
@@ -334,7 +334,7 @@ describe('Person routes', () => {
       await insertPeople([personOne]);
 
       await request(app)
-        .delete(`/v1/people/${personOne._id}`)
+        .delete(`/v1/people/${personTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
