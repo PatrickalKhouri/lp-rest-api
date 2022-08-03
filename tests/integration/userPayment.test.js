@@ -6,7 +6,7 @@ const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { UserPayment } = require('../../src/models');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
-const { userPaymentOne, userPaymentTwo, insertUserPayments } = require('../fixtures/user.fixture');
+const { userPaymentOne, userPaymentTwo, insertUserPayments } = require('../fixtures/userPayment.fixture');
 const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 
 setupTestDB();
@@ -27,23 +27,23 @@ describe('User Payments routes', () => {
     });
 
     test('should return 201 and successfully create new user if data is ok', async () => {
-      await insertUsers([userPaymentOne]);
+      await insertUsers([admin]);
+      await insertUserPayments([userPaymentOne]);
 
       const res = await request(app)
         .post('/v1/userPayments')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUserPayment)
         .expect(httpStatus.CREATED);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: expect.anything(),
         userId: newUserPayment.userId,
         accountNumber: newUserPayment.accountNumber,
         paymentType: newUserPayment.paymentType,
         provider: newUserPayment.provider,
-        createdAt: newUserPayment.datetime(),
-        modifiedAt: newUserPayment.datetime(),
+        createdAt: newUserPayment.createdAt,
+        modifiedAt: newUserPayment.modifiedAt,
       });
 
       const dbUserPayment = await UserPayment.findById(res.body.id);
@@ -63,7 +63,7 @@ describe('User Payments routes', () => {
     });
 
     test('should return 403 error if logged in user creating for another user', async () => {
-      await insertUsers([userOne]);
+      await insertUsers([userOne, userTwo]);
       await insertUserPayments([userPaymentOne]);
 
       await request(app)
@@ -100,7 +100,8 @@ describe('User Payments routes', () => {
 
   describe('GET /v1/userPayments', () => {
     test('should return 200 and apply the default query options', async () => {
-      await insertUsers([userPaymentOne]);
+      await insertUsers([userOne]);
+      await insertUserPayments([userPaymentOne]);
 
       const res = await request(app)
         .get('/v1/userPayments')
@@ -122,8 +123,8 @@ describe('User Payments routes', () => {
         accountNumber: userPaymentOne.accountNumber,
         paymentType: userPaymentOne.paymentType,
         provider: userPaymentOne.provider,
-        createdAt: userPaymentOne.createdAt(),
-        modifiedAt: userPaymentOne.modifiedAt(),
+        createdAt: userPaymentOne.createdAt,
+        modifiedAt: userPaymentOne.modifiedAt,
       });
     });
 
@@ -163,11 +164,11 @@ describe('User Payments routes', () => {
         totalResults: 1,
       });
       expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(userOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(userPaymentOne._id.toHexString());
     });
 
     test('should correctly sort the returned array if descending sort param is specified', async () => {
-      await insertUsers([userOne, userTwo]);
+      await insertUsers([userOne, userTwo, admin]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
       const res = await request(app)
@@ -190,7 +191,7 @@ describe('User Payments routes', () => {
     });
 
     test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([userOne, userTwo]);
+      await insertUsers([userOne, userTwo, admin]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
       const res = await request(app)
@@ -225,7 +226,7 @@ describe('User Payments routes', () => {
     });
 
     test('should limit returned array if limit param is specified', async () => {
-      await insertUsers([userOne, userTwo]);
+      await insertUsers([userOne, userTwo, admin]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
       const res = await request(app)
@@ -240,7 +241,7 @@ describe('User Payments routes', () => {
         page: 1,
         limit: 1,
         totalPages: 2,
-        totalResults: 3,
+        totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(userPaymentOne._id.toHexString());
@@ -258,15 +259,14 @@ describe('User Payments routes', () => {
         .send()
         .expect(httpStatus.OK);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: userPaymentOne._id.toHexString(),
         userId: userPaymentOne.userId,
         accountNumber: userPaymentOne.accountNumber,
         paymentType: userPaymentOne.paymentType,
         provider: userPaymentOne.provider,
-        createdAt: userPaymentOne.createdAt(),
-        modifiedAt: userPaymentOne.modifiedAt(),
+        createdAt: userPaymentOne.createdAt,
+        modifiedAt: userPaymentOne.modifiedAt,
       });
     });
 
@@ -276,7 +276,7 @@ describe('User Payments routes', () => {
       await request(app).get(`/v1/userPayments/${userPaymentOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to get another user', async () => {
+    test('should return 403 error if user is trying to get another user Payment', async () => {
       await insertUsers([userOne, userTwo]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
@@ -287,7 +287,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and the user object if admin is trying to get another user', async () => {
+    test('should return 200 and the user payment object if admin is trying to get another user', async () => {
       await insertUsers([userOne, admin]);
       await insertUserPayments([userPaymentOne]);
 
@@ -298,7 +298,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.OK);
     });
 
-    test('should return 400 error if userId is not a valid mongo id', async () => {
+    test('should return 400 error if userPaymentId is not a valid mongo id', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
 
@@ -309,7 +309,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if user is not found', async () => {
+    test('should return 404 error if user payment is not found', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
 
@@ -321,7 +321,7 @@ describe('User Payments routes', () => {
     });
   });
 
-  describe('DELETE /v1/userPayments/:userId', () => {
+  describe('DELETE /v1/userPayments/:userPaymentId', () => {
     test('should return 204 if data is ok', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
@@ -342,7 +342,7 @@ describe('User Payments routes', () => {
       await request(app).delete(`/v1/userPayments/${userPaymentOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to delete another user', async () => {
+    test('should return 403 error if user is trying to delete another user payment', async () => {
       await insertUsers([userOne, userTwo]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
@@ -353,7 +353,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 204 if admin is trying to delete another user', async () => {
+    test('should return 204 if admin is trying to delete another user payment', async () => {
       await insertUsers([userOne, admin]);
       await insertUserPayments([userPaymentOne]);
 
@@ -364,20 +364,20 @@ describe('User Payments routes', () => {
         .expect(httpStatus.NO_CONTENT);
     });
 
-    test('should return 400 error if userId is not a valid mongo id', async () => {
+    test('should return 400 error if userPaymentId is not a valid mongo id', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
 
       await request(app)
         .delete('/v1/userPayments/invalidId')
-        .set('Authorization', `Bearer ${userOne}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
   });
 
   describe('PATCH /v1/userPayments/:userId', () => {
-    test('should return 200 and successfully update user if data is ok', async () => {
+    test('should return 200 and successfully update user payment if data is ok', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
 
@@ -420,7 +420,7 @@ describe('User Payments routes', () => {
       await request(app).patch(`/v1/userPayments/${userPaymentOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if user is updating another user', async () => {
+    test('should return 403 if user is updating another user payment', async () => {
       await insertUsers([userOne, userTwo]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
       const updateBody = { accountNumber: faker.finance.account() };
@@ -432,7 +432,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and successfully update user if admin is updating another user', async () => {
+    test('should return 200 and successfully update user if admin is updating another user payment', async () => {
       await insertUsers([userOne, admin]);
       await insertUserPayments([userPaymentOne]);
       const updateBody = { accountNumber: faker.finance.account() };
@@ -444,8 +444,8 @@ describe('User Payments routes', () => {
         .expect(httpStatus.OK);
     });
 
-    test('should return 404 if admin is updating another user that is not found', async () => {
-      await insertUsers([userOne]);
+    test('should return 404 if admin is updating another user payment that is not found', async () => {
+      await insertUsers([userOne, admin]);
       await insertUserPayments([userPaymentOne]);
       const updateBody = { accountNumber: faker.finance.account() };
 
@@ -456,7 +456,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if userId is not a valid mongo id', async () => {
+    test('should return 400 error if userPaymentId is not a valid mongo id', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
       const updateBody = { accountNumber: faker.finance.account() };
@@ -486,7 +486,7 @@ describe('User Payments routes', () => {
       const updateBody = { provider: 'invalidPaymentType' };
 
       await request(app)
-        .patch(`/v1/userPayments/${userOne._id}`)
+        .patch(`/v1/userPayments/${userPaymentOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
