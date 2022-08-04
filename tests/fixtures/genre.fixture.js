@@ -3,12 +3,12 @@ const Genre = require('../../src/models/genre.model');
 
 const genreOne = {
   _id: mongoose.Types.ObjectId(),
-  name: 'Rock',
+  name: 'rock',
 };
 
 const genreTwo = {
   _id: mongoose.Types.ObjectId(),
-  name: 'Pop',
+  name: 'pop',
 };
 
 const insertGenres = async (genres) => {

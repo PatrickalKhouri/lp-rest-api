@@ -8,6 +8,7 @@ const genreSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: allMusicGenres,
+        unique: true
 	}
     },
     {
