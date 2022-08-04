@@ -3,88 +3,90 @@ const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const { Genre } = require('../../src/models');
-const { genreOne, genreTwo, insertGenres } = require('../fixtures/genre.fixture');
+const { Label } = require('../../src/models');
+const { labelOne, labelTwo, insertLabels } = require('../fixtures/label.fixture');
 const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 
 setupTestDB();
 
-describe('Genre routes', () => {
-  describe('POST /v1/genres', () => {
-    let newGenre;
+describe('Label routes', () => {
+  describe('POST /v1/labels', () => {
+    let newLabel;
 
     beforeEach(() => {
-      newGenre = {
-        name: 'reggae',
+      newLabel = {
+        name: faker.name.firstName(),
+        country: faker.address.country(),
       };
     });
 
-    test('should return 201 and successfully create new genre if data is ok', async () => {
+    test('should return 201 and successfully create new label if data is ok', async () => {
       await insertUsers([admin]);
 
       const res = await request(app)
-        .post('/v1/genres')
+        .post('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newGenre)
+        .send(newLabel)
         .expect(httpStatus.CREATED);
 
       expect(res.body).toEqual({
         id: expect.anything(),
-        name: newGenre.name,
+        name: newLabel.name,
+        country: newLabel.country,
       });
 
-      const dbGenre = await Genre.findById(res.body.id);
-      expect(dbGenre).toBeDefined();
-      expect(dbGenre).toMatchObject({ name: newGenre.name });
+      const dbLabel = await Label.findById(res.body.id);
+      expect(dbLabel).toBeDefined();
+      expect(dbLabel).toMatchObject({ name: newLabel.name, country: newLabel.country });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await request(app).post('/v1/genres').send(newGenre).expect(httpStatus.UNAUTHORIZED);
+      await request(app).post('/v1/labels').send(newLabel).expect(httpStatus.UNAUTHORIZED);
     });
 
     test('should return 403 error if user creating isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
-        .post('/v1/genres')
+        .post('/v1/labels')
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(newGenre)
+        .send(newLabel)
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 404 error if genre isnt valid exists', async () => {
+    test('should return 404 error if country isnt valid', async () => {
       await insertUsers([admin]);
-      newGenre.name = 'invalid genre';
+      newLabel.country = 'invalid country';
 
       await request(app)
-        .post('/v1/genres')
+        .post('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newGenre)
+        .send(newLabel)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 error if genre is already exists', async () => {
+    test('should return 400 error if label is already exists', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
-      newGenre.name = genreOne.name;
+      newLabel.country = labelOne.country;
 
       await request(app)
-        .post('/v1/genres')
+        .post('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newGenre)
+        .send(newLabel)
         .expect(httpStatus.BAD_REQUEST);
     });
   });
 
-  describe('GET /v1/genres', () => {
+  describe('GET /v1/labels', () => {
     test('should return 200 and apply the default query options', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne, genreTwo]);
+      await insertLabels([labelOne, labelTwo]);
 
       const res = await request(app)
-        .get('/v1/genres')
+        .get('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
@@ -98,22 +100,22 @@ describe('Genre routes', () => {
       });
       expect(res.body.results).toHaveLength(2);
       expect(res.body.results[0]).toEqual({
-        id: genreOne._id.toHexString(),
-        name: genreOne.name,
+        id: labelOne._id.toHexString(),
+        name: labelOne.name,
       });
     });
 
     test('should return 401 if access token is missing', async () => {
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
-      await request(app).get('/v1/genres').send().expect(httpStatus.UNAUTHORIZED);
+      await request(app).get('/v1/labels').send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if a non-admin is trying to access all genres', async () => {
+    test('should return 403 if a non-admin is trying to access all labels', async () => {
       await insertUsers([userOne]);
 
       await request(app)
-        .get('/v1/genres')
+        .get('/v1/labels')
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
@@ -121,12 +123,12 @@ describe('Genre routes', () => {
 
     test('should correctly apply filter on name field', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       const res = await request(app)
-        .get('/v1/genres')
+        .get('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ name: genreOne.name })
+        .query({ name: labelOne.name })
         .send()
         .expect(httpStatus.OK);
 
@@ -138,15 +140,15 @@ describe('Genre routes', () => {
         totalResults: 1,
       });
       expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(genreOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(labelOne._id.toHexString());
     });
 
     test('should correctly sort the returned array if descending sort param is specified', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne, genreTwo]);
+      await insertLabels([labelOne, labelTwo]);
 
       const res = await request(app)
-        .get('/v1/genres')
+        .get('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .query({ sortBy: 'name:desc' })
         .send()
@@ -160,16 +162,16 @@ describe('Genre routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(genreOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(genreTwo._id.toHexString());
+      expect(res.body.results[0].id).toBe(labelOne._id.toHexString());
+      expect(res.body.results[1].id).toBe(labelTwo._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne, genreTwo]);
+      await insertLabels([labelOne, labelTwo]);
 
       const res = await request(app)
-        .get('/v1/genres')
+        .get('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .query({ limit: 1 })
         .send()
@@ -183,133 +185,133 @@ describe('Genre routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(genreOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(labelOne._id.toHexString());
     });
   });
 
-  describe('GET /v1/genres/:genreId', () => {
+  describe('GET /v1/labels/:labelId', () => {
     test('should return 200 and the user object if data is ok', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       const res = await request(app)
-        .get(`/v1/genres/${genreOne._id}`)
+        .get(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
-        id: genreOne._id.toHexString(),
-        name: genreOne.name,
+        id: labelOne._id.toHexString(),
+        name: labelOne.name,
       });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([genreOne]);
+      await insertUsers([labelOne]);
 
-      await request(app).get(`/v1/genres/${genreOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
+      await request(app).get(`/v1/labels/${labelOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if non admin is trying to get a genre', async () => {
+    test('should return 403 error if non admin is trying to get a label', async () => {
       await insertUsers([userOne]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       await request(app)
-        .get(`/v1/genres/${genreOne._id}`)
+        .get(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 400 error if genreId is not a valid mongo id', async () => {
+    test('should return 400 error if labelId is not a valid mongo id', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       await request(app)
-        .get('/v1/genres/invalidId')
+        .get('/v1/labels/invalidId')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if genre is not found', async () => {
+    test('should return 404 error if label is not found', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       await request(app)
-        .get(`/v1/genres/${genreTwo._id}`)
+        .get(`/v1/labels/${labelTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
   });
 
-  describe('DELETE /v1/genres/:genreId', () => {
+  describe('DELETE /v1/labels/:labelId', () => {
     test('should return 204 if data is ok', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       await request(app)
-        .delete(`/v1/genres/${genreOne._id}`)
+        .delete(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NO_CONTENT);
 
-      const dbGenre = await Genre.findById(genreOne._id);
-      expect(dbGenre).toBeNull();
+      const dbLabel = await Label.findById(labelOne._id);
+      expect(dbLabel).toBeNull();
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
-      await request(app).delete(`/v1/genres/${genreOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
+      await request(app).delete(`/v1/labels/${labelOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
     test('should return 403 error if user non admin is trying to delete genre', async () => {
       await insertUsers([userOne]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       await request(app)
-        .delete(`/v1/genres/${genreOne._id}`)
+        .delete(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 400 error if genreId is not a valid mongo id', async () => {
+    test('should return 400 error if labelId is not a valid mongo id', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       await request(app)
-        .delete('/v1/genres/invalidId')
+        .delete('/v1/labels/invalidId')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if genre already is not found', async () => {
+    test('should return 404 error if label is not found', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreTwo]);
+      await insertLabels([labelTwo]);
 
       await request(app)
-        .delete(`/v1/genres/${genreOne._id}`)
+        .delete(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
   });
 
-  describe('PATCH /v1/genres/:genreId', () => {
-    test('should return 200 and successfully update genre if data is ok', async () => {
+  describe('PATCH /v1/labels/:labelId', () => {
+    test('should return 200 and successfully update label if data is ok', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
+      await insertLabels([labelOne]);
 
       const updateBody = {
-        name: 'mpb',
+        name: faker.name.firstName(),
       };
 
       const res = await request(app)
-        .patch(`/v1/genres/${genreOne._id}`)
+        .patch(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.OK);
@@ -319,73 +321,73 @@ describe('Genre routes', () => {
         name: updateBody.name,
       });
 
-      const dbGenre = await Genre.findById(genreOne._id);
-      expect(dbGenre).toBeDefined();
-      expect(dbGenre).toMatchObject({ name: updateBody.name });
+      const dbLabel = await Label.findById(labelOne._id);
+      expect(dbLabel).toBeDefined();
+      expect(dbLabel).toMatchObject({ name: updateBody.name });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertGenres([genreOne]);
-      const updateBody = { name: 'mpb' };
+      await insertLabels([labelOne]);
+      const updateBody = { name: faker.name.firstName() };
 
-      await request(app).patch(`/v1/genres/${genreOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
+      await request(app).patch(`/v1/labels/${labelOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
     test('should return 403 if non admin user is updating a genre', async () => {
       await insertUsers([userOne]);
-      await insertGenres([genreOne]);
-      const updateBody = { name: 'mpb' };
+      await insertLabels([labelOne]);
+      const updateBody = { name: faker.name.firstName() };
 
       await request(app)
-        .patch(`/v1/genres/${genreOne._id}`)
+        .patch(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 404 if admin is updating another user that is not found', async () => {
+    test('should return 404 if admin is updating another label that is not found', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
-      const updateBody = { name: 'mpb' };
+      await insertLabels([labelOne]);
+      const updateBody = { name: faker.name.firstName() };
 
       await request(app)
-        .patch(`/v1/genres/${genreTwo._id}`)
+        .patch(`/v1/labels/${labelTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if genreId is not a valid mongo id', async () => {
+    test('should return 400 error if labelId is not a valid mongo id', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
-      const updateBody = { name: 'mpb' };
+      await insertLabels([labelOne]);
+      const updateBody = { name: faker.name.firstName() };
 
       await request(app)
-        .patch(`/v1/genres/invalidId`)
+        .patch(`/v1/labels/invalidId`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 if email is invalid', async () => {
+    test('should return 400 if country is invalid', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne]);
-      const updateBody = { name: 'invalid name' };
+      await insertLabels([labelOne]);
+      const updateBody = { country: 'invalid country' };
 
       await request(app)
-        .patch(`/v1/genres/${genreOne._id}`)
+        .patch(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 if genre is exists', async () => {
+    test('should return 400 if label already exists', async () => {
       await insertUsers([admin]);
-      await insertGenres([genreOne, genreTwo]);
-      const updateBody = { name: genreTwo.name };
+      await insertLabels([labelOne, labelTwo]);
+      const updateBody = { name: labelTwo.name };
 
       await request(app)
-        .patch(`/v1/genres/${labelOne._id}`)
+        .patch(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
