@@ -10,6 +10,11 @@ const recordSchema = mongoose.Schema({
         ref: 'Artist',
         required: true
       },
+    labelId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Label',
+        required: true
+      },
     name: {
         type: String,
         required: true,
