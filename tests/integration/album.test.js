@@ -1,216 +1,125 @@
 const request = require('supertest');
 const faker = require('faker');
+const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const { User } = require('../../src/models');
+const { Album } = require('../../src/models');
+const { albumOne, albumTwo, insertAlbums } = require('../fixtures/user.fixture');
+const { insertRecords, recordOne, recordTwo } = require('../fixtures/record.fixture');
+const { artistOne, artistTwo, insertArtists } = require('../fixtures/artist.fixture');
+const { labelOne, labelTwo, insertLabels } = require('../fixtures/label.fixture');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 
 setupTestDB();
 
-describe('User routes', () => {
-  describe('POST /v1/users', () => {
-    let newUser;
+describe('Album routes', () => {
+  describe('POST /v1/albums', () => {
+    let newAlbum;
 
     beforeEach(() => {
-      newUser = {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-        password: 'password1',
-        role: 'user',
+      newAlbum = {
+        recordId: mongoose.Types.ObjectId(),
+        userId: mongoose.Types.ObjectId(),
+        description: faker.lorem.lines(),
+        stock: faker.finance.amount(0, 50, 2),
+        year: faker.finance.amount(1800, 2022, 0),
+        new: faker.datatype.boolean(),
+        price: faker.finance.amount(1, 1000, 2),
+        type: 'lp',
       };
     });
 
-    test('should return 201 and successfully create new user if data is ok', async () => {
+    test('should return 201 and successfully create new album if data is ok', async () => {
       await insertUsers([admin]);
+      await insertAlbums([newAlbum]);
 
       const res = await request(app)
-        .post('/v1/users')
+        .post('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
+        .send(newAlbum)
         .expect(httpStatus.CREATED);
 
       expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: expect.anything(),
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-        isEmailVerified: false,
+        recordId: newAlbum.recordId,
+        userId: newAlbum.userId,
+        description: newAlbum.description,
+        stock: newAlbum.stock,
+        year: newAlbum.year,
+        new: newAlbum.new,
+        price: newAlbum.price,
+        type: newAlbum.type,
       });
 
-      const dbUser = await User.findById(res.body.id);
-      expect(dbUser).toBeDefined();
-      expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role, isEmailVerified: false });
-    });
-
-    test('should be able to create an admin as well', async () => {
-      await insertUsers([admin]);
-      newUser.role = 'admin';
-
-      const res = await request(app)
-        .post('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
-        .expect(httpStatus.CREATED);
-
-      expect(res.body.role).toBe('admin');
-
-      const dbUser = await User.findById(res.body.id);
-      expect(dbUser.role).toBe('admin');
+      const dbAlbum = await Album.findById(res.body.id);
+      expect(dbAlbum).toBeDefined();
+      expect(dbAlbum).toMatchObject({
+        recordId: newAlbum.recordId,
+        userId: newAlbum.userId,
+        description: newAlbum.description,
+        stock: newAlbum.stock,
+        year: newAlbum.year,
+        new: newAlbum.new,
+        price: newAlbum.price,
+        type: newAlbum.type,
+      });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await request(app).post('/v1/users').send(newUser).expect(httpStatus.UNAUTHORIZED);
+      await request(app).post('/v1/albums').send(newAlbum).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if logged in user is not admin', async () => {
-      await insertUsers([userOne]);
-
-      await request(app)
-        .post('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(newUser)
-        .expect(httpStatus.FORBIDDEN);
-    });
-
-    test('should return 400 error if email is invalid', async () => {
+    test('should return 400 year is in the future', async () => {
       await insertUsers([admin]);
-      newUser.email = 'invalidEmail';
+      await insertAlbums([newAlbum]);
+      newAlbum.year = 3000;
 
       await request(app)
-        .post('/v1/users')
+        .post('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
+        .send(newAlbum)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 error if email is already used', async () => {
-      await insertUsers([admin, userOne]);
-      newUser.email = userOne.email;
-
-      await request(app)
-        .post('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
-        .expect(httpStatus.BAD_REQUEST);
-    });
-
-    test('should return 400 error if password length is less than 8 characters', async () => {
+    test('should return 400 Price is below zero', async () => {
       await insertUsers([admin]);
-      newUser.password = 'passwo1';
+      await insertAlbums([newAlbum]);
+      newAlbum.price = -10;
 
       await request(app)
-        .post('/v1/users')
+        .post('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
+        .send(newAlbum)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 error if password does not contain both letters and numbers', async () => {
+    test('should return 400 Stock is below zero', async () => {
       await insertUsers([admin]);
-      newUser.password = 'password';
+      await insertAlbums([newAlbum]);
+      newAlbum.stock = -10;
 
       await request(app)
-        .post('/v1/users')
+        .post('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
-        .expect(httpStatus.BAD_REQUEST);
-
-      newUser.password = '1111111';
-
-      await request(app)
-        .post('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
-        .expect(httpStatus.BAD_REQUEST);
-    });
-
-    test('should return 400 error if role is neither user nor admin', async () => {
-      await insertUsers([admin]);
-      newUser.role = 'invalid';
-
-      await request(app)
-        .post('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(newUser)
+        .send(newAlbum)
         .expect(httpStatus.BAD_REQUEST);
     });
   });
 
-  describe('GET /v1/users', () => {
+  describe('GET /v1/albums', () => {
     test('should return 200 and apply the default query options', async () => {
       await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
 
       const res = await request(app)
-        .get('/v1/users')
+        .get('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 3,
-      });
-      expect(res.body.results).toHaveLength(3);
-      expect(res.body.results[0]).toEqual({
-        id: userOne._id.toHexString(),
-        name: userOne.name,
-        email: userOne.email,
-        role: userOne.role,
-        isEmailVerified: userOne.isEmailVerified,
-      });
-    });
-
-    test('should return 401 if access token is missing', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-
-      await request(app).get('/v1/users').send().expect(httpStatus.UNAUTHORIZED);
-    });
-
-    test('should return 403 if a non-admin is trying to access all users', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-
-      await request(app)
-        .get('/v1/users')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send()
-        .expect(httpStatus.FORBIDDEN);
-    });
-
-    test('should correctly apply filter on name field', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-
-      const res = await request(app)
-        .get('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ name: userOne.name })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 1,
-      });
-      expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(userOne._id.toHexString());
-    });
-
-    test('should correctly apply filter on role field', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-
-      const res = await request(app)
-        .get('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ role: 'user' })
         .send()
         .expect(httpStatus.OK);
 
@@ -222,17 +131,75 @@ describe('User routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(userOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(userTwo._id.toHexString());
+      expect(res.body.results[0]).toEqual({
+        id: albumOne._id.toHexString(),
+        recordId: albumOne.recordId,
+        userId: albumOne.userId,
+        description: albumOne.description,
+        stock: albumOne.stock,
+        year: albumOne.year,
+        new: albumOne.new,
+        price: albumOne.price,
+        type: albumOne.type,
+      });
+    });
+
+    test('should return 401 if access token is missing', async () => {
+      await insertAlbums([albumOne, albumTwo]);
+
+      await request(app).get('/v1/albums').send().expect(httpStatus.UNAUTHORIZED);
+    });
+
+    test('should return 403 if a non-admin is trying to access all albums', async () => {
+      await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
+
+      await request(app)
+        .get('/v1/albums')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send()
+        .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should correctly apply filter on description field', async () => {
+      await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
+
+      const res = await request(app)
+        .get('/v1/albums')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ description: albumOne.description })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(albumOne._id.toHexString());
     });
 
     test('should correctly sort the returned array if descending sort param is specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
 
       const res = await request(app)
-        .get('/v1/users')
+        .get('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'role:desc' })
+        .query({ sortBy: 'year:desc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -241,21 +208,22 @@ describe('User routes', () => {
         page: 1,
         limit: 10,
         totalPages: 1,
-        totalResults: 3,
+        totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(3);
-      expect(res.body.results[0].id).toBe(userOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(userTwo._id.toHexString());
-      expect(res.body.results[2].id).toBe(admin._id.toHexString());
+      expect(res.body.results).toHaveLength(2);
     });
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
 
       const res = await request(app)
-        .get('/v1/users')
+        .get('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'role:asc' })
+        .query({ sortBy: 'year:asc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -264,21 +232,22 @@ describe('User routes', () => {
         page: 1,
         limit: 10,
         totalPages: 1,
-        totalResults: 3,
+        totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(3);
-      expect(res.body.results[0].id).toBe(admin._id.toHexString());
-      expect(res.body.results[1].id).toBe(userOne._id.toHexString());
-      expect(res.body.results[2].id).toBe(userTwo._id.toHexString());
+      expect(res.body.results).toHaveLength(2);
     });
 
     test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
 
       const res = await request(app)
-        .get('/v1/users')
+        .get('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'role:desc,name:asc' })
+        .query({ sortBy: 'year:desc,price:asc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -287,240 +256,286 @@ describe('User routes', () => {
         page: 1,
         limit: 10,
         totalPages: 1,
-        totalResults: 3,
+        totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(3);
+      expect(res.body.results).toHaveLength(2);
 
-      const expectedOrder = [userOne, userTwo, admin].sort((a, b) => {
-        if (a.role < b.role) {
+      const expectedOrder = [albumOne, albumTwo].sort((a, b) => {
+        if (a.year < b.year) {
           return 1;
         }
-        if (a.role > b.role) {
+        if (a.year > b.year) {
           return -1;
         }
-        return a.name < b.name ? -1 : 1;
+        return a.price < b.price ? -1 : 1;
       });
 
-      expectedOrder.forEach((user, index) => {
-        expect(res.body.results[index].id).toBe(user._id.toHexString());
+      expectedOrder.forEach((album, index) => {
+        expect(res.body.results[index].id).toBe(album._id.toHexString());
       });
     });
 
     test('should limit returned array if limit param is specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
 
       const res = await request(app)
-        .get('/v1/users')
+        .get('/v1/albums')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ limit: 2 })
+        .query({ limit: 1 })
         .send()
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
         results: expect.any(Array),
         page: 1,
-        limit: 2,
-        totalPages: 2,
-        totalResults: 3,
-      });
-      expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(userOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(userTwo._id.toHexString());
-    });
-
-    test('should return the correct page if page and limit params are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-
-      const res = await request(app)
-        .get('/v1/users')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ page: 2, limit: 2 })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 2,
-        limit: 2,
-        totalPages: 2,
-        totalResults: 3,
+        limit: 1,
+        totalPages: 1,
+        totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
-      expect(res.body.results[0].id).toBe(admin._id.toHexString());
+      expect(res.body.results[0].id).toBe(albumOne._id.toHexString());
     });
   });
 
-  describe('GET /v1/users/:userId', () => {
+  describe('GET /v1/albums/:albumId', () => {
     test('should return 200 and the user object if data is ok', async () => {
       await insertUsers([userOne]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
 
       const res = await request(app)
-        .get(`/v1/users/${userOne._id}`)
+        .get(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: userOne._id.toHexString(),
-        email: userOne.email,
-        name: userOne.name,
-        role: userOne.role,
-        isEmailVerified: userOne.isEmailVerified,
+        recordId: albumOne.recordId,
+        userId: albumOne.userId,
+        description: albumOne.description,
+        stock: albumOne.stock,
+        year: albumOne.year,
+        new: albumOne.new,
+        price: albumOne.price,
+        type: albumOne.type,
       });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([userOne]);
+      await insertAlbums([albumOne]);
 
-      await request(app).get(`/v1/users/${userOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
+      await request(app).get(`/v1/albums/${albumOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to get another user', async () => {
+    test('should return 403 error if user is trying to get another users album', async () => {
       await insertUsers([userOne, userTwo]);
+      await insertLabels([labelTwo]);
+      await insertArtists([artistTwo]);
+      await insertRecords([recordTwo]);
+      await insertAlbums([albumTwo]);
 
       await request(app)
-        .get(`/v1/users/${userTwo._id}`)
+        .get(`/v1/albums/${albumTwo._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and the user object if admin is trying to get another user', async () => {
-      await insertUsers([userOne, admin]);
+    test('should return 200 and the album object if admin is trying to get another users album', async () => {
+      await insertUsers([userTwo, admin]);
+      await insertLabels([labelTwo]);
+      await insertArtists([artistTwo]);
+      await insertRecords([recordTwo]);
+      await insertAlbums([albumTwo]);
 
       await request(app)
-        .get(`/v1/users/${userOne._id}`)
+        .get(`/v1/albums/${albumTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
     });
 
-    test('should return 400 error if userId is not a valid mongo id', async () => {
+    test('should return 400 error if albumId is not a valid mongo id', async () => {
       await insertUsers([admin]);
+      await insertLabels([labelTwo]);
+      await insertArtists([artistTwo]);
+      await insertRecords([recordTwo]);
+      await insertAlbums([albumTwo]);
 
       await request(app)
-        .get('/v1/users/invalidId')
+        .get('/v1/albums/invalidId')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if user is not found', async () => {
+    test('should return 404 error if ablum is not found', async () => {
       await insertUsers([admin]);
+      await insertLabels([labelTwo]);
+      await insertArtists([artistTwo]);
+      await insertRecords([recordTwo]);
+      await insertAlbums([albumTwo]);
 
       await request(app)
-        .get(`/v1/users/${userOne._id}`)
+        .get(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
   });
 
-  describe('DELETE /v1/users/:userId', () => {
+  describe('DELETE /v1/albums/:albumId', () => {
     test('should return 204 if data is ok', async () => {
       await insertUsers([userOne]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
 
       await request(app)
-        .delete(`/v1/users/${userOne._id}`)
+        .delete(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.NO_CONTENT);
 
-      const dbUser = await User.findById(userOne._id);
-      expect(dbUser).toBeNull();
+      const dbAlbum = await Album.findById(albumOne._id);
+      expect(dbAlbum).toBeNull();
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([userOne]);
+      await insertAlbums([albumOne]);
 
-      await request(app).delete(`/v1/users/${userOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
+      await request(app).delete(`/v1/albums/${albumOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to delete another user', async () => {
+    test('should return 403 error if user is trying to delete another users album', async () => {
       await insertUsers([userOne, userTwo]);
+      await insertLabels([labelTwo]);
+      await insertArtists([artistTwo]);
+      await insertRecords([recordTwo]);
+      await insertAlbums([albumTwo]);
 
       await request(app)
-        .delete(`/v1/users/${userTwo._id}`)
+        .delete(`/v1/albums/${albumTwo._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 204 if admin is trying to delete another user', async () => {
+    test('should return 204 if admin is trying to delete another users album', async () => {
       await insertUsers([userOne, admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
 
       await request(app)
-        .delete(`/v1/users/${userOne._id}`)
+        .delete(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NO_CONTENT);
     });
 
-    test('should return 400 error if userId is not a valid mongo id', async () => {
+    test('should return 400 error if albumId is not a valid mongo id', async () => {
       await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
 
       await request(app)
-        .delete('/v1/users/invalidId')
+        .delete('/v1/albums/invalidId')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if user already is not found', async () => {
+    test('should return 404 error if album already is not found', async () => {
       await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
 
       await request(app)
-        .delete(`/v1/users/${userOne._id}`)
+        .delete(`/v1/albums/${userTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
   });
 
-  describe('PATCH /v1/users/:userId', () => {
+  describe('PATCH /v1/albums/:albumId', () => {
     test('should return 200 and successfully update user if data is ok', async () => {
       await insertUsers([userOne]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
       const updateBody = {
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-        password: 'newPassword1',
+        description: faker.lorem.lines(),
+        stock: faker.finance.amount(0, 50, 2),
+        year: faker.finance.amount(1800, 2022, 0),
       };
 
       const res = await request(app)
-        .patch(`/v1/users/${userOne._id}`)
+        .patch(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.OK);
 
       expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
-        id: userOne._id.toHexString(),
-        name: updateBody.name,
-        email: updateBody.email,
-        role: 'user',
-        isEmailVerified: false,
+        id: albumOne._id.toHexString(),
+        recordId: albumOne.recordId,
+        userId: albumOne.userId,
+        description: updateBody.description,
+        stock: updateBody.stock,
+        year: updateBody.year,
+        new: albumOne.new,
+        price: albumOne.price,
+        type: albumOne.type,
       });
 
-      const dbUser = await User.findById(userOne._id);
-      expect(dbUser).toBeDefined();
-      expect(dbUser.password).not.toBe(updateBody.password);
-      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user' });
+      const dbAlbum = await Album.findById(userOne._id);
+      expect(dbAlbum).toBeDefined();
+      expect(dbAlbum).toMatchObject({
+        id: albumOne._id.toHexString(),
+        recordId: albumOne.recordId,
+        userId: albumOne.userId,
+        description: updateBody.description,
+        stock: updateBody.stock,
+        year: updateBody.year,
+        new: albumOne.new,
+        price: albumOne.price,
+        type: albumOne.type,
+      });
     });
 
     test('should return 401 error if access token is missing', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { name: faker.name.findName() };
+      await insertAlbums([albumOne]);
+      const updateBody = { description: faker.lorem.lines() };
 
-      await request(app).patch(`/v1/users/${userOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
+      await request(app).patch(`/v1/albums/${albumOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if user is updating another user', async () => {
+    test('should return 403 if user is updating another users album', async () => {
       await insertUsers([userOne, userTwo]);
-      const updateBody = { name: faker.name.findName() };
+      await insertLabels([labelTwo]);
+      await insertArtists([artistTwo]);
+      await insertRecords([recordTwo]);
+      await insertAlbums([albumTwo]);
+      const updateBody = { description: faker.lorem.lines() };
 
       await request(app)
-        .patch(`/v1/users/${userTwo._id}`)
+        .patch(`/v1/albums/${albumTwo._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.FORBIDDEN);
@@ -528,95 +543,89 @@ describe('User routes', () => {
 
     test('should return 200 and successfully update user if admin is updating another user', async () => {
       await insertUsers([userOne, admin]);
-      const updateBody = { name: faker.name.findName() };
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      const updateBody = { description: faker.lorem.lines() };
 
       await request(app)
-        .patch(`/v1/users/${userOne._id}`)
+        .patch(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.OK);
     });
 
-    test('should return 404 if admin is updating another user that is not found', async () => {
+    test('should return 404 if admin is updating another user album that is not found', async () => {
       await insertUsers([admin]);
-      const updateBody = { name: faker.name.findName() };
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      const updateBody = { description: faker.lorem.lines() };
 
       await request(app)
-        .patch(`/v1/users/${userOne._id}`)
+        .patch(`/v1/albums/${albumTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if userId is not a valid mongo id', async () => {
+    test('should return 400 error if albumId is not a valid mongo id', async () => {
       await insertUsers([admin]);
-      const updateBody = { name: faker.name.findName() };
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      const updateBody = { description: faker.lorem.lines() };
 
       await request(app)
-        .patch(`/v1/users/invalidId`)
+        .patch(`/v1/albums/invalidId`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 if email is invalid', async () => {
+    test('should return 400 if year is in the future', async () => {
       await insertUsers([userOne]);
-      const updateBody = { email: 'invalidEmail' };
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      const updateBody = { year: 3000 };
 
       await request(app)
-        .patch(`/v1/users/${userOne._id}`)
+        .patch(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 if email is already taken', async () => {
-      await insertUsers([userOne, userTwo]);
-      const updateBody = { email: userTwo.email };
+    test('should return 400 if price is negative', async () => {
+      await insertUsers([userOne]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      const updateBody = { price: -200 };
 
       await request(app)
-        .patch(`/v1/users/${userOne._id}`)
+        .patch(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should not return 400 if email is my email', async () => {
+    test('should return 400 if stock is negative', async () => {
       await insertUsers([userOne]);
-      const updateBody = { email: userOne.email };
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      const updateBody = { stock: -200 };
 
       await request(app)
-        .patch(`/v1/users/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.OK);
-    });
-
-    test('should return 400 if password length is less than 8 characters', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { password: 'passwo1' };
-
-      await request(app)
-        .patch(`/v1/users/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
-    });
-
-    test('should return 400 if password does not contain both letters and numbers', async () => {
-      await insertUsers([userOne]);
-      const updateBody = { password: 'password' };
-
-      await request(app)
-        .patch(`/v1/users/${userOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
-
-      updateBody.password = '11111111';
-
-      await request(app)
-        .patch(`/v1/users/${userOne._id}`)
+        .patch(`/v1/albums/${albumOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
