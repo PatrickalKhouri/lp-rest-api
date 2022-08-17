@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const faker = require('faker');
-const ShoppingSession = require('../../src/models/userPayment.model');
+const ShoppingSession = require('../../src/models/shoppingSession.model');
 const { userOne, userTwo } = require('./user.fixture');
 
 const shoppingSessionOne = {
