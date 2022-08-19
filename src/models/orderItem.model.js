@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
 const orderItemSchema = mongoose.Schema({
-    orderId: {
+    orderDetailId: {
         type: mongoose.Types.ObjectId,
         ref: 'OrderDetails',
         required: true
