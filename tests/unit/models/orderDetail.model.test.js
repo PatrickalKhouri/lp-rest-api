@@ -8,7 +8,7 @@ describe('Order Detail model', () => {
     beforeEach(() => {
       newOrderDetail = {
         userId: mongoose.Types.ObjectId(),
-        paymentId: mongoose.Types.ObjectId(),
+        userPaymentId: mongoose.Types.ObjectId(),
         total: faker.finance.amount(0, 50, 2),
       };
     });
