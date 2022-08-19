@@ -38,6 +38,8 @@ const personSchema = mongoose.Schema({
 personSchema.plugin(toJSON);
 personSchema.plugin(paginate);
 
+personSchema.index({name : 1, nationality: 1}, {unique: true})
+
 const Person = mongoose.model('Person', personSchema);
 
 module.exports = Person;

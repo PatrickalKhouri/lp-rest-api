@@ -7,7 +7,7 @@ describe('Order Item model', () => {
     let newOrderItem;
     beforeEach(() => {
       newOrderItem = {
-        orderId: mongoose.Types.ObjectId(),
+        orderDetailId: mongoose.Types.ObjectId(),
         albumId: mongoose.Types.ObjectId(),
         quantity: faker.finance.amount(0, 50, 2),
       };

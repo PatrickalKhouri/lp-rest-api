@@ -8,6 +8,7 @@ describe('Record model', () => {
     beforeEach(() => {
       newRecord = {
         artistId: mongoose.Types.ObjectId(),
+        labelId: mongoose.Types.ObjectId(),
         name: faker.music.songName(),
         releaseYear: faker.finance.amount(1800, 2023, 0),
         country: faker.address.country(),

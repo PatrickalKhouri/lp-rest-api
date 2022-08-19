@@ -8,7 +8,7 @@ const orderDetailSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    paymentId: {
+    userPaymentId: {
         type: mongoose.Types.ObjectId,
         ref: 'UserPayment',
         required: true        
