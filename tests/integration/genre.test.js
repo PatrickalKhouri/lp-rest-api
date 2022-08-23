@@ -43,7 +43,7 @@ describe('Genre routes', () => {
       await request(app).post('/v1/genres').send(newGenre).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user creating isnt an admin', async () => {
+    test('should return 403 error if user creating genre isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
@@ -53,7 +53,7 @@ describe('Genre routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 404 error if genre isnt valid exists', async () => {
+    test('should return 404 error if genre isnt valid', async () => {
       await insertUsers([admin]);
       newGenre.name = 'invalid genre';
 
@@ -104,7 +104,7 @@ describe('Genre routes', () => {
     });
 
     test('should return 401 if access token is missing', async () => {
-      await insertGenres([genreOne]);
+      await insertGenres([genreOne, genreTwo]);
 
       await request(app).get('/v1/genres').send().expect(httpStatus.UNAUTHORIZED);
     });
@@ -315,7 +315,7 @@ describe('Genre routes', () => {
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
-        id: labelOne._id.toHexString(),
+        id: genreOne._id.toHexString(),
         name: updateBody.name,
       });
 
@@ -343,7 +343,7 @@ describe('Genre routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 404 if admin is updating another user that is not found', async () => {
+    test('should return 404 if admin is updating another genre that is not found', async () => {
       await insertUsers([admin]);
       await insertGenres([genreOne]);
       const updateBody = { name: 'mpb' };
@@ -367,7 +367,7 @@ describe('Genre routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 if email is invalid', async () => {
+    test('should return 400 if name is invalid', async () => {
       await insertUsers([admin]);
       await insertGenres([genreOne]);
       const updateBody = { name: 'invalid name' };
@@ -385,7 +385,7 @@ describe('Genre routes', () => {
       const updateBody = { name: genreTwo.name };
 
       await request(app)
-        .patch(`/v1/genres/${labelOne._id}`)
+        .patch(`/v1/genres/${genreOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);

@@ -32,7 +32,6 @@ describe('Cart Item routes', () => {
 
     test('should return 201 and successfully create new cart item if data is ok', async () => {
       await insertUsers([admin]);
-      await insertAlbums([newCartItem]);
 
       const res = await request(app)
         .post('/v1/cartItems')
@@ -40,7 +39,6 @@ describe('Cart Item routes', () => {
         .send(newCartItem)
         .expect(httpStatus.CREATED);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: expect.anything(),
         albumId: newCartItem.albumId,
@@ -169,11 +167,13 @@ describe('Cart Item routes', () => {
       await insertAlbums([albumOne, albumTwo]);
       await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
       await insertCartItems([cartItemOne, cartItemTwo]);
+      cartItemOne.quantity = 20;
+      cartItemTwo.quantity = 30;
 
       const res = await request(app)
         .get('/v1/cartItems')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'createdAt:desc' })
+        .query({ sortBy: 'quantity:desc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -185,6 +185,8 @@ describe('Cart Item routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[0].id).toBe(cartItemTwo._id.toHexString());
+      expect(res.body.results[1].id).toBe(cartItemOne._id.toHexString());
     });
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
@@ -195,6 +197,8 @@ describe('Cart Item routes', () => {
       await insertAlbums([albumOne, albumTwo]);
       await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
       await insertCartItems([cartItemOne, cartItemTwo]);
+      cartItemOne.quantity = 20;
+      cartItemTwo.quantity = 30;
 
       const res = await request(app)
         .get('/v1/cartItems')
@@ -211,46 +215,8 @@ describe('Cart Item routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-    });
-
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-      await insertLabels([labelOne, labelTwo]);
-      await insertArtists([artistOne, artistTwo]);
-      await insertRecords([recordOne, recordTwo]);
-      await insertAlbums([albumOne, albumTwo]);
-      await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
-      await insertCartItems([cartItemOne, cartItemTwo]);
-
-      const res = await request(app)
-        .get('/v1/cartItems')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'createdAt:desc,quantity:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [cartItemOne, cartItemTwo].sort((a, b) => {
-        if (a.createdAt < b.createdAt) {
-          return 1;
-        }
-        if (a.createdAt > b.createdAt) {
-          return -1;
-        }
-        return a.quantity < b.quantity ? -1 : 1;
-      });
-
-      expectedOrder.forEach((album, index) => {
-        expect(res.body.results[index].id).toBe(album._id.toHexString());
-      });
+      expect(res.body.results[1].id).toBe(cartItemTwo._id.toHexString());
+      expect(res.body.results[0].id).toBe(cartItemOne._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -282,7 +248,7 @@ describe('Cart Item routes', () => {
   });
 
   describe('GET /v1/cartItems/:cartItemId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the cart item object if data is ok', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -470,7 +436,7 @@ describe('Cart Item routes', () => {
   });
 
   describe('PATCH /v1/cartItems/:cartItemId', () => {
-    test('should return 200 and successfully update user if data is ok', async () => {
+    test('should return 200 and successfully update cart item if data is ok', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -488,7 +454,6 @@ describe('Cart Item routes', () => {
         .send(updateBody)
         .expect(httpStatus.OK);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: cartItemOne._id.toHexString(),
         albumId: cartItemOne.albumId,
@@ -517,7 +482,7 @@ describe('Cart Item routes', () => {
       await request(app).patch(`/v1/cartItems/${cartItemOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if user is updating another users album', async () => {
+    test('should return 403 if user is updating another users cart item', async () => {
       await insertUsers([userOne, userTwo]);
       await insertLabels([labelTwo]);
       await insertArtists([artistTwo]);
@@ -534,7 +499,7 @@ describe('Cart Item routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and successfully update user if admin is updating another user', async () => {
+    test('should return 200 and successfully update user if admin is updating another users cart item', async () => {
       await insertUsers([userOne, admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -568,7 +533,7 @@ describe('Cart Item routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if albumId is not a valid mongo id', async () => {
+    test('should return 400 error if cartItemId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);

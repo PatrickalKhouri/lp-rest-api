@@ -24,7 +24,7 @@ describe('Band Member routes', () => {
       };
     });
 
-    test('should return 201 and successfully create new artist if data is ok', async () => {
+    test('should return 201 and successfully create new band member if data is ok', async () => {
       await insertUsers([admin]);
 
       const res = await request(app)
@@ -48,7 +48,7 @@ describe('Band Member routes', () => {
       await request(app).post('/v1/bandMembers').send(newBandMember).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user creating isnt an admin', async () => {
+    test('should return 403 error if user creating new band member isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
@@ -104,7 +104,7 @@ describe('Band Member routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should correctly apply filter on name field', async () => {
+    test('should correctly apply filter on artistId field', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -156,7 +156,7 @@ describe('Band Member routes', () => {
   });
 
   describe('GET /v1/bandMembers/:bandMemberId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the band member object if data is ok', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -277,7 +277,7 @@ describe('Band Member routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if bandMembers is not found', async () => {
+    test('should return 404 error if bandMember is not found', async () => {
       await insertUsers([admin]);
       await insertLabels([labelTwo]);
       await insertArtists([artistTwo]);
@@ -316,7 +316,7 @@ describe('Band Member routes', () => {
         personId: bandMemberOne.personId,
       });
 
-      const dbBandMember = await BandMember.findById(artistOne._id);
+      const dbBandMember = await BandMember.findById(bandMemberOne._id);
       expect(dbBandMember).toBeDefined();
       expect(dbBandMember).toMatchObject({ artistId: updateBody.artistId, personId: bandMemberOne.personId });
     });
@@ -344,7 +344,7 @@ describe('Band Member routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 404 if admin is updating another band membert that is not found', async () => {
+    test('should return 404 if admin is updating another band member that is not found', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -360,7 +360,7 @@ describe('Band Member routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if arstistId is not a valid mongo id', async () => {
+    test('should return 400 error if bandMemberId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
