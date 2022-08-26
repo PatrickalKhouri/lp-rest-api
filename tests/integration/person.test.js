@@ -5,6 +5,7 @@ const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { Person } = require('../../src/models');
 const { insertPeople, personOne, personTwo } = require('../fixtures/person.fixture');
+const { insertUsers, userOne, admin } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 
 setupTestDB();
@@ -24,6 +25,7 @@ describe('Person routes', () => {
     });
 
     test('should return 201 and successfully create new person if data is ok', async () => {
+      await insertUsers([admin]);
       await insertPeople([newPerson]);
 
       const res = await request(app)
@@ -57,6 +59,7 @@ describe('Person routes', () => {
     });
 
     test('should return 403 error if logged in user is not admin', async () => {
+      await insertUsers([userOne]);
       await insertPeople([newPerson]);
 
       await request(app)
@@ -67,8 +70,9 @@ describe('Person routes', () => {
     });
 
     test('should return 400 error if date of birth is on the future', async () => {
-      newPerson.dateOfBirth = '3000-07-29T02:25:31.672Z';
+      await insertUsers([admin]);
       await insertPeople([newPerson]);
+      newPerson.dateOfBirth = '3000-07-29T02:25:31.672Z';
 
       await request(app)
         .post('/v1/person')
@@ -80,6 +84,7 @@ describe('Person routes', () => {
 
   describe('GET /v1/people', () => {
     test('should return 200 and apply the default query options', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne, personTwo]);
 
       const res = await request(app)
@@ -113,6 +118,7 @@ describe('Person routes', () => {
     });
 
     test('should return 403 if a non-admin is trying to access all people', async () => {
+      await insertUsers([userOne]);
       await insertPeople([personOne, personTwo]);
 
       await request(app)
@@ -123,6 +129,7 @@ describe('Person routes', () => {
     });
 
     test('should correctly apply filter on name field', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne, personTwo]);
 
       const res = await request(app)
@@ -144,12 +151,15 @@ describe('Person routes', () => {
     });
 
     test('should correctly sort the returned array if descending sort param is specified', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne, personTwo]);
+      personOne.name = 'A';
+      personTwo.name = 'B';
 
       const res = await request(app)
         .get('/v1/people')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'dateOfBirth:desc' })
+        .query({ sortBy: 'name:desc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -161,12 +171,15 @@ describe('Person routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(3);
-      expect(res.body.results[0].id).toBe(personOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(personTwo._id.toHexString());
+      expect(res.body.results[1].id).toBe(personOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(personTwo._id.toHexString());
     });
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne, personTwo]);
+      personOne.name = 'A';
+      personTwo.name = 'B';
 
       const res = await request(app)
         .get('/v1/people')
@@ -187,41 +200,8 @@ describe('Person routes', () => {
       expect(res.body.results[1].id).toBe(personTwo._id.toHexString());
     });
 
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertPeople([personOne, personTwo]);
-
-      const res = await request(app)
-        .get('/v1/people')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'dateOfBirth:desc,name:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [personOne, personTwo].sort((a, b) => {
-        if (a.dateOfBirth < b.dateOfBirth) {
-          return 1;
-        }
-        if (a.dateOfBirth > b.dateOfBirth) {
-          return -1;
-        }
-        return a.name < b.name ? -1 : 1;
-      });
-
-      expectedOrder.forEach((person, index) => {
-        expect(res.body.results[index].id).toBe(person._id.toHexString());
-      });
-    });
-
     test('should limit returned array if limit param is specified', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne, personTwo]);
 
       const res = await request(app)
@@ -238,18 +218,19 @@ describe('Person routes', () => {
         totalPages: 2,
         totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(2);
+      expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(personOne._id.toHexString());
     });
   });
 
   describe('GET /v1/people/:personId', () => {
     test('should return 200 and the person object if data is ok', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
 
       const res = await request(app)
         .get(`/v1/people/${personOne._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
@@ -270,21 +251,23 @@ describe('Person routes', () => {
     });
 
     test('should return 400 error if userId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
 
       await request(app)
         .get('/v1/people/invalidId')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${admin}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
 
     test('should return 404 error if user is not found', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
 
       await request(app)
         .get(`/v1/people/${personTwo._id}`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
@@ -292,6 +275,7 @@ describe('Person routes', () => {
 
   describe('DELETE /v1/people/:personId', () => {
     test('should return 204 if data is ok', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
 
       await request(app)
@@ -310,7 +294,8 @@ describe('Person routes', () => {
       await request(app).delete(`/v1/people/${personOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to delete without being Admin', async () => {
+    test('should return 403 error if user is trying to delete person without being Admin', async () => {
+      await insertUsers([userOne]);
       await insertPeople([personOne]);
 
       await request(app)
@@ -321,6 +306,7 @@ describe('Person routes', () => {
     });
 
     test('should return 400 error if personId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
 
       await request(app)
@@ -331,6 +317,7 @@ describe('Person routes', () => {
     });
 
     test('should return 404 error if person already is not found', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
 
       await request(app)
@@ -343,6 +330,7 @@ describe('Person routes', () => {
 
   describe('PATCH /v1/people/:personId', () => {
     test('should return 200 and successfully update user if data is ok', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
       const updateBody = {
         name: faker.name.firstName(),
@@ -383,7 +371,8 @@ describe('Person routes', () => {
       await request(app).patch(`/v1/people/${personOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if trying to update without being and admin', async () => {
+    test('should return 403 if trying to update person without being and admin', async () => {
+      await insertUsers([userOne]);
       await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
@@ -395,6 +384,7 @@ describe('Person routes', () => {
     });
 
     test('should return 404 if admin is updating another person that is not found', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
@@ -406,6 +396,7 @@ describe('Person routes', () => {
     });
 
     test('should return 400 error if userId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
       const updateBody = { name: faker.name.findName() };
 
@@ -417,6 +408,7 @@ describe('Person routes', () => {
     });
 
     test('should return 400 if email is invalid', async () => {
+      await insertUsers([admin]);
       await insertPeople([personOne]);
       const updateBody = { dateOfBirth: '3000-07-29T02:25:31.672Z' };
 

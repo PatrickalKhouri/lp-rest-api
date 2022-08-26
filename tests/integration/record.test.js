@@ -30,7 +30,7 @@ describe('Record routes', () => {
       };
     });
 
-    test('should return 201 and successfully create new person if data is ok', async () => {
+    test('should return 201 and successfully create new record if data is ok', async () => {
       await insertRecords([newRecord]);
 
       const res = await request(app)
@@ -80,8 +80,8 @@ describe('Record routes', () => {
     });
 
     test('should return 400 error number of tracks are less than 0', async () => {
+      await insertUsers([admin]);
       newRecord.numberOfTracks = -2;
-      await insertRecords([newRecord]);
 
       await request(app)
         .post('/v1/record')
@@ -91,8 +91,8 @@ describe('Record routes', () => {
     });
 
     test('should return 400 if duration is in the wrong format', async () => {
+      await insertUsers([admin]);
       newRecord.duration = 'wrong format';
-      await insertRecords([newRecord]);
 
       await request(app)
         .post('/v1/record')
@@ -102,8 +102,8 @@ describe('Record routes', () => {
     });
 
     test('should return 400 if release year is in the future', async () => {
+      await insertUsers([admin]);
       newRecord.duration = 'wrong format';
-      await insertRecords([newRecord]);
 
       await request(app)
         .post('/v1/record')
@@ -153,7 +153,7 @@ describe('Record routes', () => {
       await request(app).get('/v1/records').send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if a non-admin is trying to access all people', async () => {
+    test('should return 403 if a non-admin is trying to access all records', async () => {
       await insertUsers([userOne]);
       await insertRecords([recordOne, recordTwo]);
 
@@ -188,43 +188,6 @@ describe('Record routes', () => {
       expect(res.body.results[0].id).toBe(recordOne._id.toHexString());
     });
 
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([admin]);
-      await insertLabels([labelOne, labelTwo]);
-      await insertArtists([artistOne, artistTwo]);
-      await insertRecords([recordOne, recordTwo]);
-
-      const res = await request(app)
-        .get('/v1/records')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'country:desc,name:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [recordOne, recordTwo].sort((a, b) => {
-        if (a.country < b.country) {
-          return 1;
-        }
-        if (a.country > b.country) {
-          return -1;
-        }
-        return a.name < b.name ? -1 : 1;
-      });
-
-      expectedOrder.forEach((record, index) => {
-        expect(res.body.results[index].id).toBe(record._id.toHexString());
-      });
-    });
-
     test('should limit returned array if limit param is specified', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne, labelTwo]);
@@ -245,7 +208,7 @@ describe('Record routes', () => {
         totalPages: 2,
         totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(2);
+      expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(recordOne._id.toHexString());
     });
   });
@@ -332,7 +295,7 @@ describe('Record routes', () => {
       await request(app).delete(`/v1/records/${recordOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user is trying to delete without being Admin', async () => {
+    test('should return 403 error if user is trying to delete record without being Admin', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
