@@ -70,6 +70,16 @@ describe('Album routes', () => {
       await request(app).post('/v1/albums').send(newAlbum).expect(httpStatus.UNAUTHORIZED);
     });
 
+    test('should return 403 error if logged in user is not creating for his user', async () => {
+      await insertUsers([userOne]);
+
+      await request(app)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newAlbum)
+        .expect(httpStatus.FORBIDDEN);
+    });
+
     test('should return 400 year is in the future', async () => {
       await insertUsers([admin]);
       await insertAlbums([newAlbum]);

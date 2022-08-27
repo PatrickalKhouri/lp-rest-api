@@ -59,13 +59,12 @@ describe('Order Details routes', () => {
       await request(app).post('/v1/orderDetails').send(newOrderDetails).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if logged in user creating for another users order detail', async () => {
-      await insertUsers([userOne, userTwo]);
-      newOrderDetails.userId = userOne.userId;
+    test('should return 403 error if logged in user is not creating for his user', async () => {
+      await insertUsers([userOne]);
 
       await request(app)
-        .post('/v1/orderDetails')
-        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(newOrderDetails)
         .expect(httpStatus.FORBIDDEN);
     });

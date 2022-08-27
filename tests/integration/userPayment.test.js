@@ -26,9 +26,8 @@ describe('User Payments routes', () => {
       };
     });
 
-    test('should return 201 and successfully create new user if data is ok', async () => {
+    test('should return 201 and successfully create new user payment if data is ok', async () => {
       await insertUsers([admin]);
-      await insertUserPayments([userPaymentOne]);
 
       const res = await request(app)
         .post('/v1/userPayments')
@@ -62,9 +61,8 @@ describe('User Payments routes', () => {
       await request(app).post('/v1/userPayments').send(newUserPayment).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if logged in user creating for another user', async () => {
-      await insertUsers([userOne, userTwo]);
-      await insertUserPayments([userPaymentOne]);
+    test('should return 403 error if logged in user creating user payment for another user', async () => {
+      await insertUsers([userOne]);
 
       await request(app)
         .post('/v1/userPayments')
@@ -74,25 +72,23 @@ describe('User Payments routes', () => {
     });
 
     test('should return 400 error if payment method is invalid', async () => {
-      await insertUsers([userOne]);
-      await insertUserPayments([userPaymentOne]);
+      await insertUsers([admin]);
       newUserPayment.paymentType = 'invalid payment type';
 
       await request(app)
         .post('/v1/userPayments')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUserPayment)
         .expect(httpStatus.BAD_REQUEST);
     });
 
     test('should return 400 error if provider method is invalid', async () => {
-      await insertUsers([userOne]);
-      await insertUserPayments([userPaymentOne]);
+      await insertUsers([admin]);
       newUserPayment.provider = 'invalid provider';
 
       await request(app)
         .post('/v1/userPayments')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newUserPayment)
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -100,12 +96,12 @@ describe('User Payments routes', () => {
 
   describe('GET /v1/userPayments', () => {
     test('should return 200 and apply the default query options', async () => {
-      await insertUsers([userOne]);
-      await insertUserPayments([userPaymentOne]);
+      await insertUsers([userOne, userTwo, admin]);
+      await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
       const res = await request(app)
         .get('/v1/userPayments')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
@@ -116,7 +112,7 @@ describe('User Payments routes', () => {
         totalPages: 1,
         totalResults: 1,
       });
-      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results).toHaveLength(2);
       expect(res.body.results[0]).toEqual({
         id: userPaymentOne._id.toHexString(),
         userId: userPaymentOne.userId,
@@ -134,7 +130,7 @@ describe('User Payments routes', () => {
       await request(app).get('/v1/userPayments').send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if a non-admin is trying to access all users', async () => {
+    test('should return 403 if a non-admin is trying to access all user payments', async () => {
       await insertUsers([userOne, userTwo]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
@@ -146,12 +142,12 @@ describe('User Payments routes', () => {
     });
 
     test('should correctly apply filter on provider field', async () => {
-      await insertUsers([userOne]);
-      await insertUserPayments([userPaymentOne]);
+      await insertUsers([userOne, userTwo, admin]);
+      await insertUserPayments([userPaymentOne, userPaymentTwo]);
 
       const res = await request(app)
         .get('/v1/userPayments')
-        .set('Authorization', `Bearer ${userPaymentOne}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .query({ provider: userPaymentOne.provider })
         .send()
         .expect(httpStatus.OK);
@@ -190,41 +186,6 @@ describe('User Payments routes', () => {
       expect(res.body.results[1].id).toBe(userPaymentTwo._id.toHexString());
     });
 
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-      await insertUserPayments([userPaymentOne, userPaymentTwo]);
-
-      const res = await request(app)
-        .get('/v1/userPayments')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'provider:desc, paymentType:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [userPaymentOne, userPaymentTwo].sort((a, b) => {
-        if (a.provider < b.provider) {
-          return 1;
-        }
-        if (a.provider > b.provider) {
-          return -1;
-        }
-        return a.paymentType < b.paymentType ? -1 : 1;
-      });
-
-      expectedOrder.forEach((userPayment, index) => {
-        expect(res.body.results[index].id).toBe(userPayment._id.toHexString());
-      });
-    });
-
     test('should limit returned array if limit param is specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
@@ -249,7 +210,7 @@ describe('User Payments routes', () => {
   });
 
   describe('GET /v1/userPayments/:userPaymentId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the user payment object if data is ok', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
 
@@ -278,7 +239,7 @@ describe('User Payments routes', () => {
 
     test('should return 403 error if user is trying to get another user Payment', async () => {
       await insertUsers([userOne, userTwo]);
-      await insertUserPayments([userPaymentOne, userPaymentTwo]);
+      await insertUserPayments([userPaymentTwo]);
 
       await request(app)
         .get(`/v1/userPayments/${userPaymentTwo._id}`)
@@ -287,7 +248,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and the user payment object if admin is trying to get another user', async () => {
+    test('should return 200 and the user payment object if admin is trying to get another user paymetn', async () => {
       await insertUsers([userOne, admin]);
       await insertUserPayments([userPaymentOne]);
 
@@ -315,7 +276,7 @@ describe('User Payments routes', () => {
 
       await request(app)
         .get(`/v1/userPayments/${userPaymentTwo._id}`)
-        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
     });
@@ -364,7 +325,7 @@ describe('User Payments routes', () => {
         .expect(httpStatus.NO_CONTENT);
     });
 
-    test('should return 400 error if userPaymentId is not a valid mongo id', async () => {
+    test('should return 400 error if userP aymentId is not a valid mongo id', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
 
@@ -422,7 +383,7 @@ describe('User Payments routes', () => {
 
     test('should return 403 if user is updating another user payment', async () => {
       await insertUsers([userOne, userTwo]);
-      await insertUserPayments([userPaymentOne, userPaymentTwo]);
+      await insertUserPayments([userPaymentTwo]);
       const updateBody = { accountNumber: faker.finance.account() };
 
       await request(app)

@@ -63,6 +63,16 @@ describe('Order Item routes', () => {
       await request(app).post('/v1/orderItems').send(newOrderItem).expect(httpStatus.UNAUTHORIZED);
     });
 
+    test('should return 403 error if logged in user is not creating for his user', async () => {
+      await insertUsers([userOne]);
+
+      await request(app)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newOrderItem)
+        .expect(httpStatus.FORBIDDEN);
+    });
+
     test('should return 400 quantity is below zero', async () => {
       await insertUsers([admin]);
       newOrderItem.quantity = -10;
