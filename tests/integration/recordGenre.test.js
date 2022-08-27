@@ -48,7 +48,7 @@ describe('Record Genre routes', () => {
       await request(app).post('/v1/recordGenre').send(newRecordGenre).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user creating isnt an admin', async () => {
+    test('should return 403 error if user creatingf record genre isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
@@ -104,7 +104,7 @@ describe('Record Genre routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should correctly apply filter on name field', async () => {
+    test('should correctly apply filter on recordID field', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -156,7 +156,7 @@ describe('Record Genre routes', () => {
   });
 
   describe('GET /v1/recordGenre/:recordGenreId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the record genre object if data is ok', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -249,7 +249,7 @@ describe('Record Genre routes', () => {
       await request(app).delete(`/v1/recordGenre/${recordGenreOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user non admin is trying to delete band member', async () => {
+    test('should return 403 error if user non admin is trying to delete record genre', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -293,7 +293,7 @@ describe('Record Genre routes', () => {
   });
 
   describe('PATCH /v1/recordGenre/:recordGenreId', () => {
-    test('should return 200 and successfully update label if data is ok', async () => {
+    test('should return 200 and successfully update record genre if data is ok', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -328,7 +328,7 @@ describe('Record Genre routes', () => {
       await request(app).patch(`/v1/recordGenre/${recordGenreOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if non admin user is updating a band member', async () => {
+    test('should return 403 if non admin user is updating a record genre', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -344,7 +344,7 @@ describe('Record Genre routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 404 if admin is updating another band membert that is not found', async () => {
+    test('should return 404 if admin is updating another record genre that is not found', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -360,7 +360,7 @@ describe('Record Genre routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if arstistId is not a valid mongo id', async () => {
+    test('should return 400 error if recordgenre is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);

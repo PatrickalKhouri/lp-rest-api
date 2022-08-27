@@ -45,7 +45,7 @@ describe('Label routes', () => {
       await request(app).post('/v1/labels').send(newLabel).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user creating isnt an admin', async () => {
+    test('should return 403 error if user creating label isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
@@ -146,6 +146,33 @@ describe('Label routes', () => {
     test('should correctly sort the returned array if descending sort param is specified', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne, labelTwo]);
+      labelOne.name = 'A';
+      labelTwo.name = 'B';
+
+      const res = await request(app)
+        .get('/v1/labels')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ sortBy: 'name:desc' })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 2,
+      });
+      expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[1].id).toBe(labelOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(labelTwo._id.toHexString());
+    });
+
+    test('should correctly sort the returned array if ascending sort param is specified', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne, labelTwo]);
+      labelOne.name = 'A';
+      labelTwo.name = 'B';
 
       const res = await request(app)
         .get('/v1/labels')
@@ -190,7 +217,7 @@ describe('Label routes', () => {
   });
 
   describe('GET /v1/labels/:labelId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the label object if data is ok', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
 
@@ -267,7 +294,7 @@ describe('Label routes', () => {
       await request(app).delete(`/v1/labels/${labelOne._id}`).send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user non admin is trying to delete genre', async () => {
+    test('should return 403 error if user non admin is trying to delete label', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
 
@@ -333,7 +360,7 @@ describe('Label routes', () => {
       await request(app).patch(`/v1/labels/${labelOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if non admin user is updating a genre', async () => {
+    test('should return 403 if non admin user is updating a label', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       const updateBody = { name: faker.name.firstName() };

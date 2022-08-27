@@ -49,7 +49,7 @@ describe('Artist routes', () => {
       await request(app).post('/v1/artists').send(newArtist).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user creating isnt an admin', async () => {
+    test('should return 403 error if user creating artist isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
@@ -142,11 +142,39 @@ describe('Artist routes', () => {
       await insertUsers([admin]);
       await insertLabels([labelOne, labelTwo]);
       await insertArtists([artistOne, artistTwo]);
+      artistOne.name = 'A';
+      artistTwo.name = 'B';
 
       const res = await request(app)
         .get('/v1/artists')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .query({ sortBy: 'name:desc' })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 2,
+      });
+      expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[0].id).toBe(artistTwo._id.toHexString());
+      expect(res.body.results[1].id).toBe(artistOne._id.toHexString());
+    });
+
+    test('should correctly sort the returned array if ascending sort param is specified', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      artistOne.name = 'A';
+      artistTwo.name = 'B';
+
+      const res = await request(app)
+        .get('/v1/artists')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .query({ sortBy: 'name:asc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -187,7 +215,7 @@ describe('Artist routes', () => {
   });
 
   describe('GET /v1/artists/:artistId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the artist object if data is ok', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -309,7 +337,7 @@ describe('Artist routes', () => {
   });
 
   describe('PATCH /v1/artists/:artistId', () => {
-    test('should return 200 and successfully update label if data is ok', async () => {
+    test('should return 200 and successfully update artist if data is ok', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);

@@ -63,6 +63,16 @@ describe('Order Item routes', () => {
       await request(app).post('/v1/orderItems').send(newOrderItem).expect(httpStatus.UNAUTHORIZED);
     });
 
+    test('should return 403 error if logged in user is not creating for his user', async () => {
+      await insertUsers([userOne]);
+
+      await request(app)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newOrderItem)
+        .expect(httpStatus.FORBIDDEN);
+    });
+
     test('should return 400 quantity is below zero', async () => {
       await insertUsers([admin]);
       newOrderItem.quantity = -10;
@@ -166,6 +176,8 @@ describe('Order Item routes', () => {
       await insertAlbums([albumOne, albumTwo]);
       await insertOrderDetails([orderDetailOne, orderDetailTwo]);
       await insertOrderItems([orderItemOne, orderItemTwo]);
+      orderItemOne.quantity = 10;
+      orderItemTwo.quantity = 20;
 
       const res = await request(app)
         .get('/v1/orderItems')
@@ -182,6 +194,8 @@ describe('Order Item routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[1].id).toBe(orderItemOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(orderItemTwo._id.toHexString());
     });
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
@@ -208,46 +222,8 @@ describe('Order Item routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-    });
-
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-      await insertLabels([labelOne, labelTwo]);
-      await insertArtists([artistOne, artistTwo]);
-      await insertRecords([recordOne, recordTwo]);
-      await insertAlbums([albumOne, albumTwo]);
-      await insertOrderDetails([orderDetailOne, orderDetailTwo]);
-      await insertOrderItems([orderItemOne, orderItemTwo]);
-
-      const res = await request(app)
-        .get('/v1/orderItems')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'quantity:desc,createdAt:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [orderItemOne, orderItemTwo].sort((a, b) => {
-        if (a.quantity < b.quantity) {
-          return 1;
-        }
-        if (a.quantity > b.quantity) {
-          return -1;
-        }
-        return a.createdAt < b.createdAt ? -1 : 1;
-      });
-
-      expectedOrder.forEach((orderItem, index) => {
-        expect(res.body.results[index].id).toBe(orderItem._id.toHexString());
-      });
+      expect(res.body.results[0].id).toBe(orderItemOne._id.toHexString());
+      expect(res.body.results[1].id).toBe(orderItemTwo._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -279,7 +255,7 @@ describe('Order Item routes', () => {
   });
 
   describe('GET /v1/orderItems/:orderItemId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the order item object if data is ok', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -326,7 +302,7 @@ describe('Order Item routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and the album object if admin is trying to get another users order item', async () => {
+    test('should return 200 and the order item object if admin is trying to get another users order item', async () => {
       await insertUsers([userTwo, admin]);
       await insertLabels([labelTwo]);
       await insertArtists([artistTwo]);
@@ -342,7 +318,7 @@ describe('Order Item routes', () => {
         .expect(httpStatus.OK);
     });
 
-    test('should return 400 error if orderID is not a valid mongo id', async () => {
+    test('should return 400 error if orderItemID is not a valid mongo id', async () => {
       await insertUsers([userTwo, admin]);
       await insertLabels([labelTwo]);
       await insertArtists([artistTwo]);
@@ -433,7 +409,7 @@ describe('Order Item routes', () => {
         .expect(httpStatus.NO_CONTENT);
     });
 
-    test('should return 400 error if orderId is not a valid mongo id', async () => {
+    test('should return 400 error if orderItemId is not a valid mongo id', async () => {
       await insertUsers([userOne, admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -467,7 +443,7 @@ describe('Order Item routes', () => {
   });
 
   describe('PATCH /v1/orderItems/:orderItemId', () => {
-    test('should return 200 and successfully update user if data is ok', async () => {
+    test('should return 200 and successfully update order item if data is ok', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -514,7 +490,7 @@ describe('Order Item routes', () => {
       await request(app).patch(`/v1/orderItems/${orderItemOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if user is updating another users album', async () => {
+    test('should return 403 if user is updating another users order item', async () => {
       await insertUsers([userOne, userTwo]);
       await insertLabels([labelTwo]);
       await insertArtists([artistTwo]);
@@ -565,7 +541,7 @@ describe('Order Item routes', () => {
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if albumId is not a valid mongo id', async () => {
+    test('should return 400 error if orderItemId is not a valid mongo id', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);

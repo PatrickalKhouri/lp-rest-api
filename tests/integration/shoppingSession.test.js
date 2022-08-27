@@ -11,7 +11,7 @@ const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('..
 
 setupTestDB();
 
-describe('User Payments routes', () => {
+describe('Shopping Session routes', () => {
   describe('POST /v1/shoppingSessions', () => {
     let newShoppingSession;
 
@@ -26,7 +26,6 @@ describe('User Payments routes', () => {
 
     test('should return 201 and successfully create new user if data is ok', async () => {
       await insertUsers([admin]);
-      await insertShoppingSessions([shoppingSessionOne]);
 
       const res = await request(app)
         .post('/v1/shoppingSessions')
@@ -56,25 +55,23 @@ describe('User Payments routes', () => {
       await request(app).post('/v1/shoppingSessions').send(newShoppingSession).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if logged in user creating for another user', async () => {
-      await insertUsers([userOne, userTwo]);
-      await insertShoppingSessions([shoppingSessionOne]);
+    test('should return 403 error if logged in user creating new shopping session for another user', async () => {
+      await insertUsers([userOne]);
 
       await request(app)
         .post('/v1/shoppingSessions')
-        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(newShoppingSession)
         .expect(httpStatus.FORBIDDEN);
     });
 
     test('should return 400 error if total is smaller than zero', async () => {
-      await insertUsers([userOne]);
-      await insertShoppingSessions([shoppingSessionOne]);
+      await insertUsers([admin]);
       newShoppingSession.total = -10;
 
       await request(app)
         .post('/v1/shoppingSessions')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newShoppingSession)
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -82,12 +79,12 @@ describe('User Payments routes', () => {
 
   describe('GET /v1/shoppingSessions', () => {
     test('should return 200 and apply the default query options', async () => {
-      await insertUsers([userOne]);
-      await insertShoppingSessions([shoppingSessionOne]);
+      await insertUsers([userOne, userTwo, admin]);
+      await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
 
       const res = await request(app)
         .get('/v1/shoppingSessions')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
 
@@ -96,9 +93,9 @@ describe('User Payments routes', () => {
         page: 1,
         limit: 10,
         totalPages: 1,
-        totalResults: 1,
+        totalResults: 2,
       });
-      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results).toHaveLength(2);
       expect(res.body.results[0]).toEqual({
         id: shoppingSessionOne._id.toHexString(),
         userId: shoppingSessionOne.userId,
@@ -114,7 +111,7 @@ describe('User Payments routes', () => {
       await request(app).get('/v1/shoppingSessions').send().expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 if a non-admin is trying to access all users', async () => {
+    test('should return 403 if a non-admin is trying to access all shopping sessions', async () => {
       await insertUsers([userOne, userTwo]);
       await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
 
@@ -150,6 +147,8 @@ describe('User Payments routes', () => {
     test('should correctly sort the returned array if descending sort param is specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
       await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
+      shoppingSessionOne.total = 1;
+      shoppingSessionTwo.total = 2;
 
       const res = await request(app)
         .get('/v1/shoppingSessions')
@@ -166,43 +165,8 @@ describe('User Payments routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(shoppingSessionOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(shoppingSessionTwo._id.toHexString());
-    });
-
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-      await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
-
-      const res = await request(app)
-        .get('/v1/shoppingSessions')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'total:desc, userId:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [shoppingSessionOne, shoppingSessionTwo].sort((a, b) => {
-        if (a.total < b.total) {
-          return 1;
-        }
-        if (a.total > b.total) {
-          return -1;
-        }
-        return a.userId < b.userId ? -1 : 1;
-      });
-
-      expectedOrder.forEach((shoppingSession, index) => {
-        expect(res.body.results[index].id).toBe(shoppingSession._id.toHexString());
-      });
+      expect(res.body.results[1].id).toBe(shoppingSessionOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(shoppingSessionTwo._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -229,7 +193,7 @@ describe('User Payments routes', () => {
   });
 
   describe('GET /v1/shoppingSessions/:shoppingSessionId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the shopping session object if data is ok', async () => {
       await insertUsers([userOne]);
       await insertShoppingSessions([shoppingSessionOne]);
 
@@ -256,7 +220,7 @@ describe('User Payments routes', () => {
 
     test('should return 403 error if user is trying to get another users Shopping Session', async () => {
       await insertUsers([userOne, userTwo]);
-      await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
+      await insertShoppingSessions([shoppingSessionTwo]);
 
       await request(app)
         .get(`/v1/shoppingSessions/${shoppingSessionTwo._id}`)
@@ -322,7 +286,7 @@ describe('User Payments routes', () => {
 
     test('should return 403 error if user is trying to delete another user shopping session', async () => {
       await insertUsers([userOne, userTwo]);
-      await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
+      await insertShoppingSessions([shoppingSessionTwo]);
 
       await request(app)
         .delete(`/v1/shoppingSessions/${shoppingSessionTwo._id}`)
@@ -400,7 +364,7 @@ describe('User Payments routes', () => {
 
     test('should return 403 if user is updating another shopping session', async () => {
       await insertUsers([userOne, userTwo]);
-      await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
+      await insertShoppingSessions([shoppingSessionTwo]);
       const updateBody = { total: faker.finance.amount(0, 1000, 2) };
 
       await request(app)

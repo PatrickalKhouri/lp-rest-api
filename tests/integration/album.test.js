@@ -33,7 +33,6 @@ describe('Album routes', () => {
 
     test('should return 201 and successfully create new album if data is ok', async () => {
       await insertUsers([admin]);
-      await insertAlbums([newAlbum]);
 
       const res = await request(app)
         .post('/v1/albums')
@@ -41,7 +40,6 @@ describe('Album routes', () => {
         .send(newAlbum)
         .expect(httpStatus.CREATED);
 
-      expect(res.body).not.toHaveProperty('password');
       expect(res.body).toEqual({
         id: expect.anything(),
         recordId: newAlbum.recordId,
@@ -70,6 +68,16 @@ describe('Album routes', () => {
 
     test('should return 401 error if access token is missing', async () => {
       await request(app).post('/v1/albums').send(newAlbum).expect(httpStatus.UNAUTHORIZED);
+    });
+
+    test('should return 403 error if logged in user is not creating for his user', async () => {
+      await insertUsers([userOne]);
+
+      await request(app)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(newAlbum)
+        .expect(httpStatus.FORBIDDEN);
     });
 
     test('should return 400 year is in the future', async () => {
@@ -195,6 +203,8 @@ describe('Album routes', () => {
       await insertArtists([artistOne, artistTwo]);
       await insertRecords([recordOne, recordTwo]);
       await insertAlbums([albumOne, albumTwo]);
+      albumOne.year = 1999;
+      albumTwo.year = 2000;
 
       const res = await request(app)
         .get('/v1/albums')
@@ -211,6 +221,8 @@ describe('Album routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[0].id).toBe(albumTwo._id.toHexString());
+      expect(res.body.results[1].id).toBe(albumOne._id.toHexString());
     });
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
@@ -219,6 +231,8 @@ describe('Album routes', () => {
       await insertArtists([artistOne, artistTwo]);
       await insertRecords([recordOne, recordTwo]);
       await insertAlbums([albumOne, albumTwo]);
+      albumOne.year = 1999;
+      albumTwo.year = 2000;
 
       const res = await request(app)
         .get('/v1/albums')
@@ -235,44 +249,8 @@ describe('Album routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-    });
-
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
-      await insertUsers([userOne, userTwo, admin]);
-      await insertLabels([labelOne, labelTwo]);
-      await insertArtists([artistOne, artistTwo]);
-      await insertRecords([recordOne, recordTwo]);
-      await insertAlbums([albumOne, albumTwo]);
-
-      const res = await request(app)
-        .get('/v1/albums')
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'year:desc,price:asc' })
-        .send()
-        .expect(httpStatus.OK);
-
-      expect(res.body).toEqual({
-        results: expect.any(Array),
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-        totalResults: 2,
-      });
-      expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [albumOne, albumTwo].sort((a, b) => {
-        if (a.year < b.year) {
-          return 1;
-        }
-        if (a.year > b.year) {
-          return -1;
-        }
-        return a.price < b.price ? -1 : 1;
-      });
-
-      expectedOrder.forEach((album, index) => {
-        expect(res.body.results[index].id).toBe(album._id.toHexString());
-      });
+      expect(res.body.results[0].id).toBe(albumOne._id.toHexString());
+      expect(res.body.results[1].id).toBe(albumTwo._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -302,7 +280,7 @@ describe('Album routes', () => {
   });
 
   describe('GET /v1/albums/:albumId', () => {
-    test('should return 200 and the user object if data is ok', async () => {
+    test('should return 200 and the album object if data is ok', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -316,7 +294,7 @@ describe('Album routes', () => {
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
-        id: userOne._id.toHexString(),
+        id: albumOne._id.toHexString(),
         recordId: albumOne.recordId,
         userId: albumOne.userId,
         description: albumOne.description,
@@ -376,7 +354,7 @@ describe('Album routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 404 error if ablum is not found', async () => {
+    test('should return 404 error if album is not found', async () => {
       await insertUsers([admin]);
       await insertLabels([labelTwo]);
       await insertArtists([artistTwo]);
@@ -473,7 +451,7 @@ describe('Album routes', () => {
   });
 
   describe('PATCH /v1/albums/:albumId', () => {
-    test('should return 200 and successfully update user if data is ok', async () => {
+    test('should return 200 and successfully update album if data is ok', async () => {
       await insertUsers([userOne]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);
@@ -504,7 +482,7 @@ describe('Album routes', () => {
         type: albumOne.type,
       });
 
-      const dbAlbum = await Album.findById(userOne._id);
+      const dbAlbum = await Album.findById(albumOne._id);
       expect(dbAlbum).toBeDefined();
       expect(dbAlbum).toMatchObject({
         id: albumOne._id.toHexString(),
@@ -541,7 +519,7 @@ describe('Album routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and successfully update user if admin is updating another user', async () => {
+    test('should return 200 and successfully update album if admin is updating another users album', async () => {
       await insertUsers([userOne, admin]);
       await insertLabels([labelOne]);
       await insertArtists([artistOne]);

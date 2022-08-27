@@ -26,7 +26,7 @@ describe('Order Details routes', () => {
       };
     });
 
-    test('should return 201 and successfully create new user if data is ok', async () => {
+    test('should return 201 and successfully create new order detail if data is ok', async () => {
       await insertUsers([admin]);
 
       const res = await request(app)
@@ -59,26 +59,24 @@ describe('Order Details routes', () => {
       await request(app).post('/v1/orderDetails').send(newOrderDetails).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if logged in user creating for another user', async () => {
-      await insertUsers([userOne, userTwo]);
-      await insertUserPayments([userPaymentOne]);
+    test('should return 403 error if logged in user is not creating for his user', async () => {
+      await insertUsers([userOne]);
 
       await request(app)
-        .post('/v1/orderDetails')
-        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(newOrderDetails)
         .expect(httpStatus.FORBIDDEN);
     });
 
     test('should return 400 error if total is smaller than zero', async () => {
-      await insertUsers([userOne]);
-      await insertUserPayments([userPaymentOne]);
+      await insertUsers([admin]);
 
       newOrderDetails.total = -5;
 
       await request(app)
         .post('/v1/orderDetails')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newOrderDetails)
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -131,7 +129,7 @@ describe('Order Details routes', () => {
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should correctly apply filter on provider field', async () => {
+    test('should correctly apply filter on provided field', async () => {
       await insertUsers([userOne]);
       await insertUserPayments([userPaymentOne]);
       await insertOrderDetails([orderDetailOne]);
@@ -158,6 +156,8 @@ describe('Order Details routes', () => {
       await insertUsers([userOne, userTwo, admin]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
       await insertOrderDetails([orderDetailOne, orderDetailTwo]);
+      orderDetailOne.total = 1;
+      orderDetailTwo.total = 2;
 
       const res = await request(app)
         .get('/v1/orderDetails')
@@ -174,19 +174,21 @@ describe('Order Details routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      expect(res.body.results[0].id).toBe(orderDetailOne._id.toHexString());
-      expect(res.body.results[1].id).toBe(orderDetailTwo._id.toHexString());
+      expect(res.body.results[1].id).toBe(orderDetailOne._id.toHexString());
+      expect(res.body.results[0].id).toBe(orderDetailTwo._id.toHexString());
     });
 
-    test('should correctly sort the returned array if multiple sorting criteria are specified', async () => {
+    test('should correctly sort the returned array if ascending sort param is specified', async () => {
       await insertUsers([userOne, userTwo, admin]);
       await insertUserPayments([userPaymentOne, userPaymentTwo]);
       await insertOrderDetails([orderDetailOne, orderDetailTwo]);
+      orderDetailOne.total = 1;
+      orderDetailTwo.total = 2;
 
       const res = await request(app)
         .get('/v1/orderDetails')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'total:desc, createdAt:asc' })
+        .query({ sortBy: 'total:asc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -198,20 +200,8 @@ describe('Order Details routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-
-      const expectedOrder = [orderDetailOne, orderDetailTwo].sort((a, b) => {
-        if (a.total < b.total) {
-          return 1;
-        }
-        if (a.total > b.total) {
-          return -1;
-        }
-        return a.createdAt < b.createdAt ? -1 : 1;
-      });
-
-      expectedOrder.forEach((orderDetail, index) => {
-        expect(res.body.results[index].id).toBe(orderDetail._id.toHexString());
-      });
+      expect(res.body.results[0].id).toBe(orderDetailOne._id.toHexString());
+      expect(res.body.results[1].id).toBe(orderDetailTwo._id.toHexString());
     });
 
     test('should limit returned array if limit param is specified', async () => {
@@ -271,13 +261,13 @@ describe('Order Details routes', () => {
       await insertOrderDetails([orderDetailTwo]);
 
       await request(app)
-        .get(`/v1/orderDetails/${userPaymentTwo._id}`)
+        .get(`/v1/orderDetails/${orderDetailTwo._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
 
-    test('should return 200 and the order detail object if admin is trying to get another user', async () => {
+    test('should return 200 and the order detail object if admin is trying to get another users order detail', async () => {
       await insertUsers([userOne, admin]);
       await insertUserPayments([userPaymentOne]);
       await insertOrderDetails([orderDetailOne]);
@@ -289,14 +279,14 @@ describe('Order Details routes', () => {
         .expect(httpStatus.OK);
     });
 
-    test('should return 400 error if userPaymentId is not a valid mongo id', async () => {
-      await insertUsers([userOne]);
+    test('should return 400 error if orderDetailId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
       await insertUserPayments([userPaymentOne]);
       await insertOrderDetails([orderDetailOne]);
 
       await request(app)
         .get('/v1/orderDetails/invalidId')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -307,7 +297,7 @@ describe('Order Details routes', () => {
       await insertOrderDetails([orderDetailOne]);
 
       await request(app)
-        .get(`/v1/orderDetails/${userPaymentTwo._id}`)
+        .get(`/v1/orderDetails/${orderDetailTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NOT_FOUND);
@@ -354,20 +344,20 @@ describe('Order Details routes', () => {
       await insertOrderDetails([orderDetailOne]);
 
       await request(app)
-        .delete(`/v1/orderDetails/${userPaymentOne._id}`)
+        .delete(`/v1/orderDetails/${orderDetailOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.NO_CONTENT);
     });
 
     test('should return 400 error if orderDetailId is not a valid mongo id', async () => {
-      await insertUsers([userOne]);
+      await insertUsers([admin]);
       await insertUserPayments([userPaymentOne]);
       await insertOrderDetails([orderDetailOne]);
 
       await request(app)
         .delete('/v1/orderDetails/invalidId')
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.BAD_REQUEST);
     });
@@ -384,7 +374,7 @@ describe('Order Details routes', () => {
       };
 
       const res = await request(app)
-        .patch(`/v1/orderDetails/${userPaymentOne._id}`)
+        .patch(`/v1/orderDetails/${orderDetailOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.OK);
@@ -450,21 +440,21 @@ describe('Order Details routes', () => {
       const updateBody = { total: faker.finance.amount(0, 1000, 2) };
 
       await request(app)
-        .patch(`/v1/orderDetails/${orderDetailOne._id}`)
+        .patch(`/v1/orderDetails/${orderDetailTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.NOT_FOUND);
     });
 
-    test('should return 400 error if orderDetailtId is not a valid mongo id', async () => {
-      await insertUsers([userOne]);
+    test('should return 400 error if orderDetailId is not a valid mongo id', async () => {
+      await insertUsers([admin]);
       await insertUserPayments([userPaymentOne]);
       await insertOrderDetails([orderDetailOne]);
       const updateBody = { total: faker.finance.amount(0, 1000, 2) };
 
       await request(app)
         .patch(`/v1/orderDetails/invalidId`)
-        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
     });
