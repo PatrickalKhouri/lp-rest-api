@@ -213,6 +213,13 @@ List of available routes:
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
 
+**UserAddress routes**:\
+`POST /v1/userAddresses` - create a userAddress\
+`GET /v1/userAddresses` - get all usersAddresses\
+`GET /v1/userAddresses/:userAddressId` - get usersAddress\
+`PATCH /v1/users/:userAddressId` - update usersAddress\
+`DELETE /v1/users/:userAddressId` - delete usersAddress\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.

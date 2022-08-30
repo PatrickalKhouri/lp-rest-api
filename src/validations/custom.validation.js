@@ -15,7 +15,15 @@ const password = (value, helpers) => {
   return value;
 };
 
+const postalCode = (value, helpers) => {
+  if (!value.match(/^[0-9]{5}-[0-9]{3}$/)) {
+    return helpers.message('"{{#label}}" must be a valid brazilian postal code');
+  }
+  return value;
+};
+
 module.exports = {
   objectId,
   password,
+  postalCode,
 };
