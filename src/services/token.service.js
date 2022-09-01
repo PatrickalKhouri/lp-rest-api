@@ -3,7 +3,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const userService = require('./user.service');
-const { Token } = require('../models');
+const { Token, User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
@@ -58,6 +58,15 @@ const verifyToken = async (token, type) => {
     throw new Error('Token not found');
   }
   return tokenDoc;
+};
+
+const getUserFromToken = async (token) => {
+  const payload = jwt.verify(token, config.jwt.secret);
+  const user = await userService.getUserById(payload.sub);
+  if (!payload) {
+    throw new Error('payload not found');
+  }
+  return user;
 };
 
 /**
@@ -117,6 +126,7 @@ module.exports = {
   generateToken,
   saveToken,
   verifyToken,
+  getUserFromToken,
   generateAuthTokens,
   generateResetPasswordToken,
   generateVerifyEmailToken,
