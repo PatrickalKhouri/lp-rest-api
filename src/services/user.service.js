@@ -38,12 +38,6 @@ const getUserById = async (id) => {
 };
 
 /**
- * Get user by access token
- * @param {string} token
- * @returns {Promise<User>}
- */
-
-/**
  * Get user by email
  * @param {string} email
  * @returns {Promise<User>}
