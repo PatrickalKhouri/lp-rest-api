@@ -60,12 +60,28 @@ const verifyToken = async (token, type) => {
   return tokenDoc;
 };
 
-const getUserFromToken = async (token) => {
+/**
+ * Gets the user from the request token
+ * @param {string} token
+ * @returns {Promise<object>}
+ */
+const getCurrentUserFromToken = async (token) => {
   const payload = jwt.verify(token, config.jwt.secret);
   const user = await userService.getUserById(payload.sub);
   if (!payload) {
     throw new Error('payload not found');
   }
+  return user;
+};
+
+/**
+ * Gets the user from the request
+ * @param {object} request
+ * @returns {Promise<object>}
+ */
+const getCurrentUserFromReq = async (req) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const user = await getCurrentUserFromToken(token);
   return user;
 };
 
@@ -126,7 +142,8 @@ module.exports = {
   generateToken,
   saveToken,
   verifyToken,
-  getUserFromToken,
+  getCurrentUserFromToken,
+  getCurrentUserFromReq,
   generateAuthTokens,
   generateResetPasswordToken,
   generateVerifyEmailToken,

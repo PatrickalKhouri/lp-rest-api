@@ -5,7 +5,8 @@ const createUserAddress = {
   body: Joi.object().keys({
     userId: Joi.string().custom(objectId),
     streetName: Joi.string().required(),
-    streetNumber: Joi.string().required(),
+    buildingNumber: Joi.string().required(),
+    apartmentNumber: Joi.string(),
     complement: Joi.string(),
     postalCode: Joi.string().required().custom(postalCode),
     city: Joi.string().required(),
