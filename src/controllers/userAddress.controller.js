@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
@@ -15,20 +16,40 @@ const createUserAddress = catchAsync(async (req, res) => {
     if (req.body.userId !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to create a user address for another user');
     } else {
-      const userAddress = await userAddressService.createUserAddress(req.body);
-      res.status(httpStatus.CREATED).send(userAddress);
+      try {
+        const userAddress = await userAddressService.createUserAddress(req.body);
+        res.status(httpStatus.CREATED).send(userAddress);
+      } catch (e) {
+        console.log(e);
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating user address');
+      }
     }
   } else {
-    const userAddress = await userAddressService.createUserAddress(req.body);
-    res.status(httpStatus.CREATED).send(userAddress);
+    try {
+      const userAddress = await userAddressService.createUserAddress(req.body);
+      res.status(httpStatus.CREATED).send(userAddress);
+    } catch (e) {
+      console.log(e);
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating user address');
+    }
   }
 });
 
 const getUserAddresses = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['city', 'state', 'country']);
+  const filter = pick(req.query, ['userId', 'city', 'state', 'country']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await userAddressService.queryUserAddresses(filter, options);
-  res.send(result);
+  const currentUser = await tokenService.getCurrentUserFromReq(req);
+  if (currentUser.role === 'admin') {
+    const result = await userAddressService.queryUserAddresses(filter, options);
+    res.send(result);
+  } else if (!filter.userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all user addresses');
+  } else if (String(filter.userId) !== String(currentUser._id)) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You can only get your own addresses');
+  } else {
+    const result = await userAddressService.queryUserAddresses(filter, options);
+    res.send(result);
+  }
 });
 
 const getUserAddress = catchAsync(async (req, res) => {
@@ -55,12 +76,22 @@ const updateUserAddress = catchAsync(async (req, res) => {
     if (String(currentUser._id) !== String(userAddressToUpdate.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to update a user address for another user');
     } else {
-      const userAddress = await userAddressService.updateUserAddressById(req.params.userAddressId, req.body);
-      res.send(userAddress);
+      try {
+        const userAddress = await userAddressService.updateUserAddressById(req.params.userAddressId, req.body);
+        res.send(userAddress);
+      } catch (e) {
+        console.log(e);
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating user address');
+      }
     }
   } else {
-    const userAddress = await userAddressService.updateUserAddressById(req.params.userAddressId, req.body);
-    res.send(userAddress);
+    try {
+      const userAddress = await userAddressService.updateUserAddressById(req.params.userAddressId, req.body);
+      res.send(userAddress);
+    } catch (e) {
+      console.log(e);
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating user address');
+    }
   }
 });
 

@@ -1,5 +1,6 @@
-Alterar streetNUmber para Bulding Number nos testes
-ver se uma mesma combinação de endereços sao permitidas pelo mesmo usuario e criar testtes para isso
-rota para pegar todos os endereços do proprio usuário
 Resolver swagger User Address
+
+Alterar streetNUmber para Bulding Number nos testes
+criar teste para o index unico de userAddress e outros
+incluir testes para modelos que o usuario pode get todos os seus
 Resolver testes -- MongoWriteConcernError: No write concern mode named 'majority-test' found in replica set configuration
