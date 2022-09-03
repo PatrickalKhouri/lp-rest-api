@@ -94,6 +94,8 @@ module.exports = router;
 //  *         $ref: '#/components/responses/Unauthorized'
 //  *       "403":
 //  *         $ref: '#/components/responses/Forbidden'
+//  *       "500":
+//  *         $ref: '#/components/responses/InternalServerError'
 //  *
 //  *   get:
 //  *     summary: Get all users addresses
@@ -241,9 +243,10 @@ module.exports = router;
  *               country:
  *                  type: string
  *             example:
- *               userId: 1sdfsa1114198aisdmklgmf3
+ *               userId: 507f191e810c19729de860ea
  *               streetName: 'Fake street name'
  *               buildingNumber: '10'
+ *               apartmentNumber: '201A'
  *               complement: 'Block 2'
  *               postalCode: '22222-222'
  *               city: 'Rio de Janeiro'
@@ -262,6 +265,8 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ *       "500":
+ *         $ref: '#/components/responses/InternalServerError'
  *
  *   delete:
  *     summary: Delete a user
