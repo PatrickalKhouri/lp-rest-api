@@ -31,7 +31,10 @@ const queryUserAddresses = async (filter, options) => {
  * @returns {Promise<UserAddress>}
  */
 const getUserAddressById = async (id) => {
-  return UserAddress.findById(id);
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return UserAddress.findById(id);
+  }
+  return null;
 };
 
 /**
@@ -55,7 +58,7 @@ const updateUserAddressById = async (userAddressId, updateBody) => {
  * @param {ObjectId} userAddressId
  * @returns {Promise<UserAddress>}
  */
-const deleteUserById = async (userAddressId) => {
+const deleteUserAddressById = async (userAddressId) => {
   const userAddress = await getUserAddressById(userAddressId);
   if (!userAddress) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User Address not found');
@@ -68,5 +71,5 @@ module.exports = {
   queryUserAddresses,
   getUserAddressById,
   updateUserAddressById,
-  deleteUserById,
+  deleteUserAddressById,
 };
