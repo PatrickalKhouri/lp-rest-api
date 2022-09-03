@@ -15,14 +15,6 @@ router
   )
   .get(auth('getUserAddresses'), validate(userAddressValidation.getUserAddresses), userAddressController.getUserAddresses);
 
-// router
-//   .route('/:userId')
-//   .get(
-//     auth('getUserAddress'),
-//     validate(userAddressValidation.getUserUserAddresses),
-//     userAddressController.getUserUserAddresses
-//   );
-
 router
   .route('/:userAddressId')
   .get(auth('getUserAddress'), validate(userAddressValidation.getUserAddress), userAddressController.getUserAddress)
@@ -31,12 +23,12 @@ router
 
 module.exports = router;
 
-// /**
-//  * @swagger
-//  * tags:
-//  *   name: User Addresses
-//  *   description: User Address management and retrieval
-//  */
+/**
+ * @swagger
+ * tags:
+ *   name: User Addresses
+ *   description: User Address management and retrieval
+ */
 
 // /**
 //  * @swagger
@@ -52,7 +44,7 @@ module.exports = router;
 //  *       content:
 //  *         application/json:
 //  *           schema:
-//  *              type: object
+//  *             type: object
 //  *             required:
 //  *               - userId
 //  *               - streetName
@@ -60,7 +52,7 @@ module.exports = router;
 //  *               - postalCode
 //  *               - city
 //  *               - state
-//  *              - country
+//  *               - country
 //  *             properties:
 //  *               userId:
 //  *                 type: ObjectId,
@@ -72,15 +64,15 @@ module.exports = router;
 //  *                 type: string
 //  *               complement:
 //  *                  type: string
-//  *              postalCode:
+//  *               postalCode:
 //  *                  type: string
 //  *                  format: Brazilian postal code
-//  *              city:
+//  *               city:
 //  *                  type: string
-//  *              state:
+//  *               state:
 //  *                  type: string
 //  *                  description: Brazilian states UFs
-//  *              country:
+//  *               country:
 //  *                  type: string
 //  *             example:
 //  *               userId: 1sdfsa1114198aisdmklgmf3
@@ -90,7 +82,7 @@ module.exports = router;
 //  *               postalCode: '22222-222'
 //  *               city: 'Rio de Janeiro'
 //  *               state: 'RJ'
-//  *               country: 'Brazil
+//  *               country: 'Brazil'
 //  *     responses:
 //  *       "201":
 //  *         description: Created
@@ -199,118 +191,118 @@ module.exports = router;
 //  *         $ref: '#/components/responses/Forbidden'
 //  */
 
-// /**
-//  * @swagger
-//  * /users/{id}:
-//  *   get:
-//  *     summary: Get a user address
-//  *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
-//  *     tags: [Users]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *         description: User Address id
-//  *     responses:
-//  *       "200":
-//  *         description: OK
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *                $ref: '#/components/schemas/UserAddress'
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  *       "404":
-//  *         $ref: '#/components/responses/NotFound'
-//  *
-//  *   patch:
-//  *     summary: Update a user address
-//  *     description: Logged in users can only update their own information. Only admins can update other users.
-//  *     tags: [Users]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *         description: User Address id
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             properties:
-//  *               userId:
-//  *                 type: objectId
-//  *                 description: only admins can update userId
-//  *               streetName:
-//  *                 type: string
-//  *               buildingNumber:
-//  *                 type: string
-//  *               complement:
-//  *                  type: string
-//  *              postalCode:
-//  *                  type: string
-//  *                  format: Brazilian postal code
-//  *              city:
-//  *                  type: string
-//  *              state:
-//  *                  type: string
-//  *                  description: Brazilian states UFs
-//  *              country:
-//  *                  type: string
-//  *             example:
-//  *               userId: 1sdfsa1114198aisdmklgmf3
-//  *               streetName: 'Fake street name'
-//  *               buildingNumber: '10'
-//  *               complement: 'Block 2'
-//  *               postalCode: '22222-222'
-//  *               city: 'Rio de Janeiro'
-//  *               state: 'RJ'
-//  *               country: 'Brazil
-//  *     responses:
-//  *       "200":
-//  *         description: OK
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *                $ref: '#/components/schemas/UserAddress'
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  *       "404":
-//  *         $ref: '#/components/responses/NotFound'
-//  *
-//  *   delete:
-//  *     summary: Delete a user
-//  *     description: Logged in users can delete only themselves. Only admins can delete other users.
-//  *     tags: [Users]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *         description: User Address id
-//  *     responses:
-//  *       "200":
-//  *         description: No content
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  *       "404":
-//  *         $ref: '#/components/responses/NotFound'
-//  */
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get a user address
+ *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User Address id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/UserAddress'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   patch:
+ *     summary: Update a user address
+ *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User Address id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: objectId
+ *                 description: only admins can update userId
+ *               streetName:
+ *                 type: string
+ *               buildingNumber:
+ *                 type: string
+ *               complement:
+ *                  type: string
+ *               postalCode:
+ *                  type: string
+ *                  format: Brazilian postal code
+ *               city:
+ *                  type: string
+ *               state:
+ *                  type: string
+ *                  description: Brazilian states UFs
+ *               country:
+ *                  type: string
+ *             example:
+ *               userId: 1sdfsa1114198aisdmklgmf3
+ *               streetName: 'Fake street name'
+ *               buildingNumber: '10'
+ *               complement: 'Block 2'
+ *               postalCode: '22222-222'
+ *               city: 'Rio de Janeiro'
+ *               state: 'RJ'
+ *               country: 'Brazil'
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/UserAddress'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   delete:
+ *     summary: Delete a user
+ *     description: Logged in users can delete only themselves. Only admins can delete other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User Address id
+ *     responses:
+ *       "200":
+ *         description: No content
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
