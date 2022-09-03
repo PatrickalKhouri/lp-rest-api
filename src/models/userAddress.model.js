@@ -15,9 +15,13 @@ const userAddressSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
-  streetNumber: {
+  buildingNumber: {
     type: String,
     required: true,
+    trim: true,
+  },
+  apartmentNumber: {
+    type: String,
     trim: true,
   },
   complement: {
@@ -58,6 +62,18 @@ const userAddressSchema = mongoose.Schema({
 
 userAddressSchema.plugin(toJSON);
 userAddressSchema.plugin(paginate);
+
+userAddressSchema.index({
+  userId : 1,
+  streetName: 1,
+  buildingNumber: 1,
+  apartmentNumber: 1,
+  complement: 1,
+  postalCode: 1,
+  city: 1,
+  state: 1,
+  country: 1
+}, {unique: true})
 
 const UserAddress = mongoose.model('UserAddress', userAddressSchema);
 

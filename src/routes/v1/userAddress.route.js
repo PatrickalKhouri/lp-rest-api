@@ -13,13 +13,13 @@ router
     validate(userAddressValidation.createUserAddress),
     userAddressController.createUserAddress
   )
-  .get(auth('getUserAddressess'), validate(userAddressValidation.getUserAddresses), userAddressController.getUserAddresses);
+  .get(auth('getUserAddresses'), validate(userAddressValidation.getUserAddresses), userAddressController.getUserAddresses);
 
 router
   .route('/:userAddressId')
-  .get(auth('getUsersAddresses'), validate(userAddressValidation.getUserAddress), userAddressController.getUserAddress)
+  .get(auth('getUserAddress'), validate(userAddressValidation.getUserAddress), userAddressController.getUserAddress)
   .patch(auth('manageUserAddresses'), validate(userAddressValidation.updateUser), userAddressController.updateUserAddress)
-  .delete(auth('manageUsersAddresses'), validate(userAddressValidation.deleteUser), userAddressController.deleteUserAddress);
+  .delete(auth('manageUserAddresses'), validate(userAddressValidation.deleteUser), userAddressController.deleteUserAddress);
 
 module.exports = router;
 
@@ -48,7 +48,7 @@ module.exports = router;
 //  *             required:
 //  *               - userId
 //  *               - streetName
-//  *               - streetNumber
+//  *               - buildingNumber
 //  *               - postalCode
 //  *               - city
 //  *               - state
@@ -58,7 +58,9 @@ module.exports = router;
 //  *                 type: ObjectId,
 //  *               streetName:
 //  *                 type: string
-//  *               streetNumber:
+//  *               buildingNumber:
+//  *                 type: string
+//  *               apartmentNumber:
 //  *                 type: string
 //  *               complement:
 //  *                  type: string
@@ -75,7 +77,7 @@ module.exports = router;
 //  *             example:
 //  *               userId: 1sdfsa1114198aisdmklgmf3
 //  *               streetName: 'Fake street name'
-//  *               streetNumber: '10'
+//  *               buildingNumber: '10'
 //  *               complement: 'Block 2'
 //  *               postalCode: '22222-222'
 //  *               city: 'Rio de Janeiro'
@@ -111,7 +113,7 @@ module.exports = router;
 //  *           type: string
 //  *         description: The name of the street
 //  *       - in: query
-//  *         name: streetNumber
+//  *         name: buildingNumber
 //  *         schema:
 //  *           type: string
 //  *         description: The number of the building in the street
@@ -244,7 +246,7 @@ module.exports = router;
 //  *                 description: only admins can update userId
 //  *               streetName:
 //  *                 type: string
-//  *               streetNumber:
+//  *               buildingNumber:
 //  *                 type: string
 //  *               complement:
 //  *                  type: string
@@ -261,7 +263,7 @@ module.exports = router;
 //  *             example:
 //  *               userId: 1sdfsa1114198aisdmklgmf3
 //  *               streetName: 'Fake street name'
-//  *               streetNumber: '10'
+//  *               buildingNumber: '10'
 //  *               complement: 'Block 2'
 //  *               postalCode: '22222-222'
 //  *               city: 'Rio de Janeiro'
