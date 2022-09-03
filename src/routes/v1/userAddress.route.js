@@ -15,6 +15,14 @@ router
   )
   .get(auth('getUserAddresses'), validate(userAddressValidation.getUserAddresses), userAddressController.getUserAddresses);
 
+// router
+//   .route('/:userId')
+//   .get(
+//     auth('getUserAddress'),
+//     validate(userAddressValidation.getUserUserAddresses),
+//     userAddressController.getUserUserAddresses
+//   );
+
 router
   .route('/:userAddressId')
   .get(auth('getUserAddress'), validate(userAddressValidation.getUserAddress), userAddressController.getUserAddress)
