@@ -75,10 +75,10 @@ module.exports = router;
 //  *               country:
 //  *                  type: string
 //  *             example:
-//  *               userId: 1sdfsa1114198aisdmklgmf3
+//  *               userId: 507f191e810c19729de860ea
 //  *               streetName: 'Fake street name'
 //  *               buildingNumber: '10'
-//  *               complement: 'Block 2'
+//  *               apartmentNumber: '10'
 //  *               postalCode: '22222-222'
 //  *               city: 'Rio de Janeiro'
 //  *               state: 'RJ'
@@ -107,26 +107,6 @@ module.exports = router;
 //  *         schema:
 //  *           type: string
 //  *         description: User Id of that address
-//  *       - in: query
-//  *         name: streetName
-//  *         schema:
-//  *           type: string
-//  *         description: The name of the street
-//  *       - in: query
-//  *         name: buildingNumber
-//  *         schema:
-//  *           type: string
-//  *         description: The number of the building in the street
-//  *       - in: query
-//  *         name: complement
-//  *         schema:
-//  *           type: string
-//  *         description: Any other information
-//  *       - in: query
-//  *         name: postalCode
-//  *         schema:
-//  *           type: string
-//  *         description: The postal code of the address
 //  *       - in: query
 //  *         name: city
 //  *         schema:
