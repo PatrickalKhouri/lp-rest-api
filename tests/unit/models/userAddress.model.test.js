@@ -9,7 +9,7 @@ describe('User Address model', () => {
       newUserAddress = {
         userId: mongoose.Types.ObjectId(),
         streetName: 'Rua Fonte da Saudade',
-        streetNumber: '114',
+        buildingNumber: '114',
         postalCode: '22471-270',
         city: faker.address.city(),
         state: 'RJ',
