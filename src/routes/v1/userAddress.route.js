@@ -18,8 +18,16 @@ router
 router
   .route('/:userAddressId')
   .get(auth('getUserAddress'), validate(userAddressValidation.getUserAddress), userAddressController.getUserAddress)
-  .patch(auth('manageUserAddresses'), validate(userAddressValidation.updateUser), userAddressController.updateUserAddress)
-  .delete(auth('manageUserAddresses'), validate(userAddressValidation.deleteUser), userAddressController.deleteUserAddress);
+  .patch(
+    auth('manageUserAddresses'),
+    validate(userAddressValidation.updateUserAddress),
+    userAddressController.updateUserAddress
+  )
+  .delete(
+    auth('manageUserAddresses'),
+    validate(userAddressValidation.deleteUserAddress),
+    userAddressController.deleteUserAddress
+  );
 
 module.exports = router;
 
