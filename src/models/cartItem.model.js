@@ -26,6 +26,8 @@ const cartItemSchema = mongoose.Schema({
 cartItemSchema.plugin(toJSON);
 cartItemSchema.plugin(paginate);
 
+cartItemSchema.index({ shoppingSessionId: 1, albumId: 1}, { unique: true })
+
 const CartItem = mongoose.model('CartItem', cartItemSchema);
 
 module.exports = CartItem;

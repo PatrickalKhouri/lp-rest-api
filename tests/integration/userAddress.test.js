@@ -106,6 +106,18 @@ describe('User Address Routes routes', () => {
         .send(newUserAddress)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 500 error if trying to create an already exsiting address to the same user', async () => {
+      await insertUsers([userOne, admin]);
+      await insertUserAddresses([userAddressOne]);
+      newUserAddress = userAddressOne;
+
+      await request(app)
+        .post('/v1/userAddresses')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUserAddress)
+        .expect(httpStatus.BAD_REQUEST);
+    });
   });
 
   describe('GET /v1/userAddresses', () => {
@@ -198,6 +210,40 @@ describe('User Address Routes routes', () => {
       });
       expect(res.body.results).toHaveLength(1);
       // expect(res.body.results[0].id).toBe(userAddressOne._id.toHexString());
+    });
+
+    test('should return 200 if user is trying to acess all of his addresses', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserAddresses([userAddressOne, userAddressTwo]);
+
+      const res = await request(app)
+        .get(`/v1/userAddresses`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(userAddressOne._id.toHexString());
+    });
+
+    test('should return 403 if user is trying to acess all of another users addresses', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserAddresses([userAddressOne, userAddressTwo]);
+
+      await request(app)
+        .get(`/v1/userAddresses`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send()
+        .expect(httpStatus.UNAUTHORIZED);
     });
   });
 

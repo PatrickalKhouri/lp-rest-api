@@ -37,6 +37,7 @@ const createUserAddress = catchAsync(async (req, res) => {
 
 const getUserAddresses = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['userId', 'city', 'state', 'country']);
+  console.log(filter);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role === 'admin') {
@@ -90,7 +91,6 @@ const updateUserAddress = catchAsync(async (req, res) => {
     }
   } else {
     try {
-      console.log(req.params.userAddressId, req.body);
       const userAddress = await userAddressService.updateUserAddressById(req.params.userAddressId, req.body);
       res.send(userAddress);
     } catch (e) {

@@ -69,6 +69,19 @@ describe('Artist routes', () => {
         .send(newArtist)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 500 error if artist already exists', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      newArtist = artistOne;
+
+      await request(app)
+        .post('/v1/artists')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newArtist)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
+    });
   });
 
   describe('GET /v1/artists', () => {
