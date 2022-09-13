@@ -84,6 +84,23 @@ describe('Cart Item routes', () => {
         .send(newCartItem)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 500 if cartItem already exists', async () => {
+      await insertUsers([userOne, admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      await insertShoppingSessions([shoppingSessionOne]);
+      await insertCartItems([cartItemOne]);
+      newCartItem = cartItemOne;
+
+      await request(app)
+        .post('/v1/cartItems')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newCartItem)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
+    });
   });
 
   describe('GET /v1/cartItems', () => {

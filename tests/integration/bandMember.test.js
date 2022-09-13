@@ -57,6 +57,21 @@ describe('Band Member routes', () => {
         .send(newBandMember)
         .expect(httpStatus.FORBIDDEN);
     });
+
+    test('should return 500 error if band member already exists', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertPeople([personOne]);
+      await insertBandMembers([bandMemberOne]);
+      newBandMember = bandMemberOne;
+
+      await request(app)
+        .post('/v1/bandMembers')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newBandMember)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
+    });
   });
 
   describe('GET /v1/bandMembers', () => {

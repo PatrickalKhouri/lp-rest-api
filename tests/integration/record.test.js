@@ -111,6 +111,20 @@ describe('Record routes', () => {
         .send(newRecord)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 500 if record already exists', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      newRecord = recordOne;
+
+      await request(app)
+        .post('/v1/record')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newRecord)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
+    });
   });
 
   describe('GET /v1/records', () => {

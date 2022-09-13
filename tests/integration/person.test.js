@@ -26,7 +26,6 @@ describe('Person routes', () => {
 
     test('should return 201 and successfully create new person if data is ok', async () => {
       await insertUsers([admin]);
-      await insertPeople([newPerson]);
 
       const res = await request(app)
         .post('/v1/person')
@@ -60,7 +59,6 @@ describe('Person routes', () => {
 
     test('should return 403 error if logged in user is not admin', async () => {
       await insertUsers([userOne]);
-      await insertPeople([newPerson]);
 
       await request(app)
         .post('/v1/person')
@@ -71,7 +69,6 @@ describe('Person routes', () => {
 
     test('should return 400 error if date of birth is on the future', async () => {
       await insertUsers([admin]);
-      await insertPeople([newPerson]);
       newPerson.dateOfBirth = '3000-07-29T02:25:31.672Z';
 
       await request(app)
@@ -79,6 +76,18 @@ describe('Person routes', () => {
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newPerson)
         .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 500 if person already exists', async () => {
+      await insertUsers([admin]);
+      await insertPeople([personOne]);
+      newPerson = personOne;
+
+      await request(app)
+        .post('/v1/person')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newPerson)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 

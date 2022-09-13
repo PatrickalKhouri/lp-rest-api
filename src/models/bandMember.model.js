@@ -22,6 +22,8 @@ const bandMemberSchema = mongoose.Schema({
 bandMemberSchema.plugin(toJSON);
 bandMemberSchema.plugin(paginate);
 
+bandMemberSchema.index({ artistId: 1, personId: 1}, { unique: true })
+
 const BandMember = mongoose.model('BandMember', bandMemberSchema);
 
 module.exports = BandMember;

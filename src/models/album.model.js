@@ -53,6 +53,13 @@ const albumSchema = mongoose.Schema({
 albumSchema.plugin(toJSON);
 albumSchema.plugin(paginate);
 
+albumSchema.index({
+	userId : 1,
+	recordId: 1,
+	year: 1,
+	new: 1,
+  }, {unique: true})
+
 const Album = mongoose.model('Album', albumSchema);
 
 module.exports = Album;

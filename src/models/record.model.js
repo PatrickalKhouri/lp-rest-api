@@ -58,6 +58,15 @@ const recordSchema = mongoose.Schema({
 recordSchema.plugin(toJSON);
 recordSchema.plugin(paginate);
 
+recordSchema.index({
+	artistId : 1,
+	name: 1,
+	releaseYear: 1,
+	duration: 1,
+    numberOfTracks: 1
+  }, {unique: true})
+
+
 const Record = mongoose.model('Record', recordSchema);
 
 module.exports = Record;

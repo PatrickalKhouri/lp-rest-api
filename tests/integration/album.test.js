@@ -82,7 +82,6 @@ describe('Album routes', () => {
 
     test('should return 400 year is in the future', async () => {
       await insertUsers([admin]);
-      await insertAlbums([newAlbum]);
       newAlbum.year = 3000;
 
       await request(app)
@@ -94,7 +93,6 @@ describe('Album routes', () => {
 
     test('should return 400 Price is below zero', async () => {
       await insertUsers([admin]);
-      await insertAlbums([newAlbum]);
       newAlbum.price = -10;
 
       await request(app)
@@ -106,7 +104,6 @@ describe('Album routes', () => {
 
     test('should return 400 Stock is below zero', async () => {
       await insertUsers([admin]);
-      await insertAlbums([newAlbum]);
       newAlbum.stock = -10;
 
       await request(app)
@@ -114,6 +111,21 @@ describe('Album routes', () => {
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newAlbum)
         .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 500 if trying to create and album that the user already has', async () => {
+      await insertUsers([userOne, admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      await insertAlbums([albumOne]);
+      newAlbum = albumOne;
+
+      await request(app)
+        .post('/v1/albums')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newAlbum)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 
