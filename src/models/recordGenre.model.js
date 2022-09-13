@@ -22,6 +22,8 @@ const recordGenreSchema = mongoose.Schema({
 recordGenreSchema.plugin(toJSON);
 recordGenreSchema.plugin(paginate);
 
+recordGenreSchema.index({ genreId : 1, recordId: 1 }, {unique: true})
+
 const RecordGenre = mongoose.model('RecordGenre', recordGenreSchema);
 
 module.exports = RecordGenre;

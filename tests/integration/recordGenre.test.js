@@ -48,7 +48,7 @@ describe('Record Genre routes', () => {
       await request(app).post('/v1/recordGenre').send(newRecordGenre).expect(httpStatus.UNAUTHORIZED);
     });
 
-    test('should return 403 error if user creatingf record genre isnt an admin', async () => {
+    test('should return 403 error if user creating record genre isnt an admin', async () => {
       await insertUsers([userOne]);
 
       await request(app)
@@ -56,6 +56,21 @@ describe('Record Genre routes', () => {
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(newRecordGenre)
         .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 500 if record genre already exists', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertGenres([genreOne]);
+      await insertRecordGenres([recordGenreOne]);
+      newRecordGenre = recordGenreOne;
+
+      await request(app)
+        .post('/v1/recordGenre')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newRecordGenre)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 

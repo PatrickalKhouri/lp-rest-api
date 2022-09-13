@@ -92,6 +92,17 @@ describe('User Payments routes', () => {
         .send(newUserPayment)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 500 error if provider method already exists', async () => {
+      await insertUsers([userOne, admin]);
+      await insertUserPayments([userPaymentOne]);
+      newUserPayment.provider = userPaymentOne;
+      await request(app)
+        .post('/v1/userPayments')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newUserPayment)
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
+    });
   });
 
   describe('GET /v1/userPayments', () => {
