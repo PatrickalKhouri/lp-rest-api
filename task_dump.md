@@ -1,3 +1,5 @@
+ver nome repetido label
+
 incluir testes para modelos que o usuario pode get todos os seus objetos
 corrigir os comentados
 
