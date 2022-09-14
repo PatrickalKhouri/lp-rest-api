@@ -66,17 +66,17 @@ describe('Label routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 error if label is already exists', async () => {
+    test('should return 500 error if label is already exists', async () => {
       await insertUsers([admin]);
       await insertLabels([labelOne]);
 
-      newLabel.country = labelOne.country;
+      newLabel.name = labelOne.name;
 
       await request(app)
         .post('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newLabel)
-        .expect(httpStatus.BAD_REQUEST);
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 
@@ -145,9 +145,9 @@ describe('Label routes', () => {
 
     test('should correctly sort the returned array if descending sort param is specified', async () => {
       await insertUsers([admin]);
-      await insertLabels([labelOne, labelTwo]);
       labelOne.name = 'A';
       labelTwo.name = 'B';
+      await insertLabels([labelOne, labelTwo]);
 
       const res = await request(app)
         .get('/v1/labels')
@@ -170,14 +170,14 @@ describe('Label routes', () => {
 
     test('should correctly sort the returned array if ascending sort param is specified', async () => {
       await insertUsers([admin]);
-      await insertLabels([labelOne, labelTwo]);
       labelOne.name = 'A';
       labelTwo.name = 'B';
+      await insertLabels([labelOne, labelTwo]);
 
       const res = await request(app)
         .get('/v1/labels')
         .set('Authorization', `Bearer ${adminAccessToken}`)
-        .query({ sortBy: 'name:desc' })
+        .query({ sortBy: 'name:asc' })
         .send()
         .expect(httpStatus.OK);
 
@@ -208,7 +208,7 @@ describe('Label routes', () => {
         results: expect.any(Array),
         page: 1,
         limit: 1,
-        totalPages: 1,
+        totalPages: 2,
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
@@ -230,6 +230,7 @@ describe('Label routes', () => {
       expect(res.body).toEqual({
         id: labelOne._id.toHexString(),
         name: labelOne.name,
+        country: labelOne.country,
       });
     });
 
@@ -346,6 +347,7 @@ describe('Label routes', () => {
       expect(res.body).toEqual({
         id: labelOne._id.toHexString(),
         name: updateBody.name,
+        country: labelOne.country,
       });
 
       const dbLabel = await Label.findById(labelOne._id);
@@ -417,7 +419,7 @@ describe('Label routes', () => {
         .patch(`/v1/labels/${labelOne._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 });

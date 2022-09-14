@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const { labelService } = require('../services');
 
 const createLabel = catchAsync(async (req, res) => {
-  const label = await labelService.creatLabel(req.body);
+  const label = await labelService.createLabel(req.body);
   res.status(httpStatus.CREATED).send(label);
 });
 
