@@ -63,7 +63,7 @@ describe('Genre routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 error if genre is already exists', async () => {
+    test('should return 500 error if genre is already exists', async () => {
       await insertUsers([admin]);
       await insertGenres([genreOne]);
 
@@ -73,7 +73,7 @@ describe('Genre routes', () => {
         .post('/v1/genres')
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(newGenre)
-        .expect(httpStatus.BAD_REQUEST);
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 

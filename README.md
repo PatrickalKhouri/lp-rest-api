@@ -227,6 +227,13 @@ List of available routes:
 `PATCH /v1/labels/:labelId` - update label\
 `DELETE /v1/labels/:labelId` - delete label\
 
+**Genre routes**:\
+`POST /v1/labels` - create a label\
+`GET /v1/labels` - get all labels\
+`GET /v1/labels/:labelId` - get a label\
+`PATCH /v1/labels/:labelId` - update label\
+`DELETE /v1/labels/:labelId` - delete label\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.

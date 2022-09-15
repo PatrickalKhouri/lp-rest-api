@@ -25,6 +25,10 @@ const defaultRoutes = [
     path: '/labels',
     route: labelRoute,
   },
+  {
+    path: '/genres',
+    route: labelRoute,
+  },
 ];
 
 const devRoutes = [

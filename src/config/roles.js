@@ -9,6 +9,8 @@ const allRoles = {
     'manageUserAddresses',
     'createLabel',
     'manageLabel',
+    'createGenre',
+    'manageGenre',
   ],
 };
 
