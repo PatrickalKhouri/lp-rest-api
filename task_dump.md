@@ -1,4 +1,4 @@
-ver nome repetido label
+por que o enum do genre nao funciona?
 
 incluir testes para modelos que o usuario pode get todos os seus objetos
 corrigir os comentados
