@@ -5,16 +5,15 @@ const { allMusicGenres } = require('../config/musicGenres');
 
 const genreSchema = mongoose.Schema({
     name: {
-        type: String,
-        required: true,
-        enum: allMusicGenres,
-        unique: true
-	}
+      type: String,
+      required: true,
+      enum: allMusicGenres,
+      unique: true,
+    },
     },
     {
-    timestamps: true,   
-    }
-)
+    timestamps: true,
+  });
     
 genreSchema.plugin(toJSON);
 genreSchema.plugin(paginate);

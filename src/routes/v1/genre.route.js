@@ -22,8 +22,8 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: genre
- *   description: genre management and retrieval
+ *   name: Genre
+ *   description: Genre management and retrieval
  */
 
 // /**
@@ -46,11 +46,8 @@ module.exports = router;
 //  *             properties:
 //  *               name:
 //  *                 type: string,
-//  *               country:
-//  *                 type: string
 //  *             example:
-//  *               name: 'Universal'
-//  *               country: 'United States of America'
+//  *               name: 'Pop'
 //  *     responses:
 //  *       "201":
 //  *         description: Created
@@ -73,10 +70,9 @@ module.exports = router;
 //  *       - bearerAuth: []
 //  *     parameters:
 //  *       - in: query
-//  *         name: country
+//  *         name: name
 //  *         schema:
 //  *           type: string
-//  *         description: All the lablels of a country
 //  *       - in: query
 //  *         name: sortBy
 //  *         schema:
@@ -88,7 +84,7 @@ module.exports = router;
 //  *           type: integer
 //  *           minimum: 1
 //  *         default: 10
-//  *         description: Maximum number of user addreses
+//  *         description: Maximum number of genres
 //  *       - in: query
 //  *         name: page
 //  *         schema:
@@ -179,12 +175,8 @@ module.exports = router;
  *               name:
  *                 type: string
  *                 description: only admins can update name
- *               country:
- *                  type: string
- *                  description: only admins can update country
  *             example:
- *               name: 'Universal Brasil'
- *               country: 'Brazil'
+ *               name: 'Punk'
  *     responses:
  *       "200":
  *         description: OK

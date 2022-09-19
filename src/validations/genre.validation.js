@@ -35,7 +35,7 @@ const updateGenre = {
 
 const deleteGenre = {
   params: Joi.object().keys({
-    GenreId: Joi.string().custom(objectId),
+    genreId: Joi.string().custom(objectId),
   }),
 };
 
