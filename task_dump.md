@@ -1,4 +1,4 @@
-por que o enum do genre nao funciona?
+Data de nasciment nao precisa de hora nem nada, ver isso no person
 
 incluir testes para modelos que o usuario pode get todos os seus objetos
 corrigir os comentados

@@ -994,6 +994,7 @@ const allMusicGenres = [
     "mákina",
     "méringue",
     "música criolla",
+    "mpb",
     "música popular brasileira",
     "música sertaneja",
     "nagauta",
