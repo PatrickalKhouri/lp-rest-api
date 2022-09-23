@@ -18,6 +18,7 @@ const getPeople = {
     alive: Joi.boolean(),
     nationality: Joi.string(),
     gender: Joi.string(),
+    sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
