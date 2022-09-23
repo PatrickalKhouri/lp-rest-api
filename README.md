@@ -228,11 +228,18 @@ List of available routes:
 `DELETE /v1/labels/:labelId` - delete label\
 
 **Genre routes**:\
-`POST /v1/labels` - create a label\
-`GET /v1/labels` - get all labels\
-`GET /v1/labels/:labelId` - get a label\
-`PATCH /v1/labels/:labelId` - update label\
-`DELETE /v1/labels/:labelId` - delete label\
+`POST /v1/genres` - create a genre\
+`GET /v1/genres` - get all genre\
+`GET /v1/genres/:genreId` - get a genre\
+`PATCH /v1/genres/:genreId` - update genre\
+`DELETE /v1/genres/:genreId` - delete genre\
+
+**Person routes**:\
+`POST /v1/people` - create a person\
+`GET /v1/people` - get all person\
+`GET /v1/people/:personId` - get a person\
+`PATCH /v1people/:personId` - update person\
+`DELETE /v1/people/:personId` - delete person\
 
 ## Error Handling
 

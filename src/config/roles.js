@@ -11,6 +11,8 @@ const allRoles = {
     'manageLabel',
     'createGenre',
     'manageGenre',
+    'createPerson',
+    'managePeople',
   ],
 };
 

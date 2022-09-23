@@ -3,3 +3,4 @@ module.exports.userController = require('./user.controller');
 module.exports.userAddressController = require('./userAddress.controller');
 module.exports.labelController = require('./label.controller');
 module.exports.genreController = require('./genre.controller');
+module.exports.personController = require('./person.controller');
