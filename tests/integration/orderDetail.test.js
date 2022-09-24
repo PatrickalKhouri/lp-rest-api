@@ -226,6 +226,43 @@ describe('Order Details routes', () => {
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(orderDetailOne._id.toHexString());
     });
+
+    test('should return 200 if user is trying to acess all of his order details', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserPayments([userPaymentOne, userPaymentTwo]);
+      await insertOrderDetails([orderDetailOne, orderDetailTwo]);
+
+      const res = await request(app)
+        .get(`/v1/orderDetails`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(orderDetailOne._id.toHexString());
+    });
+
+    test('should return 401 if non admin user is trying to acess all of another users order details', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserPayments([userPaymentOne, userPaymentTwo]);
+      await insertOrderDetails([orderDetailOne, orderDetailTwo]);
+
+      await request(app)
+        .get(`/v1/orderItems`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.UNAUTHORIZED);
+    });
   });
 
   describe('GET /v1/orderDetails/:orderDetailId', () => {

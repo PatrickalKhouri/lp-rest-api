@@ -10,7 +10,7 @@ const { insertRecords, recordOne, recordTwo } = require('../fixtures/record.fixt
 const { artistOne, artistTwo, insertArtists } = require('../fixtures/artist.fixture');
 const { labelOne, labelTwo, insertLabels } = require('../fixtures/label.fixture');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
-const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { userOneAccessToken, adminAccessToken, userTwoAccessToken } = require('../fixtures/token.fixture');
 
 setupTestDB();
 
@@ -288,6 +288,47 @@ describe('Album routes', () => {
       });
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(albumOne._id.toHexString());
+    });
+
+    test('should return 200 if user is trying to acess all of his albums', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
+
+      const res = await request(app)
+        .get(`/v1/albums`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(albumOne._id.toHexString());
+    });
+
+    test('should return 401 if non admin user is trying to acess all of another users albums', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertLabels([labelOne, labelTwo]);
+      await insertArtists([artistOne, artistTwo]);
+      await insertRecords([recordOne, recordTwo]);
+      await insertAlbums([albumOne, albumTwo]);
+
+      await request(app)
+        .get(`/v1/albums`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.UNAUTHORIZED);
     });
   });
 
