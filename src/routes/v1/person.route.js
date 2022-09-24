@@ -43,23 +43,35 @@ module.exports = router;
  *             type: object
  *             required:
  *               - name
+ *               - alive
+ *               - gender
+ *               - nationality
  *             properties:
  *               name:
  *                 type: string
- *               country:
+ *               nationality:
+ *                 type: string
+ *               dateOfBirth:
+ *                 type: date
+ *               alive:
+ *                 type: boolean
+ *               gender:
  *                 type: string
  *             example:
- *               name: fake label
- *               country: United States
+ *               name: person name
+ *               nationality: Japan
+ *               dateOfBirth: 1977-06-8T00:00:00.002Z
+ *               alive: false
+ *               gender: Female
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/label'
+ *                $ref: '#/components/schemas/person'
  *       "400":
- *         $ref: '#/components/responses/DuplicateLabel'
+ *         $ref: '#/components/responses/DuplicatePerson'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -76,12 +88,27 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: label name
+ *         description: person name
  *       - in: query
- *         name: country
+ *         name: nationality
  *         schema:
  *           type: string
- *         description: label country
+ *         description: person nationality
+ *       - in: query
+ *         name: gender
+ *         schema:
+ *           type: string
+ *         description: person gender
+ *       - in: query
+ *         name: dateOfBirth
+ *         schema:
+ *           type: string
+ *         description: person date of birth
+ *       - in: query
+ *         name: alive
+ *         schema:
+ *           type: string
+ *         description: person is alive or dead
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -112,7 +139,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/label'
+ *                     $ref: '#/components/schemas/person'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -135,7 +162,7 @@ module.exports = router;
  * @swagger
  * /people/{id}:
  *   get:
- *     summary: Get a label
+ *     summary: Get a person
  *     description: Only admins can get people.
  *     tags: [People]
  *     security:
@@ -146,14 +173,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: label id
+ *         description: person id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/label'
+ *                $ref: '#/components/schemas/person'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -162,7 +189,7 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a label
+ *     summary: Update a person
  *     description: Only admins can update people.
  *     tags: [People]
  *     security:
@@ -173,7 +200,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: label id
+ *         description: person id
  *     requestBody:
  *       required: true
  *       content:
@@ -183,22 +210,29 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *             type: object
- *             properties:
- *               country:
+ *               nationality:
+ *                 type: string
+ *               dateOfBirth:
+ *                 type: date
+ *               alive:
+ *                 type: boolean
+ *               gender:
  *                 type: string
  *             example:
- *               name: fake label name
- *               country: Brazil
+ *               name: person name
+ *               nationality: France
+ *               dateOfBirth: 1945-09-30T00:00:00.002Z
+ *               alive: true
+ *               gender: Other
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/label'
+ *                $ref: '#/components/schemas/person'
  *       "400":
- *         $ref: '#/components/responses/DuplicateLabel'
+ *         $ref: '#/components/responses/DuplicatePerson'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -207,7 +241,7 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a label
+ *     summary: Delete a person
  *     description: Only admins can delete people.
  *     tags: [People]
  *     security:
@@ -218,7 +252,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: label id
+ *         description: person id
  *     responses:
  *       "200":
  *         description: No content

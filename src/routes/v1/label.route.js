@@ -184,8 +184,6 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *             type: object
- *             properties:
  *               country:
  *                 type: string
  *             example:
