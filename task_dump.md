@@ -1,5 +1,4 @@
-incluir testes para modelos que o usuario pode get todos os seus objetos
-corrigir os comentados
+corrigir os testes comentados
 
  Compared values serialize to the same structure.
     Printing internal object structure without calling `toJSON` instead
