@@ -218,6 +218,41 @@ describe('User Payments routes', () => {
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].id).toBe(userPaymentOne._id.toHexString());
     });
+
+    test('should return 200 if user is trying to acess all of his payments', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserPayments([userPaymentOne, userPaymentTwo]);
+
+      const res = await request(app)
+        .get(`/v1/userPayments`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].id).toBe(userPaymentOne._id.toHexString());
+    });
+
+    test('should return 401 if non admin user is trying to acess all of another users payments', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserPayments([userPaymentOne, userPaymentTwo]);
+
+      await request(app)
+        .get(`/v1/userPayments`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.UNAUTHORIZED);
+    });
   });
 
   describe('GET /v1/userPayments/:userPaymentId', () => {

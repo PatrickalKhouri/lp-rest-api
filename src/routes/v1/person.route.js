@@ -22,113 +22,149 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Person
+ *   name: People
  *   description: Person management and retrieval
  */
 
-// /**
-//  * @swagger
-//  * /Persons:
-//  *   post:
-//  *     summary: Create a Person
-//  *     description: Only admins can create Person.
-//  *     tags: [Persons]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             required:
-//  *               - name
-//  *             properties:
-//  *               name:
-//  *                 type: string,
-//  *             example:
-//  *               name: 'Pop'
-//  *     responses:
-//  *       "201":
-//  *         description: Created
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *                $ref: '#/components/schemas/Person'
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  *       "500":
-//  *         $ref: '#/components/responses/InternalServerError'
-//  *
-//  *   get:
-//  *     summary: Get all Persons
-//  *     description: Only admins can retrieve all Persons.
-//  *     tags: [Persons]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     parameters:
-//  *       - in: query
-//  *         name: name
-//  *         schema:
-//  *           type: string
-//  *       - in: query
-//  *         name: sortBy
-//  *         schema:
-//  *           type: string
-//  *         description: sort by query in the form of field:desc/asc (ex. name:asc)
-//  *       - in: query
-//  *         name: limit
-//  *         schema:
-//  *           type: integer
-//  *           minimum: 1
-//  *         default: 10
-//  *         description: Maximum number of Persons
-//  *       - in: query
-//  *         name: page
-//  *         schema:
-//  *           type: integer
-//  *           minimum: 1
-//  *           default: 1
-//  *         description: Page number
-//  *     responses:
-//  *       "200":
-//  *         description: OK
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *               type: object
-//  *               properties:
-//  *                 results:
-//  *                   type: array
-//  *                   items:
-//  *                     $ref: '#/components/schemas/Person'
-//  *                 page:
-//  *                   type: integer
-//  *                   example: 1
-//  *                 limit:
-//  *                   type: integer
-//  *                   example: 10
-//  *                 totalPages:
-//  *                   type: integer
-//  *                   example: 1
-//  *                 totalResults:
-//  *                   type: integer
-//  *                   example: 1
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  */
+/**
+ * @swagger
+ * /people:
+ *   post:
+ *     summary: Create a person
+ *     description: Only admins can create people.
+ *     tags: [People]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - alive
+ *               - gender
+ *               - nationality
+ *             properties:
+ *               name:
+ *                 type: string
+ *               nationality:
+ *                 type: string
+ *               dateOfBirth:
+ *                 type: date
+ *               alive:
+ *                 type: boolean
+ *               gender:
+ *                 type: string
+ *             example:
+ *               name: person name
+ *               nationality: Japan
+ *               dateOfBirth: 1977-06-8T00:00:00.002Z
+ *               alive: false
+ *               gender: Female
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/person'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicatePerson'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *
+ *   get:
+ *     summary: Get all people
+ *     description: Only admins can retrieve all people.
+ *     tags: [People]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: person name
+ *       - in: query
+ *         name: nationality
+ *         schema:
+ *           type: string
+ *         description: person nationality
+ *       - in: query
+ *         name: gender
+ *         schema:
+ *           type: string
+ *         description: person gender
+ *       - in: query
+ *         name: dateOfBirth
+ *         schema:
+ *           type: string
+ *         description: person date of birth
+ *       - in: query
+ *         name: alive
+ *         schema:
+ *           type: string
+ *         description: person is alive or dead
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         default: 10
+ *         description: Maximum number of people
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/person'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ */
 
 /**
  * @swagger
- * /users/{id}:
+ * /people/{id}:
  *   get:
- *     summary: Get a Person
- *     description: Only admins can fetch a Person.
- *     tags: [Users]
+ *     summary: Get a person
+ *     description: Only admins can get people.
+ *     tags: [People]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -137,14 +173,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Person id
+ *         description: person id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Person'
+ *                $ref: '#/components/schemas/person'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -153,9 +189,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a Person
- *     description: Only admins can update Persons.
- *     tags: [Users]
+ *     summary: Update a person
+ *     description: Only admins can update people.
+ *     tags: [People]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -164,7 +200,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Person id
+ *         description: person id
  *     requestBody:
  *       required: true
  *       content:
@@ -174,29 +210,40 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *                 description: only admins can update name
+ *               nationality:
+ *                 type: string
+ *               dateOfBirth:
+ *                 type: date
+ *               alive:
+ *                 type: boolean
+ *               gender:
+ *                 type: string
  *             example:
- *               name: 'Punk'
+ *               name: person name
+ *               nationality: France
+ *               dateOfBirth: 1945-09-30T00:00:00.002Z
+ *               alive: true
+ *               gender: Other
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Person'
+ *                $ref: '#/components/schemas/person'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicatePerson'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       "500":
- *         $ref: '#/components/responses/InternalServerError'
  *
  *   delete:
- *     summary: Delete a Person
- *     description: Only admins can delete other Persons.
- *     tags: [Persons]
+ *     summary: Delete a person
+ *     description: Only admins can delete people.
+ *     tags: [People]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -205,7 +252,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Person id
+ *         description: person id
  *     responses:
  *       "200":
  *         description: No content

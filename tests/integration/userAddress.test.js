@@ -235,6 +235,18 @@ describe('User Address Routes routes', () => {
       expect(res.body.results[0].id).toBe(userAddressOne._id.toHexString());
     });
 
+    test('should return 401 if non admin user is trying to acess all of another users addresses', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertUserAddresses([userAddressOne, userAddressTwo]);
+
+      await request(app)
+        .get(`/v1/userAddresses`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .query({ userId: userOne._id })
+        .send()
+        .expect(httpStatus.UNAUTHORIZED);
+    });
+
     test('should return 403 if user is trying to acess all of another users addresses', async () => {
       await insertUsers([userOne, userTwo]);
       await insertUserAddresses([userAddressOne, userAddressTwo]);
