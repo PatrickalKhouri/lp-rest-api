@@ -18,7 +18,90 @@ components:
         email: fake@example.com
         name: fake name
         role: user
-
+    Genre:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      example:
+          id: 632f42f228914eff60e84388
+          name: rock
+    Labels:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+          enum: [Too long, ask for the enum to an Admin]
+      example:
+          id: 632f42f74cca87148e193abb
+          name: Sony
+          country: Japan
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        dateOfBirth:
+          type: date
+        gender:
+          type: stringer
+          enum: ['Female, Male, Other']
+        alive:
+          type: boolean
+        nationality:
+          type: string
+          enum: [Too long, ask for the enum to an Admin]
+      example:
+          id: 632f4301b7018f1243894fed
+          name: Kanye Omari West
+          country: United States
+          alive: true
+          dateOfBirth: '1977-06-8T00:00:00.002Z'
+    UserAddress:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        streetName:
+          type: string
+        buildingNumber:
+          type: string
+        apartmentNumber:
+          type: string
+        complement:
+          type: string
+        postalCode:
+          type: string
+          format: Brazilian postal code
+        city:
+          type: string
+        state:
+          type: string
+          enum: [AC,AL,AP,AM,BA,CE,DF,ES,GO,MA,MT,MS,MG,PA,PB,PR,PE,PI,RJ,RN,RS,RO,RR,SC,SP,SE,TO]
+        country:
+          type: string
+          enum: [Too long, ask for the enum to an Admin]
+      example:
+          id: 632f452ccd92aa388041e11f
+          userId: 5ebac534954b54139806c112
+          streetName: 'fake street'
+          buildingNumber: '10'
+          apartmentNumber: '201'
+          complement: '2nd block'
+          postalCode: '22222-222'
+          city: 'Rio de Janeiro'
+          state: 'RJ'
+          country: Brazil
     Token:
       type: object
       properties:

@@ -22,113 +22,122 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Person
+ *   name: People
  *   description: Person management and retrieval
  */
 
-// /**
-//  * @swagger
-//  * /Persons:
-//  *   post:
-//  *     summary: Create a Person
-//  *     description: Only admins can create Person.
-//  *     tags: [Persons]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             required:
-//  *               - name
-//  *             properties:
-//  *               name:
-//  *                 type: string,
-//  *             example:
-//  *               name: 'Pop'
-//  *     responses:
-//  *       "201":
-//  *         description: Created
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *                $ref: '#/components/schemas/Person'
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  *       "500":
-//  *         $ref: '#/components/responses/InternalServerError'
-//  *
-//  *   get:
-//  *     summary: Get all Persons
-//  *     description: Only admins can retrieve all Persons.
-//  *     tags: [Persons]
-//  *     security:
-//  *       - bearerAuth: []
-//  *     parameters:
-//  *       - in: query
-//  *         name: name
-//  *         schema:
-//  *           type: string
-//  *       - in: query
-//  *         name: sortBy
-//  *         schema:
-//  *           type: string
-//  *         description: sort by query in the form of field:desc/asc (ex. name:asc)
-//  *       - in: query
-//  *         name: limit
-//  *         schema:
-//  *           type: integer
-//  *           minimum: 1
-//  *         default: 10
-//  *         description: Maximum number of Persons
-//  *       - in: query
-//  *         name: page
-//  *         schema:
-//  *           type: integer
-//  *           minimum: 1
-//  *           default: 1
-//  *         description: Page number
-//  *     responses:
-//  *       "200":
-//  *         description: OK
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *               type: object
-//  *               properties:
-//  *                 results:
-//  *                   type: array
-//  *                   items:
-//  *                     $ref: '#/components/schemas/Person'
-//  *                 page:
-//  *                   type: integer
-//  *                   example: 1
-//  *                 limit:
-//  *                   type: integer
-//  *                   example: 10
-//  *                 totalPages:
-//  *                   type: integer
-//  *                   example: 1
-//  *                 totalResults:
-//  *                   type: integer
-//  *                   example: 1
-//  *       "401":
-//  *         $ref: '#/components/responses/Unauthorized'
-//  *       "403":
-//  *         $ref: '#/components/responses/Forbidden'
-//  */
+/**
+ * @swagger
+ * /people:
+ *   post:
+ *     summary: Create a person
+ *     description: Only admins can create people.
+ *     tags: [People]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *             example:
+ *               name: fake label
+ *               country: United States
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/label'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateLabel'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *
+ *   get:
+ *     summary: Get all people
+ *     description: Only admins can retrieve all people.
+ *     tags: [People]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: label name
+ *       - in: query
+ *         name: country
+ *         schema:
+ *           type: string
+ *         description: label country
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         default: 10
+ *         description: Maximum number of people
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/label'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ */
 
 /**
  * @swagger
- * /users/{id}:
+ * /people/{id}:
  *   get:
- *     summary: Get a Person
- *     description: Only admins can fetch a Person.
- *     tags: [Users]
+ *     summary: Get a label
+ *     description: Only admins can get people.
+ *     tags: [People]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -137,14 +146,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Person id
+ *         description: label id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Person'
+ *                $ref: '#/components/schemas/label'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -153,9 +162,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a Person
- *     description: Only admins can update Persons.
- *     tags: [Users]
+ *     summary: Update a label
+ *     description: Only admins can update people.
+ *     tags: [People]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -164,7 +173,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Person id
+ *         description: label id
  *     requestBody:
  *       required: true
  *       content:
@@ -174,29 +183,33 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *                 description: only admins can update name
+ *             type: object
+ *             properties:
+ *               country:
+ *                 type: string
  *             example:
- *               name: 'Punk'
+ *               name: fake label name
+ *               country: Brazil
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Person'
+ *                $ref: '#/components/schemas/label'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateLabel'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *       "500":
- *         $ref: '#/components/responses/InternalServerError'
  *
  *   delete:
- *     summary: Delete a Person
- *     description: Only admins can delete other Persons.
- *     tags: [Persons]
+ *     summary: Delete a label
+ *     description: Only admins can delete people.
+ *     tags: [People]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -205,7 +218,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Person id
+ *         description: label id
  *     responses:
  *       "200":
  *         description: No content
