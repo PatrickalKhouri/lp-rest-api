@@ -13,6 +13,8 @@ const allRoles = {
     'manageGenre',
     'createPerson',
     'managePeople',
+    'createArtist',
+    'manageArtists',
   ],
 };
 

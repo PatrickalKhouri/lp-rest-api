@@ -1,5 +1,22 @@
 components:
   schemas:
+    Artist:
+      type: object
+      properties:
+        id:
+          type: string
+        labelId:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+          enum: [Too long, ask for the enum to an Admin]
+      example:
+        id: 63322dda8f9d0fe821b20b21
+        labelId: 632f42f74cca87148e193abb
+        name: fake artist
+        country: Germany
     User:
       type: object
       properties:
