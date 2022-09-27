@@ -9,13 +9,13 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('createArtist'), validate(artistValidation.createArtist), artistController.createArtist)
-  .get(auth('manageArtists'), validate(artistValidation.getArtist), artistController.getArtist);
+  .get(auth('manageArtists'), validate(artistValidation.getArtist), artistController.getArtists);
 
 router
   .route('/:artistId')
   .get(auth('manageArtists'), validate(artistValidation.getArtist), artistController.getArtist)
-//   .patch(auth('manageArtists'), validate(artistValidation.updateArtist), artistController.updateArtist)
-//   .delete(auth('manageArtists'), validate(artistValidation.deleteArtist), artistController.deleteArtist);
+  .patch(auth('manageArtists'), validate(artistValidation.updateArtist), artistController.updateArtist)
+  .delete(auth('manageArtists'), validate(artistValidation.deleteArtist), artistController.deleteArtist);
 
 module.exports = router;
 

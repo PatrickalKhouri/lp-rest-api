@@ -10,7 +10,7 @@ const createArtist = catchAsync(async (req, res) => {
   if (!label) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
   } else {
-    const artist = await artistService.createLabel(req.body);
+    const artist = await artistService.createArtist(req.body);
     res.status(httpStatus.CREATED).send(artist);
   }
 });
@@ -23,7 +23,7 @@ const getArtists = catchAsync(async (req, res) => {
 });
 
 const getArtist = catchAsync(async (req, res) => {
-  const artist = await artistService.getLabelById(req.params.labelId);
+  const artist = await artistService.getArtistById(req.params.artistId);
   if (!artist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Artist not found');
   }
@@ -31,10 +31,12 @@ const getArtist = catchAsync(async (req, res) => {
 });
 
 const updateArtist = catchAsync(async (req, res) => {
-  const bodyLabelId = req.body.labelId;
-  const label = await labelService.getLabelById(bodyLabelId);
-  if (!label) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
+  if (req.body.labelId) {
+    const bodyLabelId = req.body.labelId;
+    const label = await labelService.getLabelById(bodyLabelId);
+    if (!label) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
+    }
   }
   const artist = await artistService.updateArtistById(req.params.artistId, req.body);
   res.send(artist);

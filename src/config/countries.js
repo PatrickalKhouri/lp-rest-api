@@ -193,6 +193,7 @@ const allCountries = {
   SM : 'San Marino',
   ST : 'Sao Tome and Principe',
   SA : 'Saudi Arabia',
+  MF : 'Saint Martin',
   SN : 'Senegal',
   RS : 'Serbia',
   SC : 'Seychelles',
@@ -254,3 +255,6 @@ module.exports = {
   countries,
   countriesLong,
 };
+
+
+//iso.org

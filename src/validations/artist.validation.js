@@ -5,7 +5,7 @@ const createArtist = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     country: Joi.string(),
-    labelId: Joi.string().required.custom(objectId),
+    labelId: Joi.string().custom(objectId).required(),
   }),
 };
 
