@@ -238,8 +238,16 @@ List of available routes:
 `POST /v1/people` - create a person\
 `GET /v1/people` - get all person\
 `GET /v1/people/:personId` - get a person\
-`PATCH /v1people/:personId` - update person\
+`PATCH /v1/people/:personId` - update person\
 `DELETE /v1/people/:personId` - delete person\
+
+**Artist routes**:\
+`POST /v1/artists` - create an artists\
+`GET /v1/artists` - get all artists\
+`GET /v1/artists/:artistsId` - get an artist\
+`PATCH /v1/artists/:artistsId` - update artist\
+`DELETE /v1/artists/:artistsId` - delete artist\
+
 
 ## Error Handling
 

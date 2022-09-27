@@ -71,6 +71,12 @@ const getUserAddress = catchAsync(async (req, res) => {
 
 const updateUserAddress = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
+  if (req.body.userId) {
+    const user = await userService.getUserById(req.body.userId);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User to update not found');
+    }
+  }
   const userAddressToUpdate = await userAddressService.getUserAddressById(req.params.userAddressId);
   if (!userAddressToUpdate) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User Address not found');

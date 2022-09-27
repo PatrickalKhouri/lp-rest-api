@@ -119,7 +119,7 @@ const allCountries = {
   KR : "Korea', Republic of",
   XK : 'Kosovo',
   KW : 'Kuwait',
-  KG : 'Kyrgyzstan',
+  KG : 'Kyrgyz Republic',
   LA : "Lao People's Democratic Republic",
   LV : 'Latvia',
   LB : 'Lebanon',
@@ -130,7 +130,7 @@ const allCountries = {
   LT : 'Lithuania',
   LU : 'Luxembourg',
   MO : 'Macao',
-  MK : "Macedonia', The Former Yugoslav Republic of",
+  MK : "Macedonia",
   MG : 'Madagascar',
   MW : 'Malawi',
   MY : 'Malaysia',
@@ -193,6 +193,7 @@ const allCountries = {
   SM : 'San Marino',
   ST : 'Sao Tome and Principe',
   SA : 'Saudi Arabia',
+  MF : 'Saint Martin',
   SN : 'Senegal',
   RS : 'Serbia',
   SC : 'Seychelles',
@@ -238,7 +239,7 @@ const allCountries = {
   VU : 'Vanuatu',
   VE : 'Venezuela',
   VN : 'Viet Nam',
-  VG : 'British Virgin Islands',
+  VG : 'Virgin Islands, British',
   VI : 'U.S. Virgin Islands',
   WF : 'Wallis and Futuna',
   EH : 'Western Sahara',
@@ -254,3 +255,6 @@ module.exports = {
   countries,
   countriesLong,
 };
+
+
+//iso.org
