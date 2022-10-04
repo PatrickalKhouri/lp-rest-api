@@ -248,6 +248,13 @@ List of available routes:
 `PATCH /v1/artists/:artistsId` - update artist\
 `DELETE /v1/artists/:artistsId` - delete artist\
 
+**Band Member routes**:\
+`POST /v1/bandMembers` - create a band member\
+`GET /v1/bandMembers` - get all band members\
+`GET /v1/bandMembers/:bandMember` - get a band member\
+`PATCH /v1/bandMembers/:bandMember` - update a band member\
+`DELETE /v1/bandMembers/:bandMember` - delete a band member\
+
 
 ## Error Handling
 
