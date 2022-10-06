@@ -6,8 +6,8 @@ const { bandMemberService, artistService, personService } = require('../services
 
 const createBandMember = catchAsync(async (req, res) => {
   const { artistId, personId } = req.body;
-  const artist = await artistService.getLabelById(artistId);
-  const person = await personService.getLabelById(personId);
+  const artist = await artistService.getArtistById(artistId);
+  const person = await personService.getPersonById(personId);
   if (!artist || !person) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Artist or Person not found');
   } else {
@@ -19,7 +19,7 @@ const createBandMember = catchAsync(async (req, res) => {
 const getBandMembers = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['artistId', 'personId']);
   const options = pick(req.query, ['limit', 'page']);
-  const result = await bandMemberService.queryBandMember(filter, options);
+  const result = await bandMemberService.queryBandMembers(filter, options);
   res.send(result);
 });
 

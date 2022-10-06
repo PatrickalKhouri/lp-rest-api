@@ -209,7 +209,7 @@ const allCountries = {
   LK : 'Sri Lanka',
   SD : 'Sudan',
   SR : 'Suriname',
-  SJ : 'Svalbard and Jan Mayen',
+  SJ : 'Svalbard & Jan Mayen Islands',
   SZ : 'Swaziland',
   SE : 'Sweden',
   CH : 'Switzerland',
