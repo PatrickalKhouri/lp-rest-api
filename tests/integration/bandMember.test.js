@@ -74,6 +74,28 @@ describe('Band Member routes', () => {
         .send(newBandMember)
         .expect(httpStatus.BAD_REQUEST);
     });
+
+    test('should return 404 error artist doesnt exits', async () => {
+      await insertUsers([admin]);
+      await insertPeople([personOne]);
+
+      await request(app)
+        .post('/v1/bandMembers')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newBandMember)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 404 error person doesnt exits', async () => {
+      await insertUsers([admin]);
+      await insertArtists([artistOne]);
+
+      await request(app)
+        .post('/v1/bandMembers')
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(newBandMember)
+        .expect(httpStatus.NOT_FOUND);
+    });
   });
 
   describe('GET /v1/bandMembers', () => {

@@ -17,6 +17,19 @@ components:
         labelId: 632f42f74cca87148e193abb
         name: fake artist
         country: Germany
+    Band Member:
+      type: object
+      properties:
+        id:
+          type: string
+        artistId:
+          type: string
+        personId:
+          type: string
+      example:
+        id: 634094a0ff28121b15f08b98
+        artistId: 63322dda8f9d0fe821b20b21
+        personId: 632f4301b7018f1243894fed
     User:
       type: object
       properties:

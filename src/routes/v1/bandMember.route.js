@@ -22,17 +22,17 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Artists
- *   description: Artist management and retrieval
+ *   name: BandMembers
+ *   description: band member management and retrieval
  */
 
 /**
  * @swagger
- * /artists:
+ * /bandMembers:
  *   post:
- *     summary: Creates an artists
- *     description: Only admins can create artists.
- *     tags: [Artists]
+ *     summary: Creates a Band Member
+ *     description: Only admins can create Band Members.
+ *     tags: [BandMembers]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,67 +42,56 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - labelId
+ *               - artistId
+ *               - personId
  *             properties:
- *               name:
+ *               artistid:
  *                 type: string
- *               country:
- *                 type: string
- *               labelId:
+ *               personId:
  *                 type: string
  *             example:
- *               labelId: 63322babc8c8998afbdc9bf0
- *               name: Fake Band
- *               country: Germany
+ *               artistid: 63322dda8f9d0fe821b20b21
+ *               personId: 632f4301b7018f1243894fed
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/artist'
+ *                $ref: '#/components/schemas/BandMember'
  *       "400":
- *         $ref: '#/components/responses/DuplicateArtist'
+ *         $ref: '#/components/responses/DuplicatebandMember'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
  *
  *   get:
- *     summary: Get all artists
- *     description: Only admins can retrieve all artists.
- *     tags: [Artists]
+ *     summary: Get all Band Members
+ *     description: Only admins can retrieve all Band Members.
+ *     tags: [BandMembers]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: name
+ *         name: artistId
  *         schema:
  *           type: string
- *         description: artist name
+ *         description: bandMember artist
  *       - in: query
- *         name: country
+ *         name: personId
  *         schema:
  *           type: string
- *         description: artist country
- *       - in: query
- *         name: labelId
- *         schema:
- *           type: string
- *         description: artist label id
- *       - in: query
- *         name: sortBy
- *         schema:
- *           type: string
- *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *         description: bandMember person
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of artists
+ *         description: Maximum number of band members
  *       - in: query
  *         name: page
  *         schema:
@@ -121,7 +110,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/artist'
+ *                     $ref: '#/components/schemas/BandMember'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -142,11 +131,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /artists/{id}:
+ * /bandMembers/{id}:
  *   get:
- *     summary: Get an artist
- *     description: Only admins can get artists.
- *     tags: [Artists]
+ *     summary: Get an Band Member
+ *     description: Only admins can get Band Members.
+ *     tags: [BandMembers]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -155,14 +144,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: artist id
+ *         description: Band Member id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/artist'
+ *                $ref: '#/components/schemas/BandMember'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -171,9 +160,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a artist
- *     description: Only admins can update artists.
- *     tags: [Artists]
+ *     summary: Update a Band Member
+ *     description: Only admins can update Band Members.
+ *     tags: [BandMembers]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -182,7 +171,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: artist id
+ *         description: bandMember id
  *     requestBody:
  *       required: true
  *       content:
@@ -190,25 +179,22 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               artistId:
  *                 type: string
- *               country:
- *                 type: string
- *               labelId:
+ *               personId:
  *                 type: string
  *             example:
- *               name: fake artist name
- *               country: Brazil
- *               labelId: 63322c325148bff009fc0971
+ *               artistId: 6340962762b0158e1b0473a6
+ *               personId: 6340962b530b24897ba0f06d
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/artist'
+ *                $ref: '#/components/schemas/BandMember'
  *       "400":
- *         $ref: '#/components/responses/DuplicateArtist'
+ *         $ref: '#/components/responses/DuplicateBandMember'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -217,9 +203,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a artist
- *     description: Only admins can delete artists.
- *     tags: [Artists]
+ *     summary: Delete a Band Member
+ *     description: Only admins can delete Band Members.
+ *     tags: [BandMembers]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -228,7 +214,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: artist id
+ *         description: bandMember id
  *     responses:
  *       "200":
  *         description: No content
