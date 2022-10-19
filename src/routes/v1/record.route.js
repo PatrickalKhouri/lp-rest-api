@@ -9,13 +9,13 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('createRecord'), validate(recordValidation.createRecord), recordController.createRecord)
-//   .get(auth('manageRecords'), validate(recordValidation.getRecords), recordController.getRecords);
+  .get(auth('manageRecords'), validate(recordValidation.getRecords), recordController.getRecords);
 
-// router
-//   .route('/:labelId')
-//   .get(auth('manageRecords'), validate(recordValidation.getRecord), recordController.getRecord)
-//   .patch(auth('manageRecords'), validate(recordValidation.updateRecord), recordController.updateRecord)
-//   .delete(auth('manageRecords'), validate(recordValidation.deleteRecord), recordController.deleteRecord);
+router
+  .route('/:labelId')
+  .get(auth('manageRecords'), validate(recordValidation.getRecord), recordController.getRecord)
+  .patch(auth('manageRecords'), validate(recordValidation.updateRecord), recordController.updateRecord)
+  .delete(auth('manageRecords'), validate(recordValidation.deleteRecord), recordController.deleteRecord);
 
 module.exports = router;
 

@@ -7,7 +7,6 @@ const createRecord = {
     labelId: Joi.string().custom(objectId),
     name: Joi.string().required(),
     releaseYear: Joi.number().required(),
-    apartmentNumber: Joi.string(),
     country: Joi.string(),
     duration: Joi.string().required().custom(recordDuration),
     language: Joi.string().required(),
@@ -15,6 +14,56 @@ const createRecord = {
   }),
 };
 
+const getUserRecord = {
+  query: Joi.object().keys({
+    artistId: Joi.string().custom(objectId),
+    labelId: Joi.string().custom(objectId),
+    name: Joi.string(),
+    releaseYear: Joi.number(),
+    country: Joi.string(),
+    duration: Joi.string().custom(recordDuration),
+    language: Joi.string(),
+    numberOfTracks: Joi.number(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
+const getRecord = {
+  params: Joi.object().keys({
+    recordId: Joi.string().custom(objectId),
+  }),
+};
+
+const updateRecord = {
+  params: Joi.object().keys({
+    recordId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      artistId: Joi.string().custom(objectId),
+      labelId: Joi.string().custom(objectId),
+      name: Joi.string(),
+      releaseYear: Joi.number(),
+      country: Joi.string(),
+      duration: Joi.string().custom(recordDuration),
+      language: Joi.string(),
+      numberOfTracks: Joi.number(),
+    })
+    .min(1),
+};
+
+const deleteRecord = {
+  params: Joi.object().keys({
+    recordId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createRecord,
+  getUserRecord,
+  getRecord,
+  updateRecord,
+  deleteRecord,
 };
