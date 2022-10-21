@@ -82,7 +82,7 @@ components:
         dateOfBirth:
           type: date
         gender:
-          type: stringer
+          type: string
           enum: ['Female, Male, Other']
         alive:
           type: boolean
@@ -95,6 +95,41 @@ components:
           country: United States
           alive: true
           dateOfBirth: '1977-06-8T00:00:00.002Z'
+    Record:
+      type: object
+      properties:
+        id:
+          type: string
+        artistId:
+          type: string
+        labelId:
+          type: date
+        name:
+          type: string
+        releaseYear:
+          type: number
+        country:
+          type: string
+          enum: [Too long, ask for the enum to an Admin]
+        duration:
+          type: string
+        language:
+          type: string
+        numberOfTracks:
+          type: number 
+        type:
+          type: string
+          enum: ['LP', 'EP', 'Single']   
+      example:
+          id: 632f4301b7018f1243894fed
+          artistId: Kanye Omari West
+          labelId: United States
+          name: true
+          releaseYear: '1977-06-8T00:00:00.002Z'
+          country:
+          duration:
+          language:
+          numberOfTracks: 
     UserAddress:
       type: object
       properties:

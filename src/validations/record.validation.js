@@ -10,14 +10,16 @@ const createRecord = {
     country: Joi.string(),
     duration: Joi.string().required().custom(recordDuration),
     language: Joi.string().required(),
+    recordType: Joi.string().required(),
     numberOfTracks: Joi.number().required(),
   }),
 };
 
-const getUserRecord = {
+const getRecords = {
   query: Joi.object().keys({
     artistId: Joi.string().custom(objectId),
     labelId: Joi.string().custom(objectId),
+    recordType: Joi.string().required(),
     name: Joi.string(),
     releaseYear: Joi.number(),
     country: Joi.string(),
@@ -45,6 +47,7 @@ const updateRecord = {
       artistId: Joi.string().custom(objectId),
       labelId: Joi.string().custom(objectId),
       name: Joi.string(),
+      recordType: Joi.string().required(),
       releaseYear: Joi.number(),
       country: Joi.string(),
       duration: Joi.string().custom(recordDuration),
@@ -62,7 +65,7 @@ const deleteRecord = {
 
 module.exports = {
   createRecord,
-  getUserRecord,
+  getRecords,
   getRecord,
   updateRecord,
   deleteRecord,

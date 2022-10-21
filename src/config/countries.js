@@ -199,7 +199,7 @@ const allCountries = {
   SC : 'Seychelles',
   SL : 'Sierra Leone',
   SG : 'Singapore',
-  SK : 'Slovakia',
+  SK : 'Slovakia (Slovak Republic)',
   SI : 'Slovenia',
   SB : 'Solomon Islands',
   SO : 'Somalia',

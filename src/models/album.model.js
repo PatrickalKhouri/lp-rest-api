@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { albumTypes } = require('../config/albumTypes');
+const { albumFormatsString } = require('../config/albumFormat');
 
 const albumSchema = mongoose.Schema({
 	userId: {
@@ -39,10 +39,10 @@ const albumSchema = mongoose.Schema({
 		min: 0,
 		required: true
 	},
-	type: {
+	format: {
 		type: String,
 		required: true,
-		enum: albumTypes
+		enum: albumFormatsString
 	}
 	},
 	{

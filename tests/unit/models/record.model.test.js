@@ -14,6 +14,7 @@ describe('Record model', () => {
         country: faker.address.country(),
         duration: '20:10',
         language: 'English',
+        recordType: 'EP',
         numberOfTracks: faker.finance.amount(1, 30, 0),
       };
 
@@ -28,6 +29,11 @@ describe('Record model', () => {
 
       test('should throw a validation error if the duration is in the wrong format', async () => {
         newRecord.duration = 'not a valid duratiob';
+        await expect(new Record(newRecord).validate()).rejects.toThrow();
+      });
+
+      test('should throw a validation error if the type is in the wrong format', async () => {
+        newRecord.recordType = 'not a valid type';
         await expect(new Record(newRecord).validate()).rejects.toThrow();
       });
 

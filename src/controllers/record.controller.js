@@ -8,9 +8,12 @@ const createRecord = catchAsync(async (req, res) => {
   const { artistId, labelId } = req.body;
   const artist = await artistService.getArtistById(artistId);
   const label = await labelService.getLabelById(labelId);
-  if (!artist || !label) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Artist or Label not found');
+  if (!artist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Artist not found');
+  } else if (!label) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
   } else {
+    console.log('entrou no else');
     const record = await recordService.createRecord(req.body);
     res.status(httpStatus.CREATED).send(record);
   }
@@ -25,6 +28,7 @@ const getRecords = catchAsync(async (req, res) => {
     'duration',
     'language',
     'numberOfTracks',
+    'recordType',
   ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await recordService.queryRecords(filter, options);

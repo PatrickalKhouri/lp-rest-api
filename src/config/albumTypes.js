@@ -1,9 +1,7 @@
 const allAlbumTypes = {
-  lp: 'lp',
-  ep: 'ep',
-  cd: 'cd',
-  tape: 'tape',
-  single: 'single',
+  lp: 'LP',
+  ep: 'EP',
+  cd: 'CD',
 };
 
 const albumTypes = Object.keys(allAlbumTypes);
