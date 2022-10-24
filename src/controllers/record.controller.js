@@ -13,7 +13,6 @@ const createRecord = catchAsync(async (req, res) => {
   } else if (!label) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
   } else {
-    console.log('entrou no else');
     const record = await recordService.createRecord(req.body);
     res.status(httpStatus.CREATED).send(record);
   }
@@ -23,6 +22,7 @@ const getRecords = catchAsync(async (req, res) => {
   const filter = pick(req.query, [
     'artistId',
     'labelId',
+    'name',
     'releaseYear',
     'country',
     'duration',

@@ -19,7 +19,7 @@ const getRecords = {
   query: Joi.object().keys({
     artistId: Joi.string().custom(objectId),
     labelId: Joi.string().custom(objectId),
-    recordType: Joi.string().required(),
+    recordType: Joi.string(),
     name: Joi.string(),
     releaseYear: Joi.number(),
     country: Joi.string(),
@@ -47,7 +47,7 @@ const updateRecord = {
       artistId: Joi.string().custom(objectId),
       labelId: Joi.string().custom(objectId),
       name: Joi.string(),
-      recordType: Joi.string().required(),
+      recordType: Joi.string(),
       releaseYear: Joi.number(),
       country: Joi.string(),
       duration: Joi.string().custom(recordDuration),

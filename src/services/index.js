@@ -8,3 +8,4 @@ module.exports.userAddressService = require('./userAddress.service');
 module.exports.labelService = require('./label.service');
 module.exports.genreService = require('./genre.service');
 module.exports.personService = require('./person.service');
+module.exports.recordService = require('./record.service');

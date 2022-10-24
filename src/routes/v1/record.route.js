@@ -12,7 +12,7 @@ router
   .get(auth('manageRecords'), validate(recordValidation.getRecords), recordController.getRecords);
 
 router
-  .route('/:labelId')
+  .route('/:recordId')
   .get(auth('manageRecords'), validate(recordValidation.getRecord), recordController.getRecord)
   .patch(auth('manageRecords'), validate(recordValidation.updateRecord), recordController.updateRecord)
   .delete(auth('manageRecords'), validate(recordValidation.deleteRecord), recordController.deleteRecord);

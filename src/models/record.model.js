@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 const { languages } = require('../config/languages');
-const { albumTypes } = require('../config/albumTypes');
+const { albumTypesString } = require('../config/albumTypes');
 
 const recordSchema = mongoose.Schema({
     artistId: {
@@ -48,7 +48,7 @@ const recordSchema = mongoose.Schema({
     recordType: {
         type: String,
         required: true,
-        enum: albumTypes
+        enum: albumTypesString
     },
     numberOfTracks: {
         type: Number,
