@@ -274,8 +274,8 @@ describe('Record routes', () => {
 
       expect(res.body).toEqual({
         id: recordOne._id.toHexString(),
-        artistId: recordOne.artistId,
-        labelId: recordOne.labelId,
+        artistId: String(recordOne.artistId),
+        labelId: String(recordOne.labelId),
         name: recordOne.name,
         releaseYear: recordOne.releaseYear,
         country: recordOne.country,
@@ -390,7 +390,7 @@ describe('Record routes', () => {
       await insertRecords([recordOne]);
       const updateBody = {
         name: 'Graduation',
-        releaseYear: faker.finance.amount(1800, 2023, 0),
+        releaseYear: Number(faker.finance.amount(1800, 2023, 0)),
       };
 
       const res = await request(app)
@@ -401,6 +401,8 @@ describe('Record routes', () => {
 
       expect(res.body).toEqual({
         id: recordOne._id.toHexString(),
+        artistId: recordOne.artistId,
+        labelId: recordOne.labelId,
         name: updateBody.name,
         releaseYear: updateBody.releaseYear,
         country: recordOne.country,
@@ -453,7 +455,7 @@ describe('Record routes', () => {
       const updateBody = { name: 'Graduation' };
 
       await request(app)
-        .patch(`/v1/records/${recordOne._id}`)
+        .patch(`/v1/records/${recordTwo._id}`)
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.NOT_FOUND);
@@ -513,6 +515,34 @@ describe('Record routes', () => {
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send(updateBody)
         .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 404 if updating artistId that doesnt exists', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      const updateBody = { artistId: recordTwo.artistId };
+
+      await request(app)
+        .patch(`/v1/records/${recordOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
+    });
+
+    test('should return 404 if updating labelId that doesnt exists', async () => {
+      await insertUsers([admin]);
+      await insertLabels([labelOne]);
+      await insertArtists([artistOne]);
+      await insertRecords([recordOne]);
+      const updateBody = { labelId: recordTwo.labelId };
+
+      await request(app)
+        .patch(`/v1/records/${recordOne._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.NOT_FOUND);
     });
   });
 });

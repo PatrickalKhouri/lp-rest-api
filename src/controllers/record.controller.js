@@ -44,6 +44,20 @@ const getRecord = catchAsync(async (req, res) => {
 });
 
 const updateRecord = catchAsync(async (req, res) => {
+  if (req.body.artistId) {
+    const { artistId } = req.body;
+    const artist = await artistService.getArtistById(artistId);
+    if (!artist) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Artist not found');
+    }
+  }
+  if (req.body.labelId) {
+    const { labelId } = req.body;
+    const label = await labelService.getLabelById(labelId);
+    if (!label) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
+    }
+  }
   const record = await recordService.updateRecordById(req.params.recordId, req.body);
   res.send(record);
 });

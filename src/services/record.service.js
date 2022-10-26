@@ -56,7 +56,7 @@ const updateRecordById = async (recordId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Record not found');
   }
   Object.assign(record, updateBody);
-  await Record.save();
+  await record.save();
   return record;
 };
 
@@ -77,6 +77,7 @@ const deleteRecordById = async (recordId) => {
 module.exports = {
   createRecord,
   queryRecords,
+  getRecordById,
   getRecordByName,
   updateRecordById,
   deleteRecordById,

@@ -103,7 +103,7 @@ components:
         artistId:
           type: string
         labelId:
-          type: date
+          type: string
         name:
           type: string
         releaseYear:
@@ -121,15 +121,15 @@ components:
           type: string
           enum: ['LP', 'EP', 'Single']   
       example:
-          id: 632f4301b7018f1243894fed
-          artistId: Kanye Omari West
-          labelId: United States
-          name: true
-          releaseYear: '1977-06-8T00:00:00.002Z'
-          country:
-          duration:
-          language:
-          numberOfTracks: 
+          id: 635854f8c2c2391300fa85bf
+          artistId: 632f4301b7018f1243894fed
+          labelId: 632f42f74cca87148e193abb
+          name: Yield
+          releaseYear: 1998
+          country: United States
+          duration: 48:37
+          language: English
+          numberOfTracks: 13
     UserAddress:
       type: object
       properties:

@@ -22,17 +22,17 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Labels
- *   description: Label management and retrieval
+ *   name: Records
+ *   description: record management and retrieval
  */
 
 /**
  * @swagger
- * /labels:
+ * /records:
  *   post:
- *     summary: Create a label
- *     description: Only admins can create labels.
- *     tags: [Labels]
+ *     summary: Creates a record
+ *     description: Only admins can create records.
+ *     tags: [Records]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,47 +42,101 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - artistId
+ *               - labelId
+ *               - releaseYear
  *               - country
+ *               - duration
+ *               - language
+ *               - numberOfTracks
+ *               - recordType
  *             properties:
- *               name:
+ *               artistId:
  *                 type: string
+ *               labelId:
+ *                 type: string
+ *               releaseYear:
+ *                 type: number
  *               country:
+ *                  type: string
+ *               duration:
+ *                 type: string
+ *               language:
+ *                 type: string
+ *               numberOfTracks:
+ *                 type: number
+ *               recordType:
  *                 type: string
  *             example:
- *               name: fake label
- *               country: United States
+ *               artistId: 635851ec18cc5390e4f0c42e
+ *               labelId: 635851f3b8d73a3fb4b89997
+ *               releaseYear: 2003
+ *               duration: 42:15
+ *               language: Japanese
+ *               country: Japan
+ *               numberOfTracks: 15
+ *               recordType: LP
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/label'
+ *                $ref: '#/components/schemas/record'
  *       "400":
- *         $ref: '#/components/responses/DuplicateLabel'
+ *         $ref: '#/components/responses/DuplicateRecord'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all labels
- *     description: Only admins can retrieve all labels.
- *     tags: [Labels]
+ *     summary: Get all records
+ *     description: Only admins can retrieve all records.
+ *     tags: [Records]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: name
+ *         name: artistId
  *         schema:
  *           type: string
- *         description: label name
+ *         description: artist Id
+ *       - in: query
+ *         name: labelId
+ *         schema:
+ *           type: string
+ *         description: record label id
+ *       - in: query
+ *         name: releaseYear
+ *         schema:
+ *           type: number
+ *         description: record release year
+ *       - in: query
+ *         name: duration
+ *         schema:
+ *           type: string
+ *         description: record duration
+ *       - in: query
+ *         name: language
+ *         schema:
+ *           type: string
+ *         description: record language
  *       - in: query
  *         name: country
  *         schema:
  *           type: string
- *         description: label country
+ *         description: record country
+ *       - in: query
+ *         name: numberOfTracks
+ *         schema:
+ *           type: number
+ *         description: record number of tracks
+ *       - in: query
+ *         name: recordType
+ *         schema:
+ *           type: string
+ *         description: record type
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -94,7 +148,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of labels
+ *         description: Maximum number of records
  *       - in: query
  *         name: page
  *         schema:
@@ -113,7 +167,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/label'
+ *                     $ref: '#/components/schemas/record'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -134,11 +188,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /labels/{id}:
+ * /records/{id}:
  *   get:
- *     summary: Get a label
- *     description: Only admins can get labels.
- *     tags: [Labels]
+ *     summary: Get a record
+ *     description: Only admins can get records.
+ *     tags: [Records]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -147,14 +201,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: label id
+ *         description: record id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/label'
+ *                $ref: '#/components/schemas/record'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -163,9 +217,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a label
- *     description: Only admins can update labels.
- *     tags: [Labels]
+ *     summary: Update a record
+ *     description: Only admins can update records.
+ *     tags: [Records]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -174,7 +228,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: label id
+ *         description: record id
  *     requestBody:
  *       required: true
  *       content:
@@ -182,12 +236,24 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               artistId:
  *                 type: string
+ *               labelId:
+ *                 type: string
+ *               releaseYear:
+ *                 type: number
  *               country:
+ *                  type: string
+ *               duration:
+ *                 type: string
+ *               language:
+ *                 type: string
+ *               numberOfTracks:
+ *                 type: number
+ *               recordType:
  *                 type: string
  *             example:
- *               name: fake label name
+ *               name: fake record name
  *               country: Brazil
  *     responses:
  *       "200":
@@ -195,9 +261,9 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/label'
+ *                $ref: '#/components/schemas/record'
  *       "400":
- *         $ref: '#/components/responses/DuplicateLabel'
+ *         $ref: '#/components/responses/DuplicateRecord'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -206,9 +272,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a label
- *     description: Only admins can delete labels.
- *     tags: [Labels]
+ *     summary: Delete a record
+ *     description: Only admins can delete records.
+ *     tags: [Records]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -217,7 +283,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: label id
+ *         description: record id
  *     responses:
  *       "200":
  *         description: No content

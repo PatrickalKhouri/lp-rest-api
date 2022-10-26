@@ -6,8 +6,8 @@ const { labelOne, labelTwo } = require('./label.fixture');
 
 const recordOne = {
   _id: mongoose.Types.ObjectId(),
-  artistId: artistOne._id,
-  labelId: labelOne._id,
+  artistId: String(artistOne._id),
+  labelId: String(labelOne._id),
   name: 'To Pimp a Butterfly',
   releaseYear: Number(faker.finance.amount(1800, 2023, 0)),
   country: faker.address.country(),
@@ -19,8 +19,8 @@ const recordOne = {
 
 const recordTwo = {
   _id: mongoose.Types.ObjectId(),
-  artistId: artistTwo._id,
-  labelId: labelTwo._id,
+  artistId: String(artistTwo._id),
+  labelId: String(labelTwo._id),
   name: 'Blonde',
   recordType: 'LP',
   releaseYear: Number(faker.finance.amount(1800, 2023, 0)),
