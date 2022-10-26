@@ -6,26 +6,28 @@ const { labelOne, labelTwo } = require('./label.fixture');
 
 const recordOne = {
   _id: mongoose.Types.ObjectId(),
-  artistId: artistOne._id,
-  labelId: labelOne.id,
-  name: faker.music.songName(),
-  releaseYear: faker.finance.amount(1800, 2023, 0),
+  artistId: String(artistOne._id),
+  labelId: String(labelOne._id),
+  name: 'To Pimp a Butterfly',
+  releaseYear: Number(faker.finance.amount(1800, 2023, 0)),
   country: faker.address.country(),
+  recordType: 'EP',
   duration: '20:10',
   language: 'English',
-  numberOfTracks: faker.finance.amount(1, 30, 0),
+  numberOfTracks: Number(faker.finance.amount(1, 30, 0)),
 };
 
 const recordTwo = {
   _id: mongoose.Types.ObjectId(),
-  artistId: artistTwo._id,
-  labelId: labelTwo.id,
-  name: faker.music.songName(),
-  releaseYear: faker.finance.amount(1800, 2023, 0),
+  artistId: String(artistTwo._id),
+  labelId: String(labelTwo._id),
+  name: 'Blonde',
+  recordType: 'LP',
+  releaseYear: Number(faker.finance.amount(1800, 2023, 0)),
   country: faker.address.country(),
   duration: '40:10',
   language: 'English',
-  numberOfTracks: faker.finance.amount(1, 30, 0),
+  numberOfTracks: Number(faker.finance.amount(1, 30, 0)),
 };
 
 const insertRecords = async (records) => {

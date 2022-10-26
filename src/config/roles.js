@@ -17,6 +17,8 @@ const allRoles = {
     'manageArtists',
     'createBandMember',
     'manageBandMembers',
+    'createRecord',
+    'manageRecords',
   ],
 };
 

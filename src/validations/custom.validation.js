@@ -22,8 +22,16 @@ const postalCode = (value, helpers) => {
   return value;
 };
 
+const recordDuration = (value, helpers) => {
+  if (!value.match(/^(([0-9]?[0-9][0-9]|[0-9]):([0-5][0-9]))$/)) {
+    return helpers.message('Duração está com o formato inválido');
+  }
+  return value;
+};
+
 module.exports = {
   objectId,
   password,
   postalCode,
+  recordDuration,
 };

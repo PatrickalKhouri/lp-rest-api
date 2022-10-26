@@ -82,7 +82,7 @@ components:
         dateOfBirth:
           type: date
         gender:
-          type: stringer
+          type: string
           enum: ['Female, Male, Other']
         alive:
           type: boolean
@@ -95,6 +95,41 @@ components:
           country: United States
           alive: true
           dateOfBirth: '1977-06-8T00:00:00.002Z'
+    Record:
+      type: object
+      properties:
+        id:
+          type: string
+        artistId:
+          type: string
+        labelId:
+          type: string
+        name:
+          type: string
+        releaseYear:
+          type: number
+        country:
+          type: string
+          enum: [Too long, ask for the enum to an Admin]
+        duration:
+          type: string
+        language:
+          type: string
+        numberOfTracks:
+          type: number 
+        type:
+          type: string
+          enum: ['LP', 'EP', 'Single']   
+      example:
+          id: 635854f8c2c2391300fa85bf
+          artistId: 632f4301b7018f1243894fed
+          labelId: 632f42f74cca87148e193abb
+          name: Yield
+          releaseYear: 1998
+          country: United States
+          duration: 48:37
+          language: English
+          numberOfTracks: 13
     UserAddress:
       type: object
       properties:

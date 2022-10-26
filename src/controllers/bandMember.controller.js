@@ -8,8 +8,10 @@ const createBandMember = catchAsync(async (req, res) => {
   const { artistId, personId } = req.body;
   const artist = await artistService.getArtistById(artistId);
   const person = await personService.getPersonById(personId);
-  if (!artist || !person) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Artist or Person not found');
+  if (!artist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Artist not found');
+  } else if (!person) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Person not found');
   } else {
     const bandMember = await bandMemberService.createBandMember(req.body);
     res.status(httpStatus.CREATED).send(bandMember);

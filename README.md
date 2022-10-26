@@ -244,16 +244,23 @@ List of available routes:
 **Artist routes**:\
 `POST /v1/artists` - create an artists\
 `GET /v1/artists` - get all artists\
-`GET /v1/artists/:artistsId` - get an artist\
-`PATCH /v1/artists/:artistsId` - update artist\
-`DELETE /v1/artists/:artistsId` - delete artist\
+`GET /v1/artists/:artistId` - get an artist\
+`PATCH /v1/artists/:artistId` - update artist\
+`DELETE /v1/artists/:artistId` - delete artist\
 
 **Band Member routes**:\
 `POST /v1/bandMembers` - create a band member\
 `GET /v1/bandMembers` - get all band members\
-`GET /v1/bandMembers/:bandMember` - get a band member\
-`PATCH /v1/bandMembers/:bandMember` - update a band member\
-`DELETE /v1/bandMembers/:bandMember` - delete a band member\
+`GET /v1/bandMembers/:bandMemberId` - get a band member\
+`PATCH /v1/bandMembers/:bandMemberId` - update a band member\
+`DELETE /v1/bandMembers/:bandMemberId` - delete a band member\
+
+**Record routes**:\
+`POST /v1/records` - creates a record\
+`GET /v1/records` - get all records\
+`GET /v1/records/:recordId` - get a record\
+`PATCH /v1/records/:recordId` - update a record\
+`DELETE /v1/records/:recordId` - delete a record\
 
 
 ## Error Handling

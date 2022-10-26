@@ -6,6 +6,7 @@ const labelRoute = require('./label.route');
 const genreRoute = require('./genre.route');
 const personRoute = require('./person.route');
 const artistRoute = require('./artist.route');
+const recordRoute = require('./record.route');
 const bandMemberRoute = require('./bandMember.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
@@ -44,6 +45,10 @@ const defaultRoutes = [
   {
     path: '/bandMembers',
     route: bandMemberRoute,
+  },
+  {
+    path: '/records',
+    route: recordRoute,
   },
 ];
 
