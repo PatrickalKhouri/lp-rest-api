@@ -262,6 +262,13 @@ List of available routes:
 `PATCH /v1/records/:recordId` - update a record\
 `DELETE /v1/records/:recordId` - delete a record\
 
+**Genre Record routes**:\
+
+`POST /v1/genresRecords` - creates a genre record\
+`GET /v1/genresRecords` - get all  genres records\
+`GET /v1/genresRecords/:genreRecordId` - get a genre record\
+`PATCH /v1/genresRecords/:genreRecordId` - update a genre record\
+`DELETE /v1/genresRecords/:genreRecordId` - delete a genre record\
 
 ## Error Handling
 
