@@ -1,50 +1,38 @@
+/* eslint-disable prettier/prettier */
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const genreRecordValidation = require('../../validations/genreRecord.validation');
-const genreRecordController = require('../../controllers/genreRecord.controller');
+const recordGenreValidation = require('../../validations/recordGenre.validation');
+const recordGenreController = require('../../controllers/recordGenre.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(
-    auth('createGenreRecord'),
-    validate(genreRecordValidation.createGenreRecord),
-    genreRecordValidation.createGenreRecord
-  )
-  .get(auth('manageGenreRecords'), validate(genreRecordValidation.getGenreRecord), genreRecordController.getGenreRecords);
+  .post(auth('createRecordGenre'), validate(recordGenreValidation.createRecordGenre), recordGenreController.createRecordGenre)
+  .get(auth('manageRecordGenres'), validate(recordGenreValidation.getRecordGenre), recordGenreController.getRecordGenres);
 
 router
-  .route('/:GenreRecordId')
-  .get(auth('manageGenreRecords'), validate(genreRecordValidation.getGenreRecord), genreRecordController.getGenreRecord)
-  .patch(
-    auth('manageGenreRecords'),
-    validate(genreRecordValidation.updateGenreRecord),
-    genreRecordValidation.updateGenreRecord
-  )
-  .delete(
-    auth('manageGenreRecords'),
-    validate(genreRecordValidation.deleteGenreRecord),
-    genreRecordValidation.deleteGenreRecord
-  );
-
+  .route('/:recordId')
+  .get(auth('manageRecordGenres'), validate(recordGenreValidation.getRecordGenre), recordGenreController.getRecordGenre)
+  .patch(auth('manageRecordGenres'), validate(recordGenreValidation.updateRecordGenre), recordGenreController.updateRecordGenre)
+  .delete(auth('manageRecordGenres'), validate(recordGenreValidation.deleteRecordGenre), recordGenreController.deleteRecordGenre);
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: GenreRecords
+ *   name: recordGenres
  *   description: band member management and retrieval
  */
 
 /**
  * @swagger
- * /GenreRecords:
+ * /recordGenres:
  *   post:
  *     summary: Creates a Band Member
  *     description: Only admins can create Band Members.
- *     tags: [GenreRecords]
+ *     tags: [recordGenres]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -70,9 +58,9 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/GenreRecord'
+ *                $ref: '#/components/schemas/recordGenre'
  *       "400":
- *         $ref: '#/components/responses/DuplicateGenreRecord'
+ *         $ref: '#/components/responses/DuplicaterecordGenre'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -83,7 +71,7 @@ module.exports = router;
  *   get:
  *     summary: Get all Band Members
  *     description: Only admins can retrieve all Band Members.
- *     tags: [GenreRecords]
+ *     tags: [recordGenres]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -91,12 +79,12 @@ module.exports = router;
  *         name: artistId
  *         schema:
  *           type: string
- *         description: GenreRecord artist
+ *         description: recordGenre artist
  *       - in: query
  *         name: personId
  *         schema:
  *           type: string
- *         description: GenreRecord person
+ *         description: recordGenre person
  *       - in: query
  *         name: limit
  *         schema:
@@ -122,7 +110,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/GenreRecord'
+ *                     $ref: '#/components/schemas/recordGenre'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -143,11 +131,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /GenreRecords/{id}:
+ * /recordGenres/{id}:
  *   get:
  *     summary: Get an Band Member
  *     description: Only admins can get Band Members.
- *     tags: [GenreRecords]
+ *     tags: [recordGenres]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -163,7 +151,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/GenreRecord'
+ *                $ref: '#/components/schemas/recordGenre'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -174,7 +162,7 @@ module.exports = router;
  *   patch:
  *     summary: Update a Band Member
  *     description: Only admins can update Band Members.
- *     tags: [GenreRecords]
+ *     tags: [recordGenres]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -183,7 +171,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: GenreRecord id
+ *         description: recordGenre id
  *     requestBody:
  *       required: true
  *       content:
@@ -204,9 +192,9 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/GenreRecord'
+ *                $ref: '#/components/schemas/recordGenre'
  *       "400":
- *         $ref: '#/components/responses/DuplicateGenreRecord'
+ *         $ref: '#/components/responses/DuplicaterecordGenre'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -217,7 +205,7 @@ module.exports = router;
  *   delete:
  *     summary: Delete a Band Member
  *     description: Only admins can delete Band Members.
- *     tags: [GenreRecords]
+ *     tags: [recordGenres]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -226,7 +214,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: GenreRecord id
+ *         description: recordGenre id
  *     responses:
  *       "200":
  *         description: No content

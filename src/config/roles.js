@@ -19,8 +19,8 @@ const allRoles = {
     'manageBandMembers',
     'createRecord',
     'manageRecords',
-    'createGenreRecord',
-    'manageGenreRecords',
+    'createRecordGenre',
+    'manageRecordGenres',
   ],
 };
 

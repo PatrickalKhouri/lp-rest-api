@@ -2,9 +2,9 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { genreRecordService, genreService, recordService } = require('../services');
+const { recordGenreService, genreService, recordService } = require('../services');
 
-const createGenreRecord = catchAsync(async (req, res) => {
+const createRecordGenre = catchAsync(async (req, res) => {
   const { genreId, recordId } = req.body;
   const genre = await genreService.getGenreById(genreId);
   const record = await recordService.getRecordById(recordId);
@@ -13,27 +13,27 @@ const createGenreRecord = catchAsync(async (req, res) => {
   } else if (!record) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Record not found');
   } else {
-    const genreRecord = await genreRecordService.createGenreRecord(req.body);
-    res.status(httpStatus.CREATED).send(genreRecord);
+    const recordGenre = await recordGenreService.createRecordGenre(req.body);
+    res.status(httpStatus.CREATED).send(recordGenre);
   }
 });
 
-const getGenreRecords = catchAsync(async (req, res) => {
+const getRecordGenres = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['genreId', 'recordId']);
   const options = pick(req.query, ['limit', 'page']);
-  const result = await genreRecordService.queryGenreRecords(filter, options);
+  const result = await recordGenreService.queryRecordGenres(filter, options);
   res.send(result);
 });
 
-const getGenreRecord = catchAsync(async (req, res) => {
-  const genreRecord = await genreRecordService.getGenreRecordById(req.params.genreRecordId);
-  if (!genreRecord) {
+const getRecordGenre = catchAsync(async (req, res) => {
+  const recordGenre = await recordGenreService.getRecordGenreById(req.params.recordGenreId);
+  if (!recordGenre) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Genre/Record not found');
   }
-  res.send(genreRecord);
+  res.send(recordGenre);
 });
 
-const updateGenreRecord = catchAsync(async (req, res) => {
+const updateRecordGenre = catchAsync(async (req, res) => {
   if (req.body.genreId) {
     const { genreId } = req.body;
     const genre = await genreService.getGenreById(genreId);
@@ -48,19 +48,19 @@ const updateGenreRecord = catchAsync(async (req, res) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'record not found');
     }
   }
-  const genreRecord = await genreRecordService.updateGenreRecordById(req.params.genreRecordId, req.body);
-  res.send(genreRecord);
+  const recordGenre = await recordGenreService.updateRecordGenreById(req.params.recordGenreId, req.body);
+  res.send(recordGenre);
 });
 
-const deleteGenreRecord = catchAsync(async (req, res) => {
-  await genreRecordService.deleteGenreRecordById(req.params.genreRecordId);
+const deleteRecordGenre = catchAsync(async (req, res) => {
+  await recordGenreService.deleteRecordGenreById(req.params.RecordGenreId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 module.exports = {
-  createGenreRecord,
-  getGenreRecords,
-  getGenreRecord,
-  updateGenreRecord,
-  deleteGenreRecord,
+  createRecordGenre,
+  getRecordGenres,
+  getRecordGenre,
+  updateRecordGenre,
+  deleteRecordGenre,
 };

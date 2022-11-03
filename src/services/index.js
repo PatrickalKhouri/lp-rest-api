@@ -7,6 +7,6 @@ module.exports.userService = require('./user.service');
 module.exports.userAddressService = require('./userAddress.service');
 module.exports.labelService = require('./label.service');
 module.exports.genreService = require('./genre.service');
-module.exports.genreRecordService = require('./genreRecord.service');
+module.exports.recordGenreService = require('./recordGenre.service');
 module.exports.personService = require('./person.service');
 module.exports.recordService = require('./record.service');

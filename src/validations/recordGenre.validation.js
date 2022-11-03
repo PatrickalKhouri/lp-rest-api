@@ -1,14 +1,14 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
-const createGenreRecord = {
+const createRecordGenre = {
   body: Joi.object().keys({
     genreId: Joi.string().custom(objectId).required(),
     recordId: Joi.string().custom(objectId).required(),
   }),
 };
 
-const getGenreRecords = {
+const getRecordGenres = {
   query: Joi.object().keys({
     genreId: Joi.string().custom(objectId),
     recordId: Joi.string().custom(objectId),
@@ -17,15 +17,15 @@ const getGenreRecords = {
   }),
 };
 
-const getGenreRecord = {
+const getRecordGenre = {
   params: Joi.object().keys({
-    genreRecordId: Joi.string().custom(objectId),
+    recordGenreId: Joi.string().custom(objectId),
   }),
 };
 
-const updateGenreRecord = {
+const updateRecordGenre = {
   params: Joi.object().keys({
-    genreRecordId: Joi.required().custom(objectId),
+    recordGenreId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
@@ -35,16 +35,16 @@ const updateGenreRecord = {
     .min(1),
 };
 
-const deleteGenreRecord = {
+const deleteRecordGenre = {
   params: Joi.object().keys({
-    genreRecordId: Joi.string().custom(objectId),
+    recordGenreId: Joi.string().custom(objectId),
   }),
 };
 
 module.exports = {
-  createGenreRecord,
-  getGenreRecords,
-  getGenreRecord,
-  updateGenreRecord,
-  deleteGenreRecord,
+  createRecordGenre,
+  getRecordGenres,
+  getRecordGenre,
+  updateRecordGenre,
+  deleteRecordGenre,
 };
