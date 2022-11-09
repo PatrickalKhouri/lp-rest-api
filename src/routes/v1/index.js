@@ -10,6 +10,7 @@ const recordRoute = require('./record.route');
 const bandMemberRoute = require('./bandMember.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
+const recordGenresRoute = require('./recordGenre.route');
 
 const router = express.Router();
 
@@ -49,6 +50,10 @@ const defaultRoutes = [
   {
     path: '/records',
     route: recordRoute,
+  },
+  {
+    path: '/recordGenres',
+    route: recordGenresRoute,
   },
 ];
 

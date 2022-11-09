@@ -5,22 +5,22 @@ const { recordOne, recordTwo } = require('./record.fixture');
 
 const recordGenreOne = {
   _id: mongoose.Types.ObjectId(),
-  artistId: genreOne._id,
-  personId: recordOne._id,
+  genreId: genreOne._id,
+  recordId: recordOne._id,
 };
 
 const recordGenreTwo = {
   _id: mongoose.Types.ObjectId(),
-  artistId: genreTwo._id,
-  personId: recordTwo._id,
+  genreId: genreTwo._id,
+  recordId: recordTwo._id,
 };
 
-const insertrecordGenres = async (recordGenres) => {
+const insertRecordGenres = async (recordGenres) => {
   await RecordGenre.insertMany(recordGenres.map((recordGenre) => ({ ...recordGenre })));
 };
 
 module.exports = {
   recordGenreOne,
   recordGenreTwo,
-  insertrecordGenres,
+  insertRecordGenres,
 };

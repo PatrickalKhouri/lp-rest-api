@@ -3,6 +3,7 @@ module.exports.userController = require('./user.controller');
 module.exports.userAddressController = require('./userAddress.controller');
 module.exports.labelController = require('./label.controller');
 module.exports.genreController = require('./genre.controller');
+module.exports.recordGenreController = require('./recordGenre.controller');
 module.exports.personController = require('./person.controller');
 module.exports.artistController = require('./artist.controller');
 module.exports.bandMemberController = require('./bandMember.controller');
