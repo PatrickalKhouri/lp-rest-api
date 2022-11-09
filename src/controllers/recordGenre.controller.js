@@ -53,7 +53,7 @@ const updateRecordGenre = catchAsync(async (req, res) => {
 });
 
 const deleteRecordGenre = catchAsync(async (req, res) => {
-  await recordGenreService.deleteRecordGenreById(req.params.RecordGenreId);
+  await recordGenreService.deleteRecordGenreById(req.params.recordGenreId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

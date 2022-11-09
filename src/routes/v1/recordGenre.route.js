@@ -13,7 +13,7 @@ router
   .get(auth('manageRecordGenres'), validate(recordGenreValidation.getRecordGenre), recordGenreController.getRecordGenres);
 
 router
-  .route('/:recordId')
+  .route('/:recordGenreId')
   .get(auth('manageRecordGenres'), validate(recordGenreValidation.getRecordGenre), recordGenreController.getRecordGenre)
   .patch(auth('manageRecordGenres'), validate(recordGenreValidation.updateRecordGenre), recordGenreController.updateRecordGenre)
   .delete(auth('manageRecordGenres'), validate(recordGenreValidation.deleteRecordGenre), recordGenreController.deleteRecordGenre);
