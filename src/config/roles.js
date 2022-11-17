@@ -1,5 +1,13 @@
 const allRoles = {
-  user: ['createUserAddress', 'getUserAddress', 'manageUserAddresses', 'getUserAddresses'],
+  user: [
+    'createUserAddress',
+    'getUserAddress',
+    'manageUserAddresses',
+    'getUserAddresses',
+    'createAlbums',
+    'getAlbums',
+    'manageAlbums',
+  ],
   admin: [
     'getUsers',
     'manageUsers',
@@ -21,6 +29,9 @@ const allRoles = {
     'manageRecords',
     'createRecordGenre',
     'manageRecordGenres',
+    'createAlbums',
+    'getAlbums',
+    'manageAlbums',
   ],
 };
 
