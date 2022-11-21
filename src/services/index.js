@@ -1,3 +1,4 @@
+module.exports.albumService = require('./album.service');
 module.exports.artistService = require('./artist.service');
 module.exports.bandMemberService = require('./bandMember.service');
 module.exports.authService = require('./auth.service');

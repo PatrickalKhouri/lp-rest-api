@@ -66,6 +66,7 @@ const deleteUserAddressById = async (userAddressId) => {
   await userAddress.remove();
   return userAddress;
 };
+
 module.exports = {
   createUserAddress,
   queryUserAddresses,

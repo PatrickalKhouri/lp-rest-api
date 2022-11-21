@@ -78,9 +78,6 @@ const updateUserAddress = catchAsync(async (req, res) => {
     }
   }
   const userAddressToUpdate = await userAddressService.getUserAddressById(req.params.userAddressId);
-  if (!userAddressToUpdate) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User Address not found');
-  }
   if (currentUser.role !== 'admin') {
     if (String(currentUser._id) !== String(userAddressToUpdate.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to update a user address for another user');
@@ -107,9 +104,6 @@ const updateUserAddress = catchAsync(async (req, res) => {
 const deleteUserAddress = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   const userAddressToDelete = await userAddressService.getUserAddressById(req.params.userAddressId);
-  if (!userAddressToDelete) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User Address not found');
-  }
   if (currentUser.role !== 'admin') {
     if (String(currentUser._id) !== String(userAddressToDelete.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to delete a user address for another user');
