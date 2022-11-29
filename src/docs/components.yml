@@ -130,6 +130,19 @@ components:
           duration: 48:37
           language: English
           numberOfTracks: 13
+    RecordGenre:
+      type: object
+      properties:
+        id:
+          type: string
+        recordId:
+          type: string
+        genreId:
+          type: string
+        example:
+          id: 6375490d72497a50f1f3de58
+          recordId: 635854f8c2c2391300fa85bf
+          genreId: 632f42f228914eff60e84388
     UserAddress:
       type: object
       properties:

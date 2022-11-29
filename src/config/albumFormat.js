@@ -5,7 +5,7 @@ const allAlbumFormats = {
 };
 
 const albumFormats = Object.keys(allAlbumFormats);
-const albumFormatsString = Object.values(albumFormats);
+const albumFormatsString = Object.values(allAlbumFormats);
 
 module.exports = {
   albumFormats,

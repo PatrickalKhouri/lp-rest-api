@@ -5,8 +5,8 @@ corrigir os testes comentados
  Compared values serialize to the same structure.
     Printing internal object structure without calling `toJSON` instead
 
-ver o caso de quando passa um id na url do endpoint uqe nao existe
-
 Atualizar erros no swagger (e na aplicação? talvez isso mude o erro 500 para 400 quando tiver itens duplicados) para os duplicados
 
 quando delete, como cascadeia num nosql?
+
+adicionar o id match nos getModelId (ver userAddressService)

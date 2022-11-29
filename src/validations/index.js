@@ -1,3 +1,4 @@
+module.exports.albumValidation = require('./album.validation');
 module.exports.artistValidation = require('./artist.validation');
 module.exports.authValidation = require('./auth.validation');
 module.exports.bandMemberValidation = require('./bandMember.validation');

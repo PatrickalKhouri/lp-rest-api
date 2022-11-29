@@ -270,6 +270,14 @@ List of available routes:
 `PATCH /v1/genresRecords/:genreRecordId` - update a genre record\
 `DELETE /v1/genresRecords/:genreRecordId` - delete a genre record\
 
+**Album routes**:\
+
+`POST /v1/albums` - creates an album/
+`GET /v1/albums` - get all albums\
+`GET /v1/albums/:albumId` - get an album\
+`PATCH /v1/albums/:albumId` - updates an album\
+`DELETE /v1/albums/:albumId` - deletes an album\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.
