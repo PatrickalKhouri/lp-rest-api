@@ -6,7 +6,6 @@ const catchAsync = require('../utils/catchAsync');
 const { albumService, recordService, userService, tokenService } = require('../services');
 
 const createAlbum = catchAsync(async (req, res) => {
-  console.log('dentro do create');
   const bodyAlbumUserId = req.body.userId;
   const record = await recordService.getRecordById(req.body.recordId);
   const user = await userService.getUserById(bodyAlbumUserId);
@@ -17,7 +16,6 @@ const createAlbum = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't create an album for non existing record");
   }
   const currentUser = await tokenService.getCurrentUserFromReq(req);
-  console.log(currentUser.role);
   if (currentUser.role !== 'admin') {
     if (req.body.userId !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to create an album for another user');
@@ -67,7 +65,7 @@ const updateAlbum = catchAsync(async (req, res) => {
   if (req.body.recordId) {
     const record = await recordService.getRecordById(req.body.recordId);
     if (!record) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Can't create an album for non existing record");
+      throw new ApiError(httpStatus.BAD_REQUEST, "Can't update an album for non existing record");
     }
   }
   const albumToUpdate = await albumService.getAlbumById(req.params.albumId);

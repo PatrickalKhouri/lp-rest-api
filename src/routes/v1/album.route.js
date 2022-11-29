@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('createAlbum'), validate(albumValidation.createAlbum), albumController.createAlbum)
-  .get(auth('getAlbums'), validate(albumValidation.getAlbums), albumController.getAlbum);
+  .get(auth('getAlbums'), validate(albumValidation.getAlbums), albumController.getAlbums);
 
 router
   .route('/:albumId')

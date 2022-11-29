@@ -14,7 +14,7 @@ describe('Album model', () => {
         year: faker.finance.amount(1800, 2022, 0),
         new: faker.datatype.boolean(),
         price: faker.finance.amount(1, 1000, 2),
-        type: 'lp',
+        format: 'CD',
       };
     });
 

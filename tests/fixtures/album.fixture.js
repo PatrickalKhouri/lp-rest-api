@@ -6,20 +6,20 @@ const { userOne, userTwo } = require('./user.fixture');
 
 const albumOne = {
   _id: mongoose.Types.ObjectId(),
-  recordId: recordOne._id,
-  userId: userOne._id,
+  recordId: String(recordOne._id),
+  userId: String(userOne._id),
   description: faker.lorem.lines(),
-  stock: faker.finance.amount(0, 50, 2),
-  year: faker.finance.amount(1800, 2022, 0),
+  stock: Number(faker.finance.amount(0, 50, 2)),
+  year: Number(faker.finance.amount(1800, 2022, 0)),
   new: faker.datatype.boolean(),
-  price: faker.finance.amount(1, 1000, 2),
+  price: Number(faker.finance.amount(1, 1000, 2)),
   format: 'CD',
 };
 
 const albumTwo = {
   _id: mongoose.Types.ObjectId(),
-  recordId: recordTwo._id,
-  userId: userTwo._id,
+  recordId: String(recordTwo._id),
+  userId: String(userTwo._id),
   description: faker.lorem.lines(),
   stock: faker.finance.amount(0, 50, 2),
   year: faker.finance.amount(1800, 2022, 0),
