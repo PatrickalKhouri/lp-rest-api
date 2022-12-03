@@ -9,3 +9,4 @@ module.exports.personController = require('./person.controller');
 module.exports.artistController = require('./artist.controller');
 module.exports.bandMemberController = require('./bandMember.controller');
 module.exports.recordController = require('./record.controller');
+module.exports.shoppingSessionController = require('./shoppingSession.controller');

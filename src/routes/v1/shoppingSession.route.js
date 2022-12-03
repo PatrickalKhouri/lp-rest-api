@@ -1,8 +1,8 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const shoppingSessionValidation = require('../../validations/userAddress.validation');
-const shoppingSessionController = require('../../controllers/userAddress.controller');
+const shoppingSessionValidation = require('../../validations/shoppingSession.validation');
+const shoppingSessionController = require('../../controllers/shoppingSession.controller');
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router
 router
   .route('/:shoppingSessionId')
   .get(
-    auth('getShoppingSession'),
+    auth('getShoppingSessions'),
     validate(shoppingSessionValidation.getShoppingSession),
     shoppingSessionController.getShoppingSession
   )

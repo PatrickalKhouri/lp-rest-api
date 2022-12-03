@@ -11,3 +11,4 @@ module.exports.genreService = require('./genre.service');
 module.exports.recordGenreService = require('./recordGenre.service');
 module.exports.personService = require('./person.service');
 module.exports.recordService = require('./record.service');
+module.exports.shoppingSessionService = require('./shoppingSession.service');

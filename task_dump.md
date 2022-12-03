@@ -10,3 +10,4 @@ Atualizar erros no swagger (e na aplicação? talvez isso mude o erro 500 para 4
 quando delete, como cascadeia num nosql?
 
 adicionar o id match nos getModelId (ver userAddressService)
+adicionar createdAt e updatedAt pros metodos de
