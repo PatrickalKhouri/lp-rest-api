@@ -20,7 +20,7 @@ const createShoppingSession = async (shoppingSessionBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryShoppingSessions = async (filter, options) => {
+const queryShoppingSession = async (filter, options) => {
   const shoppingSessions = await ShoppingSession.paginate(filter, options);
   return shoppingSessions;
 };
@@ -69,7 +69,7 @@ const deleteShoppingSessionById = async (shoppingSessionId) => {
 
 module.exports = {
   createShoppingSession,
-  queryShoppingSessions,
+  queryShoppingSession,
   getShoppingSessionById,
   updateShoppingSessionById,
   deleteShoppingSessionById,
