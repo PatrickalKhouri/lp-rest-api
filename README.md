@@ -278,6 +278,14 @@ List of available routes:
 `PATCH /v1/albums/:albumId` - updates an album\
 `DELETE /v1/albums/:albumId` - deletes an album\
 
+**Shopping Session routes**:\
+
+`POST /v1/shoppingSessions` - creates a shopping session\
+`GET /v1/shoppingSessions` - get all shopping sessions\
+`GET /v1/shoppingSessions/:shoppingSessionId` - gets a shopping session\
+`PATCH /v1/shoppingSessions/:shoppingSessionId` - updates a shopping session\
+`DELETE /v1/shoppingSessions/:shoppingSessionId` - deletes a shopping session\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.

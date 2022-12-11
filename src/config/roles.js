@@ -7,6 +7,9 @@ const allRoles = {
     'createAlbum',
     'getAlbums',
     'manageAlbums',
+    'createShoppingSession',
+    'getShoppingSessions',
+    'manageShoppingSession',
   ],
   admin: [
     'getUsers',
@@ -32,6 +35,9 @@ const allRoles = {
     'createAlbum',
     'getAlbums',
     'manageAlbums',
+    'createShoppingSession',
+    'getShoppingSessions',
+    'manageShoppingSession',
   ],
 };
 
