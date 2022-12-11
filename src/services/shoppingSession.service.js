@@ -48,7 +48,7 @@ const updateShoppingSessionById = async (shoppingSessionId, updateBody) => {
   if (!shoppingSession) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Shopping Session not found');
   }
-  Object.assign(ShoppingSession, updateBody);
+  Object.assign(shoppingSession, updateBody);
   await shoppingSession.save();
   return shoppingSession;
 };
