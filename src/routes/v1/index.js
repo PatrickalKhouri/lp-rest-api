@@ -2,6 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const userAddressRoute = require('./userAddress.route');
+const userPaymentRoute = require('./userPayment.route');
 const labelRoute = require('./label.route');
 const genreRoute = require('./genre.route');
 const personRoute = require('./person.route');
@@ -64,6 +65,10 @@ const defaultRoutes = [
   {
     path: '/shoppingSessions',
     route: shoppingSessionRoute,
+  },
+  {
+    path: '/userPayments',
+    route: userPaymentRoute,
   },
 ];
 

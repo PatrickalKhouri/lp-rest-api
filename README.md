@@ -286,6 +286,14 @@ List of available routes:
 `PATCH /v1/shoppingSessions/:shoppingSessionId` - updates a shopping session\
 `DELETE /v1/shoppingSessions/:shoppingSessionId` - deletes a shopping session\
 
+**User Payment routes**:\
+
+`POST /v1/userPayments` - creates a user payment\
+`GET /v1/userPayments` - get all user payment\
+`GET /v1/userPayments/:userPaymentId` - gets an suser payment\
+`PATCH /v1/userPayments/:userPaymentId` - updates an user payment\
+`DELETE /v1/userPayments/:userPaymentId` - deletes an user payment\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.

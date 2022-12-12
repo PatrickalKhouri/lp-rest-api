@@ -10,3 +10,4 @@ module.exports.shoppingSessionValidation = require('./shoppingSession.validation
 module.exports.recordValidation = require('./record.validation');
 module.exports.userValidation = require('./user.validation');
 module.exports.userAddressValidation = require('./userAddress.validation');
+module.exports.userPaymentValidation = require('./userPayment.validation');
