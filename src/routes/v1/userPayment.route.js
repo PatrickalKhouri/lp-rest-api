@@ -17,7 +17,7 @@ router
 
 router
   .route('/:userPaymentId')
-  .get(auth('getUserPayment'), validate(userPaymentValidation.getUserPayment), userPaymentController.getUserPayment)
+  .get(auth('getUserPayments'), validate(userPaymentValidation.getUserPayment), userPaymentController.getUserPayment)
   .patch(
     auth('manageUserPayments'),
     validate(userPaymentValidation.updateUserPayment),
