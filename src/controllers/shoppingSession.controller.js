@@ -47,7 +47,7 @@ const getShoppingSessions = catchAsync(async (req, res) => {
   } else if (String(filter.userId) !== String(currentUser._id)) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You can only get your shopping sessions');
   } else {
-    console.log('oi')
+    console.log('oi');
     const result = await shoppingSessionService.queryShoppingSession(filter, options);
     res.send(result);
   }

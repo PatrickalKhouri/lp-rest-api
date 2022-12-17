@@ -9,8 +9,6 @@ const userPaymentOne = {
   accountNumber: faker.finance.account(),
   paymentType: 'Pix',
   provider: 'Visa',
-  createdAt: faker.datatype.datetime(),
-  modifiedAt: faker.datatype.datetime(),
 };
 
 const userPaymentTwo = {
@@ -19,8 +17,6 @@ const userPaymentTwo = {
   accountNumber: faker.finance.account(),
   paymentType: 'Boleto',
   provider: 'Master Card',
-  createdAt: faker.datatype.datetime(),
-  modifiedAt: faker.datatype.datetime(),
 };
 
 const insertUserPayments = async (userPayments) => {

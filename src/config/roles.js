@@ -10,6 +10,9 @@ const allRoles = {
     'createShoppingSession',
     'getShoppingSessions',
     'manageShoppingSession',
+    'createUserPayment',
+    'getUserPayments',
+    'manageUserPayments',
   ],
   admin: [
     'getUsers',
@@ -38,6 +41,9 @@ const allRoles = {
     'createShoppingSession',
     'getShoppingSessions',
     'manageShoppingSession',
+    'createUserPayment',
+    'getUserPayments',
+    'manageUserPayments',
   ],
 };
 
