@@ -13,6 +13,7 @@ const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 const recordGenresRoute = require('./recordGenre.route');
 const albumRoute = require('./album.route');
+const cartItemsRoute = require('./cartItem.route');
 const shoppingSessionRoute = require('./shoppingSession.route');
 
 const router = express.Router();
@@ -69,6 +70,10 @@ const defaultRoutes = [
   {
     path: '/userPayments',
     route: userPaymentRoute,
+  },
+  {
+    path: '/cartItems',
+    route: cartItemsRoute,
   },
 ];
 
