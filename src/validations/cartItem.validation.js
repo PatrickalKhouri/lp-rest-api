@@ -12,7 +12,7 @@ const createCartItems = {
 const getCartItems = {
   query: Joi.object().keys({
     shoppingSessionId: Joi.string().custom(objectId),
-    albumId: Joi.string().custom(objectId).required(),
+    albumId: Joi.string().custom(objectId),
     quantity: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),

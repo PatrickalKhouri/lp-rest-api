@@ -9,7 +9,7 @@ describe('Cart Item model', () => {
       newCartItem = {
         shoppingSessionId: mongoose.Types.ObjectId(),
         albumId: mongoose.Types.ObjectId(),
-        quantity: faker.finance.amount(0, 50, 2),
+        quantity: Number(faker.finance.amount(0, 50, 2)),
       };
     });
 

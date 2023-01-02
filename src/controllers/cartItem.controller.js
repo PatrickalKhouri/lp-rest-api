@@ -17,9 +17,6 @@ const createCartItem = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't crete item cart for non existing album");
   }
   const shoppingSessionUserId = userService.getUserById(shoppingSession.userId);
-  if (!shoppingSessionUserId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Can't crete item cart for non existing user");
-  }
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
     if (String(shoppingSessionUserId) !== String(currentUser._id)) {
@@ -54,7 +51,7 @@ const getCartItems = catchAsync(async (req, res) => {
   } else if (!filter.shoppingSessionId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all user payments');
   } else {
-    const shoppingSession = shoppingSessionService.getShoppingSessionById(filter.shoppingSessionId);
+    const shoppingSession = await shoppingSessionService.getShoppingSessionById(filter.shoppingSessionId);
     const shoppingSessionUserId = shoppingSession.userId;
     if (String(currentUser._id) === String(shoppingSessionUserId)) {
       const result = await cartItemService.queryCartItems(filter, options);
@@ -72,7 +69,7 @@ const getCartItem = catchAsync(async (req, res) => {
   }
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
-    const shoppingSession = shoppingSessionService.getShoppingSessionById(cartItem.shoppingSessionId);
+    const shoppingSession = await shoppingSessionService.getShoppingSessionById(String(cartItem.shoppingSessionId));
     const shoppingSessionUserId = shoppingSession.userId;
     if (String(shoppingSessionUserId) !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to get a cart item of another user');
@@ -103,8 +100,10 @@ const updateCartItem = catchAsync(async (req, res) => {
     }
   }
   const cartItemToUpdate = await cartItemService.getCartItemById(req.params.cartItemId);
-  const cartItemShoppingSession = shoppingSessionService.getShoppingSessionById(cartItemToUpdate.shoppingSessionId);
-  const shoppingSessionUser = userService.getUserById(cartItemShoppingSession.userId);
+  const cartItemShoppingSession = await shoppingSessionService.getShoppingSessionById(
+    String(cartItemToUpdate.shoppingSessionId)
+  );
+  const shoppingSessionUser = await userService.getUserById(cartItemShoppingSession.userId);
   if (currentUser.role !== 'admin') {
     if (String(currentUser._id) !== String(shoppingSessionUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to update a cart item for another user');
@@ -132,16 +131,18 @@ const deleteCartItem = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   const cartItemToDelete = await cartItemService.getCartItemById(req.params.cartItemId);
   if (currentUser.role !== 'admin') {
-    const cartItemShoppingSession = shoppingSessionService.getShoppingSessionById(cartItemToDelete.shoppingSessionId);
-    const shoppingSessionUser = userService.getUserById(cartItemShoppingSession.userId);
+    const cartItemShoppingSession = await shoppingSessionService.getShoppingSessionById(
+      String(cartItemToDelete.shoppingSessionId)
+    );
+    const shoppingSessionUser = await userService.getUserById(String(cartItemShoppingSession.userId));
     if (String(currentUser._id) !== String(shoppingSessionUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to delete a cart item for another user');
     } else {
-      await cartItemService.deleteUserPaymentById(req.params.cartItemId);
+      await cartItemService.deleteCartItemById(req.params.cartItemId);
       res.status(httpStatus.NO_CONTENT).send();
     }
   } else {
-    await cartItemService.deleteUserPaymentById(req.params.cartItemId);
+    await cartItemService.deleteCartItemById(req.params.cartItemId);
     res.status(httpStatus.NO_CONTENT).send();
   }
 });

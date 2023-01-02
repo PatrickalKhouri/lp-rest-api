@@ -458,7 +458,7 @@ describe('User Address Routes routes', () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test('should return 400 if postal code  is invalid', async () => {
+    test('should return 400 if postal code is invalid', async () => {
       await insertUsers([userOne, admin]);
       await insertUserAddresses([userAddressOne]);
       const updateBody = { postalCode: 'invalid postal code' };

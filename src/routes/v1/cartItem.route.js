@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('createCartItem'), validate(cartItemValidation.createCartItems), cartItemController.createCartItems)
+  .post(auth('createCartItem'), validate(cartItemValidation.createCartItems), cartItemController.createCartItem)
   .get(auth('getCartItems'), validate(cartItemValidation.getCartItems), cartItemController.getCartItems);
 
 router
