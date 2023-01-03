@@ -13,6 +13,9 @@ const allRoles = {
     'createUserPayment',
     'getUserPayments',
     'manageUserPayments',
+    'createCartItem',
+    'getCartItems',
+    'manageCartItems',
   ],
   admin: [
     'getUsers',
@@ -44,6 +47,9 @@ const allRoles = {
     'createUserPayment',
     'getUserPayments',
     'manageUserPayments',
+    'createCartItem',
+    'getCartItems',
+    'manageCartItems',
   ],
 };
 

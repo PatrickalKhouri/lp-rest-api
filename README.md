@@ -294,6 +294,14 @@ List of available routes:
 `PATCH /v1/userPayments/:userPaymentId` - updates an user payment\
 `DELETE /v1/userPayments/:userPaymentId` - deletes an user payment\
 
+**Cart Item routes**:\
+
+`POST /v1/cartItems` - creates a cart item\
+`GET /v1/cartItems` - get all cart item\
+`GET /v1/cartItems/:cartItemId` - gets a cart item\
+`PATCH /v1/cartItems/:cartItemId` - updates acart item\
+`DELETE /v1/cartItems/:cartItemId` - deletes a\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.
