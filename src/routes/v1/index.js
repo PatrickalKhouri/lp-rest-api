@@ -13,8 +13,9 @@ const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 const recordGenresRoute = require('./recordGenre.route');
 const albumRoute = require('./album.route');
-const cartItemsRoute = require('./cartItem.route');
+const cartItemRoute = require('./cartItem.route');
 const shoppingSessionRoute = require('./shoppingSession.route');
+const orderDetailRoute = require('./orderDetail.route');
 
 const router = express.Router();
 
@@ -73,7 +74,11 @@ const defaultRoutes = [
   },
   {
     path: '/cartItems',
-    route: cartItemsRoute,
+    route: cartItemRoute,
+  },
+  {
+    path: '/orderDetails',
+    route: orderDetailRoute,
   },
 ];
 
