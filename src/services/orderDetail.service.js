@@ -7,7 +7,7 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} orderDetailBody
  * @returns {Promise<UserPayment>}
  */
-const createCartItem = async (orderDetailBody) => {
+const createOrderDetail = async (orderDetailBody) => {
   return OrderDetail.create(orderDetailBody);
 };
 
@@ -28,7 +28,7 @@ const queryOrderDetails = async (filter, options) => {
 /**
  * Get order detail item by id
  * @param {ObjectId} id
- * @returns {Promise<CartItem>}
+ * @returns {Promise<OrderDetail>}
  */
 const getOrderDetailById = async (id) => {
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -68,7 +68,7 @@ const deleteOrderDetailById = async (orderDetailId) => {
 };
 
 module.exports = {
-  createCartItem,
+  createOrderDetail,
   queryOrderDetails,
   getOrderDetailById,
   updateOrderDetailById,

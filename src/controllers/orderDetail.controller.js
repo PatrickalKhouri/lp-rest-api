@@ -25,7 +25,7 @@ const createOrderDetail = catchAsync(async (req, res) => {
         res.status(httpStatus.CREATED).send(orderDetail);
       } catch (e) {
         console.log(e);
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating user Payment');
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating order detail');
       }
     }
   } else {
@@ -97,7 +97,7 @@ const updateOrderDetail = catchAsync(async (req, res) => {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to update an order detail for another user');
     } else {
       try {
-        const orderDetail = await orderDetailService.orderDetailId(req.params.orderDetailId, req.body);
+        const orderDetail = await orderDetailService.updateOrderDetailById(req.params.orderDetailId, req.body);
         res.send(orderDetail);
       } catch (e) {
         console.log(e);
@@ -106,7 +106,7 @@ const updateOrderDetail = catchAsync(async (req, res) => {
     }
   } else {
     try {
-      const orderDetail = await orderDetailService.orderDetailId(req.params.orderDetailId, req.body);
+      const orderDetail = await orderDetailService.updateOrderDetailById(req.params.orderDetailId, req.body);
       res.send(orderDetail);
     } catch (e) {
       console.log(e);
@@ -122,11 +122,11 @@ const deleteOrderDetail = catchAsync(async (req, res) => {
     if (String(currentUser._id) !== String(orderDetailToDelete.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to delete an order detail for another user');
     } else {
-      await orderDetailService.getOrderDetailById(req.params.orderDetailId);
+      await orderDetailService.deleteOrderDetailById(req.params.orderDetailId);
       res.status(httpStatus.NO_CONTENT).send();
     }
   } else {
-    await orderDetailService.getOrderDetailById(req.params.orderDetailId);
+    await orderDetailService.deleteOrderDetailById(req.params.orderDetailId);
     res.status(httpStatus.NO_CONTENT).send();
   }
 });

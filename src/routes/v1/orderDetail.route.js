@@ -30,7 +30,7 @@ router
   );
 
 module.exports = router;
-gi
+
 /**
  * @swagger
  * tags:
