@@ -6,13 +6,12 @@ const catchAsync = require('../utils/catchAsync');
 const { cartItemService, tokenService, albumService, userService, shoppingSessionService } = require('../services');
 
 const createCartItem = catchAsync(async (req, res) => {
-  const bodyShoppingSession = req.body.shoppingSessionId;
-  const bodyAlbum = req.body.shoppingSessionId;
-  const shoppingSession = shoppingSessionService.getShoppingSessionById(bodyShoppingSession);
+  const { shoppingSessionId, albumId } = req.body;
+  const shoppingSession = shoppingSessionService.getShoppingSessionById(shoppingSessionId);
   if (!shoppingSession) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't crete item cart for non existing shopping session");
   }
-  const album = albumService.getAlbumById(bodyAlbum);
+  const album = albumService.getAlbumById(albumId);
   if (!album) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't crete item cart for non existing album");
   }

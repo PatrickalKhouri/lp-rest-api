@@ -15,3 +15,5 @@ adicionar createdAt e updatedAt pros metodos de
 por que os testes de ver todos quando usuario n é admin, e de atualizar o de um dado que n existe n funcionam?
 
 max quantity cartitem
+
+desconstruir no create

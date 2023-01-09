@@ -9,8 +9,6 @@ const orderDetailOne = {
   userId: userOne._id,
   userPaymentId: userPaymentOne._id,
   total: faker.finance.amount(0, 1000, 2),
-  createdAt: faker.datatype.datetime(),
-  modifiedAt: faker.datatype.datetime(),
 };
 
 const orderDetailTwo = {
@@ -18,16 +16,14 @@ const orderDetailTwo = {
   userId: userTwo._id,
   userPaymentId: userPaymentTwo._id,
   total: faker.finance.amount(0, 1000, 2),
-  createdAt: faker.datatype.datetime(),
-  modifiedAt: faker.datatype.datetime(),
 };
 
-const inserOrderDetails = async (orderDetails) => {
+const insertOrderDetails = async (orderDetails) => {
   await OrderDetail.insertMany(orderDetails.map((orderDetail) => ({ ...orderDetail })));
 };
 
 module.exports = {
   orderDetailOne,
   orderDetailTwo,
-  inserOrderDetails,
+  insertOrderDetails,
 };

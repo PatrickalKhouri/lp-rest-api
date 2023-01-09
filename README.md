@@ -299,8 +299,16 @@ List of available routes:
 `POST /v1/cartItems` - creates a cart item\
 `GET /v1/cartItems` - get all cart item\
 `GET /v1/cartItems/:cartItemId` - gets a cart item\
-`PATCH /v1/cartItems/:cartItemId` - updates acart item\
-`DELETE /v1/cartItems/:cartItemId` - deletes a\
+`PATCH /v1/cartItems/:cartItemId` - updates a cart item\
+`DELETE /v1/cartItems/:cartItemId` - deletes a cart item\
+
+**Order Details routes**:\
+
+`POST /v1/orderDetails` - creates an order details\
+`GET /v1/orderDetails` - get all order details\
+`GET /v1/orderDetails/:orderDetailId` - gets an order details\
+`PATCH /v1/orderDetails/:orderDetailId` - updates an order details\
+`DELETE /v1/orderDetails/:orderDetailId` - deletes an order details\
 
 ## Error Handling
 
