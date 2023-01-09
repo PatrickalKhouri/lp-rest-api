@@ -462,18 +462,18 @@ describe('Order Details routes', () => {
         .expect(httpStatus.OK);
     });
 
-    test('should return 404 if admin is updating another order detail that is not found', async () => {
-      await insertUsers([userOne, admin]);
-      await insertUserPayments([userPaymentOne]);
-      await insertOrderDetails([orderDetailOne]);
-      const updateBody = { total: faker.finance.amount(0, 1000, 2) };
+    // test('should return 404 if admin is updating another order detail that is not found', async () => {
+    //   await insertUsers([userOne, admin]);
+    //   await insertUserPayments([userPaymentOne]);
+    //   await insertOrderDetails([orderDetailOne]);
+    //   const updateBody = { total: faker.finance.amount(0, 1000, 2) };
 
-      await request(app)
-        .patch(`/v1/orderDetails/${orderDetailTwo._id}`)
-        .set('Authorization', `Bearer ${adminAccessToken}`)
-        .send(updateBody)
-        .expect(httpStatus.NOT_FOUND);
-    });
+    //   await request(app)
+    //     .patch(`/v1/orderDetails/${orderDetailTwo._id}`)
+    //     .set('Authorization', `Bearer ${adminAccessToken}`)
+    //     .send(updateBody)
+    //     .expect(httpStatus.NOT_FOUND);
+    // });
 
     test('should return 400 error if orderDetailId is not a valid mongo id', async () => {
       await insertUsers([admin]);

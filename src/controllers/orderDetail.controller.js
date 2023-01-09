@@ -110,6 +110,7 @@ const updateOrderDetail = catchAsync(async (req, res) => {
       res.send(orderDetail);
     } catch (e) {
       console.log(e);
+      console.log(req.params.orderDetailId);
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when updating order detail');
     }
   }
