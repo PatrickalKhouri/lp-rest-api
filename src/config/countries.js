@@ -53,7 +53,7 @@ const allCountries = {
   CD : 'The Democratic Republic of the Congo',
   CK : 'Cook Islands',
   CR : 'Costa Rica',
-  CI : "Cote D'Ivoire",
+  CI : "Cote d'Ivoire",
   HR : 'Croatia',
   CU : 'Cuba',
   CY : 'Cyprus',
@@ -144,7 +144,7 @@ const allCountries = {
   MU : 'Mauritius',
   YT : 'Mayotte',
   MX : 'Mexico',
-  FM : "Micronesia', Federated States of",
+  FM : "Micronesia",
   MD : "Moldova', Republic of",
   MC : 'Monaco',
   MN : 'Mongolia',
@@ -218,7 +218,7 @@ const allCountries = {
   SY : 'Syrian Arab Republic',
   TW : 'Taiwan',
   TJ : 'Tajikistan',
-  TZ : "Tanzania', United Republic of",
+  TZ : "Tanzania",
   TH : 'Thailand',
   TL : 'Timor-Leste',
   TG : 'Togo',
@@ -240,7 +240,7 @@ const allCountries = {
   UZ : 'Uzbekistan',
   VU : 'Vanuatu',
   VE : 'Venezuela',
-  VN : 'Viet Nam',
+  VN : 'Vietnam',
   VG : 'Virgin Islands, British',
   VI : 'U.S. Virgin Islands',
   WF : 'Wallis and Futuna',
@@ -257,6 +257,3 @@ module.exports = {
   countries,
   countriesLong,
 };
-
-
-//iso.org

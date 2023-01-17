@@ -1,11 +1,10 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { OrderDetail } = require('../../src/models');
-const { orderDetailOne, orderDetailTwo, insertOrderDetails } = require('../fixtures/orderDetails.fixture');
+const { orderDetailOne, orderDetailTwo, insertOrderDetails } = require('../fixtures/orderDetail.fixture');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userPaymentOne, userPaymentTwo, insertUserPayments } = require('../fixtures/userPayment.fixture');
 const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('../fixtures/token.fixture');

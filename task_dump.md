@@ -1,4 +1,7 @@
+verificar totals e quantity no validation
 testes em que id referenciados nao existem
+
+verificar o igualidade sem ser adm se botei o id
 
 corrigir os testes comentados
 
@@ -17,3 +20,5 @@ por que os testes de ver todos quando usuario n é admin, e de atualizar o de um
 max quantity cartitem
 
 desconstruir no create
+
+testes comentados

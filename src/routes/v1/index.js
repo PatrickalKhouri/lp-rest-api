@@ -16,6 +16,7 @@ const albumRoute = require('./album.route');
 const cartItemRoute = require('./cartItem.route');
 const shoppingSessionRoute = require('./shoppingSession.route');
 const orderDetailRoute = require('./orderDetail.route');
+const orderItemRoute = require('./orderItem.route');
 
 const router = express.Router();
 
@@ -79,6 +80,10 @@ const defaultRoutes = [
   {
     path: '/orderDetails',
     route: orderDetailRoute,
+  },
+  {
+    path: '/orderItems',
+    route: orderItemRoute,
   },
 ];
 

@@ -19,6 +19,9 @@ const allRoles = {
     'createOrderDetail',
     'getOrderDetails',
     'manageOrderDetail',
+    'createOrderItem',
+    'getOrderItems',
+    'manageOrderItem',
   ],
   admin: [
     'getUsers',
@@ -56,6 +59,9 @@ const allRoles = {
     'createOrderDetail',
     'getOrderDetails',
     'manageOrderDetail',
+    'createOrderItem',
+    'getOrderItems',
+    'manageOrderItem',
   ],
 };
 

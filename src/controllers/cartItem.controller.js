@@ -18,7 +18,7 @@ const createCartItem = catchAsync(async (req, res) => {
   const shoppingSessionUserId = userService.getUserById(shoppingSession.userId);
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
-    if (String(shoppingSessionUserId) !== String(currentUser._id)) {
+    if (String(shoppingSessionUserId._id) !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to create a cart Item for another user');
     } else {
       try {

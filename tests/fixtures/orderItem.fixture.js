@@ -22,12 +22,12 @@ const orderItemTwo = {
   modifiedAt: faker.datatype.datetime(),
 };
 
-const inserOrderItems = async (orderItems) => {
+const insertOrderItems = async (orderItems) => {
   await OrderItem.insertMany(orderItems.map((orderItem) => ({ ...orderItem })));
 };
 
 module.exports = {
   orderItemOne,
   orderItemTwo,
-  inserOrderItems,
+  insertOrderItems,
 };
