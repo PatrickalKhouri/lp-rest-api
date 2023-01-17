@@ -1,4 +1,3 @@
-verificar totals e quantity no validation
 testes em que id referenciados nao existem
 
 verificar o igualidade sem ser adm se botei o id
@@ -22,3 +21,4 @@ max quantity cartitem
 desconstruir no create
 
 testes comentados
+string dos testes e dos controllers, para ver se os nomes dos modelos estao de acordo com o controller certo ('erro ao criar order detail no cart item controller por exemplo")
