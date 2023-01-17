@@ -4,14 +4,14 @@ const { objectId } = require('./custom.validation');
 const createShoppingSession = {
   body: Joi.object().keys({
     userId: Joi.string().custom(objectId).required(),
-    total: Joi.string().required(),
+    total: Joi.number().required(),
   }),
 };
 
 const getShoppingSessions = {
   query: Joi.object().keys({
     userId: Joi.string().custom(objectId),
-    total: Joi.string(),
+    total: Joi.number(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -31,7 +31,7 @@ const updateShoppingSession = {
   body: Joi.object()
     .keys({
       userId: Joi.string().custom(objectId),
-      total: Joi.string(),
+      total: Joi.number(),
     })
     .min(1),
 };
