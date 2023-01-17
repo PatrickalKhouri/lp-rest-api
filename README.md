@@ -310,6 +310,14 @@ List of available routes:
 `PATCH /v1/orderDetails/:orderDetailId` - updates an order details\
 `DELETE /v1/orderDetails/:orderDetailId` - deletes an order details\
 
+**Order Items routes**:\
+
+`POST /v1/orderItems` - creates an order item\
+`GET /v1/orderItems` - get all order item\
+`GET /v1/orderItems/:orderItemId` - gets an order item\
+`PATCH /v1/orderItems/:orderItemId` - updates an order item\
+`DELETE /v1/orderItems/:orderItemId` - deletes an order item\
+
 ## Error Handling
 
 The app has a centralized error handling mechanism.

@@ -3,9 +3,9 @@ const { OrderDetail } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
- * Create a user Payment
+ * Create a order detail
  * @param {Object} orderDetailBody
- * @returns {Promise<UserPayment>}
+ * @returns {Promise<OrderDetail>}
  */
 const createOrderDetail = async (orderDetailBody) => {
   return OrderDetail.create(orderDetailBody);
@@ -41,7 +41,7 @@ const getOrderDetailById = async (id) => {
  * Update order detail by id
  * @param {ObjectId} orderDetailId
  * @param {Object} updateBody
- * @returns {Promise<UserPayment>}
+ * @returns {Promise<OrderDetail>}
  */
 const updateOrderDetailById = async (orderDetailId, updateBody) => {
   const orderDetail = await getOrderDetailById(orderDetailId);
@@ -54,9 +54,9 @@ const updateOrderDetailById = async (orderDetailId, updateBody) => {
 };
 
 /**
- * Delete user by id
+ * Delete order by id
  * @param {ObjectId} orderDetailId
- * @returns {Promise<UserPayment>}
+ * @returns {Promise<OrderDetail>}
  */
 const deleteOrderDetailById = async (orderDetailId) => {
   const orderDetail = await getOrderDetailById(orderDetailId);

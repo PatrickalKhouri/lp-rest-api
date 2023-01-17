@@ -7,6 +7,7 @@ module.exports.genreValidation = require('./genre.validation');
 module.exports.labelValidation = require('./label.validation');
 module.exports.personValidation = require('./person.validation');
 module.exports.orderDetailValidation = require('./orderDetail.validation');
+module.exports.orderItemValidation = require('./orderItem.validation');
 module.exports.shoppingSessionValidation = require('./shoppingSession.validation');
 module.exports.recordValidation = require('./record.validation');
 module.exports.recordGenreValidation = require('./recordGenre.validation');

@@ -1,17 +1,17 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
-const createCartItems = {
+const createOrderItem = {
   body: Joi.object().keys({
-    shoppingSessionId: Joi.string().custom(objectId).required(),
+    orderDetailId: Joi.string().custom(objectId).required(),
     albumId: Joi.string().custom(objectId).required(),
     quantity: Joi.number().required(),
   }),
 };
 
-const getCartItems = {
+const getOrderItems = {
   query: Joi.object().keys({
-    shoppingSessionId: Joi.string().custom(objectId),
+    orderDetailId: Joi.string().custom(objectId),
     albumId: Joi.string().custom(objectId),
     quantity: Joi.number(),
     sortBy: Joi.string(),
@@ -20,35 +20,35 @@ const getCartItems = {
   }),
 };
 
-const getCartItem = {
+const getOrderItem = {
   params: Joi.object().keys({
-    cartItemId: Joi.string().custom(objectId),
+    orderItemId: Joi.string().custom(objectId),
   }),
 };
 
-const updateCartItem = {
+const updateOrderItem = {
   params: Joi.object().keys({
-    cartItemId: Joi.required().custom(objectId),
+    orderItemId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
-      shoppingSessionId: Joi.string().custom(objectId),
+      orderDetailId: Joi.string().custom(objectId),
       albumId: Joi.string().custom(objectId),
       quantity: Joi.number(),
     })
     .min(1),
 };
 
-const deleteCartItem = {
+const deleteOrderItem = {
   params: Joi.object().keys({
-    cartItemId: Joi.string().custom(objectId),
+    orderItemId: Joi.string().custom(objectId),
   }),
 };
 
 module.exports = {
-  createCartItems,
-  getCartItems,
-  getCartItem,
-  updateCartItem,
-  deleteCartItem,
+  createOrderItem,
+  getOrderItems,
+  getOrderItem,
+  updateOrderItem,
+  deleteOrderItem,
 };

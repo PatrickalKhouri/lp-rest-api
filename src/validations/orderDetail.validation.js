@@ -13,7 +13,7 @@ const getOrderDetails = {
   query: Joi.object().keys({
     userId: Joi.string().custom(objectId),
     userPaymentId: Joi.string().custom(objectId),
-    total: Joi.string(),
+    total: Joi.number(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -34,7 +34,7 @@ const updateOrderDetail = {
     .keys({
       userId: Joi.string().custom(objectId),
       userPaymentId: Joi.string().custom(objectId),
-      total: Joi.string(),
+      total: Joi.number(),
     })
     .min(1),
 };
