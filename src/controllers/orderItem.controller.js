@@ -15,10 +15,9 @@ const createOrderItem = catchAsync(async (req, res) => {
   if (!orderDetail) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't create order item for non existing order detail");
   }
-  const orderDetailUserId = await userService.getUserById(orderDetail.userId);
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
-    if (String(orderDetailUserId._id) !== String(currentUser._id)) {
+    if (String(orderDetail.userId) !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to create an order item for another user');
     } else {
       try {
@@ -51,8 +50,7 @@ const getOrderItems = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all order items');
   } else {
     const orderDetail = await orderDetailService.getOrderDetailById(filter.orderDetailId);
-    const orderDetailUserId = orderDetail.userId;
-    if (String(currentUser._id) === String(orderDetailUserId)) {
+    if (String(currentUser._id) === String(orderDetail.userId)) {
       const result = await orderItemService.queryOrderItems(filter, options);
       res.send(result);
     } else {
@@ -69,8 +67,7 @@ const getOrderItem = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
     const orderDetail = await orderDetailService.getOrderDetailById(String(orderItem.orderDetailId));
-    const orderDetailUserId = orderDetail.userId;
-    if (String(orderDetailUserId) !== String(currentUser._id)) {
+    if (String(orderDetail.userId) !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to get an order item of another user');
     } else {
       res.send(orderItem);
@@ -87,8 +84,7 @@ const updateOrderItem = catchAsync(async (req, res) => {
     if (!orderDetail) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Order Detail to update not found');
     }
-    const orderDetailUserId = orderDetail.userId;
-    if (!orderDetailUserId) {
+    if (!orderDetail.userId) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Can't update order item for non existing user");
     }
   }
@@ -99,9 +95,9 @@ const updateOrderItem = catchAsync(async (req, res) => {
     }
   }
   const orderItemToUpdate = await orderItemService.getOrderItemById(req.params.orderItemId);
-  const orderItemOrderDetail = await orderDetailService.getOrderDetailById(String(orderItemToUpdate.orderDetailId));
+  const orderDetail = await orderDetailService.getOrderDetailById(String(orderItemToUpdate.orderDetailId));
   if (currentUser.role !== 'admin') {
-    if (String(currentUser._id) !== String(orderItemOrderDetail.userId)) {
+    if (String(currentUser._id) !== String(orderDetail.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to update an order item for another user');
     } else {
       try {
@@ -127,8 +123,8 @@ const deleteOrderItem = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
     const orderItemToDelete = await orderItemService.getOrderItemById(req.params.orderItemId);
-    const orderItemOrderDetail = await orderDetailService.getOrderDetailById(String(orderItemToDelete.orderDetailId));
-    if (String(currentUser._id) !== String(orderItemOrderDetail.userId)) {
+    const orderDetail = await orderDetailService.getOrderDetailById(String(orderItemToDelete.orderDetailId));
+    if (String(currentUser._id) !== String(orderDetail.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to delete a order item for another user');
     } else {
       await orderItemService.deleteOrderItemById(req.params.orderItemId);
