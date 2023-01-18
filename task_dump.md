@@ -1,7 +1,5 @@
 testes em que id referenciados nao existem
 
-verificar o igualidade sem ser adm se botei o id
-
 corrigir os testes comentados
 
  Compared values serialize to the same structure.
