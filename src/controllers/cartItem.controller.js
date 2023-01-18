@@ -51,8 +51,7 @@ const getCartItems = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all user payments');
   } else {
     const shoppingSession = await shoppingSessionService.getShoppingSessionById(filter.shoppingSessionId);
-    const shoppingSessionUserId = shoppingSession.userId;
-    if (String(currentUser._id) === String(shoppingSessionUserId)) {
+    if (String(currentUser._id) === String(shoppingSession.userId)) {
       const result = await cartItemService.queryCartItems(filter, options);
       res.send(result);
     } else {
@@ -69,8 +68,7 @@ const getCartItem = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
     const shoppingSession = await shoppingSessionService.getShoppingSessionById(String(cartItem.shoppingSessionId));
-    const shoppingSessionUserId = shoppingSession.userId;
-    if (String(shoppingSessionUserId) !== String(currentUser._id)) {
+    if (String(shoppingSession.userId) !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to get a cart item of another user');
     } else {
       res.send(cartItem);
@@ -87,8 +85,7 @@ const updateCartItem = catchAsync(async (req, res) => {
     if (!shoppingSession) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Shpping Session to update not found');
     }
-    const shoppingSessionUserId = shoppingSession.userId;
-    if (!shoppingSessionUserId) {
+    if (!shoppingSession.userId) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Can't update item cart for non existing user");
     }
   }
@@ -133,8 +130,7 @@ const deleteCartItem = catchAsync(async (req, res) => {
     const cartItemShoppingSession = await shoppingSessionService.getShoppingSessionById(
       String(cartItemToDelete.shoppingSessionId)
     );
-    const shoppingSessionUser = await userService.getUserById(String(cartItemShoppingSession.userId));
-    if (String(currentUser._id) !== String(shoppingSessionUser._id)) {
+    if (String(currentUser._id) !== String(cartItemShoppingSession.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to delete a cart item for another user');
     } else {
       await cartItemService.deleteCartItemById(req.params.cartItemId);
