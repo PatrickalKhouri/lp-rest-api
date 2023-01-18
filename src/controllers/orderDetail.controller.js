@@ -50,8 +50,7 @@ const getOrderDetails = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all orders details');
   } else {
     const userPayment = await userPaymentService.getUserPaymentById(filter.userPaymentId);
-    const userPaymentUserId = userPayment.userId;
-    if (String(currentUser._id) === String(userPaymentUserId)) {
+    if (String(currentUser._id) === String(userPayment.userId)) {
       const result = await orderDetailService.queryOrderDetails(filter, options);
       res.send(result);
     } else {

@@ -104,9 +104,9 @@ const updateUserPayment = catchAsync(async (req, res) => {
 
 const deleteUserPayment = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
-  const userPaymentToDelete = await userPaymentService.getUserPaymentById(req.params.userPaymentId);
+  const userPayment = await userPaymentService.getUserPaymentById(req.params.userPaymentId);
   if (currentUser.role !== 'admin') {
-    if (String(currentUser._id) !== String(userPaymentToDelete.userId)) {
+    if (String(currentUser._id) !== String(userPayment.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to delete a user Payment for another user');
     } else {
       await userPaymentService.deleteUserPaymentById(req.params.userPaymentId);

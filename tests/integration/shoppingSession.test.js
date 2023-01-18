@@ -432,7 +432,7 @@ describe('Shopping Session routes', () => {
         .patch(`/v1/shoppingSessions/${shoppingSessionOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 });

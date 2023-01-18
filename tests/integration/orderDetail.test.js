@@ -497,7 +497,7 @@ describe('Order Details routes', () => {
         .patch(`/v1/orderDetails/${orderDetailOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 });

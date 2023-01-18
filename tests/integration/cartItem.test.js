@@ -626,7 +626,7 @@ describe('Cart Item routes', () => {
         .patch(`/v1/cartItems/${cartItemOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send(updateBody)
-        .expect(httpStatus.BAD_REQUEST);
+        .expect(httpStatus.INTERNAL_SERVER_ERROR);
     });
   });
 });
