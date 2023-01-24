@@ -41,16 +41,6 @@ describe('Person routes', () => {
         nationality: newPerson.nationality,
         gender: newPerson.gender,
       });
-
-      // const dbPerson = await Person.findById(res.body.id);
-      // expect(dbPerson).toBeDefined();
-      // expect(dbPerson).toMatchObject({
-      //   name: newPerson.name,
-      //   dateOfBirth: newPerson.dateOfBirth,
-      //   alive: newPerson.alive,
-      //   nationality: newPerson.nationality,
-      //   gender: newPerson.newPerson,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -362,16 +352,6 @@ describe('Person routes', () => {
         dateOfBirth: personOne.dateOfBirth,
         gender: personOne.gender,
       });
-
-      // const dbPerson = await Person.findById(personOne._id);
-      // expect(dbPerson).toBeDefined();
-      // expect(dbPerson).toMatchObject({
-      //   id: personOne._id.toHexString(),
-      //   name: updateBody.name,
-      //   email: updateBody.alive,
-      //   nationality: updateBody.nationality,
-      //   dateOfBirth: updateBody.dateOfBirth,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

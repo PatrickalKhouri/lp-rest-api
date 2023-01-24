@@ -54,19 +54,6 @@ describe('Album routes', () => {
         price: newAlbum.price,
         format: newAlbum.format,
       });
-
-      // const dbAlbum = await Album.findById(res.body.id);
-      // expect(dbAlbum).toBeDefined();
-      // expect(dbAlbum).toMatchObject({
-      //   recordId: newAlbum.recordId,
-      //   userId: newAlbum.userId,
-      //   description: newAlbum.description,
-      //   stock: newAlbum.stock,
-      //   year: newAlbum.year,
-      //   new: newAlbum.new,
-      //   price: newAlbum.price,
-      //   type: newAlbum.type,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -470,20 +457,6 @@ describe('Album routes', () => {
         price: albumOne.price,
         format: albumOne.format,
       });
-
-      // const dbAlbum = await Album.findById(albumOne._id);
-      // expect(dbAlbum).toBeDefined();
-      // expect(dbAlbum).toMatchObject({
-      //   id: albumOne._id.toHexString(),
-      //   recordId: albumOne.recordId,
-      //   userId: albumOne.userId,
-      //   description: updateBody.description,
-      //   stock: updateBody.stock,
-      //   year: updateBody.year,
-      //   new: albumOne.new,
-      //   price: albumOne.price,
-      //   format: albumOne.format,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

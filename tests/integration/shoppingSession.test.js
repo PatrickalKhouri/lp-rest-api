@@ -36,15 +36,6 @@ describe('Shopping Session routes', () => {
         userId: String(newShoppingSession.userId),
         total: Number(newShoppingSession.total),
       });
-
-      // const dbShoppingSession = await ShoppingSession.findById(res.body.id);
-      // expect(dbShoppingSession).toBeDefined();
-      // expect(dbShoppingSession).toMatchObject({
-      //   userId: newShoppingSession.userId,
-      //   total: newShoppingSession.total,
-      //   createdAt: newShoppingSession.createdAt,
-      //   modifiedAt: newShoppingSession.modifiedAt,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -365,16 +356,6 @@ describe('Shopping Session routes', () => {
         userId: String(shoppingSessionOne.userId),
         total: Number(updateBody.total),
       });
-
-      // const dbShoppingSession = await ShoppingSession.findById(shoppingSessionOne._id);
-      // expect(dbShoppingSession).toBeDefined();
-      // expect(dbShoppingSession).toMatchObject({
-      //   id: shoppingSessionOne._id.toHexString(),
-      //   userId: shoppingSessionOne.userId,
-      //   total: shoppingSessionOne.accountNumber,
-      //   createdAt: shoppingSessionOne.createdAt,
-      //   modifiedAt: shoppingSessionOne.modifiedAt,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

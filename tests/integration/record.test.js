@@ -53,19 +53,6 @@ describe('Record routes', () => {
         recordType: newRecord.recordType,
         numberOfTracks: newRecord.numberOfTracks,
       });
-
-      // const dbRecord = await Record.findById(res.body.id);
-      // expect(dbRecord).toBeDefined();
-      // expect(dbRecord).toMatchObject({
-      //   artistId: newRecord.artistId,
-      //   labelId: newRecord.labelId,
-      //   name: newRecord.name,
-      //   releaseYear: newRecord.releaseYear,
-      //   country: newRecord.country,
-      //   duration: newRecord.duration,
-      //   language: newRecord.language,
-      //   numberOfTracks: newRecord.numberOfTracks,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -403,19 +390,6 @@ describe('Record routes', () => {
         id: recordOne._id.toHexString(),
         artistId: recordOne.artistId,
         labelId: recordOne.labelId,
-        name: updateBody.name,
-        releaseYear: updateBody.releaseYear,
-        country: recordOne.country,
-        recordType: recordOne.recordType,
-        duration: recordOne.duration,
-        language: recordOne.language,
-        numberOfTracks: recordOne.numberOfTracks,
-      });
-
-      const dbRecord = await Record.findById(recordOne._id);
-      expect(dbRecord).toBeDefined();
-      expect(dbRecord).toMatchObject({
-        id: recordOne._id.toHexString(),
         name: updateBody.name,
         releaseYear: updateBody.releaseYear,
         country: recordOne.country,

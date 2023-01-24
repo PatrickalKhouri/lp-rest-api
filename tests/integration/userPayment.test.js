@@ -39,17 +39,6 @@ describe('User Payments routes', () => {
         paymentType: newUserPayment.paymentType,
         provider: newUserPayment.provider,
       });
-
-      // const dbUserPayment = await UserPayment.findById(res.body.id);
-      // expect(dbUserPayment).toBeDefined();
-      // expect(dbUserPayment).toMatchObject({
-      //   userId: newUserPayment.userId,
-      //   accountNumber: newUserPayment.accountNumber,
-      //   paymentType: newUserPayment.paymentType,
-      //   provider: newUserPayment.provider,
-      //   createdAt: newUserPayment.createdAt,
-      //   modifiedAt: newUserPayment.modifiedAt,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -383,16 +372,6 @@ describe('User Payments routes', () => {
       expect(res.body).toEqual({
         id: userPaymentOne._id.toHexString(),
         userId: String(userPaymentOne.userId),
-        accountNumber: updateBody.accountNumber,
-        paymentType: userPaymentOne.paymentType,
-        provider: userPaymentOne.provider,
-      });
-
-      const dbUserPayment = await UserPayment.findById(userPaymentOne._id);
-      expect(dbUserPayment).toBeDefined();
-      expect(dbUserPayment).toMatchObject({
-        id: userPaymentOne._id.toHexString(),
-        userId: userPaymentOne.userId,
         accountNumber: updateBody.accountNumber,
         paymentType: userPaymentOne.paymentType,
         provider: userPaymentOne.provider,

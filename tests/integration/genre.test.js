@@ -32,10 +32,6 @@ describe('Genre routes', () => {
         id: expect.anything(),
         name: newGenre.name,
       });
-
-      // const dbGenre = await Genre.findById(res.body.id);
-      // expect(dbGenre).toBeDefined();
-      // expect(dbGenre).toMatchObject({ name: newGenre.name });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -317,10 +313,6 @@ describe('Genre routes', () => {
         id: genreOne._id.toHexString(),
         name: updateBody.name,
       });
-
-      // const dbGenre = await Genre.findById(genreOne._id);
-      // expect(dbGenre).toBeDefined();
-      // expect(dbGenre).toMatchObject({ name: updateBody.name });
     });
 
     test('should return 401 error if access token is missing', async () => {
