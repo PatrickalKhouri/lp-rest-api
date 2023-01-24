@@ -39,14 +39,6 @@ describe('Order Details routes', () => {
         userPaymentId: String(newOrderDetails.userPaymentId),
         total: Number(newOrderDetails.total),
       });
-
-      // const dbOrderDetail = await OrderDetail.findById(res.body.id);
-      // expect(dbOrderDetail).toBeDefined();
-      // expect(dbOrderDetail).toMatchObject({
-      //   userId: String(newOrderDetails.userId),
-      //   userPaymentId: String(newOrderDetails.userPaymentId),
-      //   total: Number(newOrderDetails.total),
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -415,17 +407,6 @@ describe('Order Details routes', () => {
         userPaymentId: String(orderDetailOne.userPaymentId),
         total: Number(updateBody.total),
       });
-
-      // const dbOrderDetail = await OrderDetail.findById(orderDetailOne._id);
-      // expect(dbOrderDetail).toBeDefined();
-      // expect(dbOrderDetail).toMatchObject({
-      //   id: orderDetailOne._id.toHexString(),
-      //   userId: orderDetailOne.userId,
-      //   userPaymentId: orderDetailOne.accountNumber,
-      //   total: updateBody.total,
-      //   createdAt: orderDetailOne.createdAt,
-      //   modifiedAt: orderDetailOne.modifiedAt,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

@@ -44,16 +44,6 @@ describe('Order Item routes', () => {
         orderDetailId: String(newOrderItem.orderDetailId),
         quantity: Number(newOrderItem.quantity),
       });
-
-      // const dbOrderItem = await OrderItem.findById(res.body.id);
-      // expect(dbOrderItem).toBeDefined();
-      // expect(dbOrderItem).toMatchObject({
-      //   albumId: newOrderItem.albumId,
-      //   orderDetailId: newOrderItem.albumId,
-      //   quantity: newOrderItem.quantity,
-      //   createdAt: newOrderItem.createdAt,
-      //   modifiedAt: newOrderItem.modifiedAt,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

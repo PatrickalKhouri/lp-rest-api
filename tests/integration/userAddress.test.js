@@ -45,19 +45,6 @@ describe('User Address Routes routes', () => {
         state: newUserAddress.state,
         country: newUserAddress.country,
       });
-
-      // const dbUserAddress = await UserAddress.findById(res.body.id);
-      // expect(dbUserAddress).toBeDefined();
-      // expect(dbUserAddress).toMatchObject({
-      //   _id: dbUserAddress._id,
-      //   userId: String(newUserAddress.userId),
-      //   streetName: newUserAddress.streetName,
-      //   postalCode: newUserAddress.postalCode,
-      //   buildingNumber: newUserAddress.buildingNumber,
-      //   city: newUserAddress.city,
-      //   state: newUserAddress.state,
-      //   country: newUserAddress.country,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -400,19 +387,6 @@ describe('User Address Routes routes', () => {
         state: userAddressOne.state,
         country: userAddressOne.country,
       });
-
-      // const dbUserAddress = await UserAddress.findById(userAddressOne._id);
-      // expect(dbUserAddress).toBeDefined();
-      // expect(dbUserAddress).toMatchObject({
-      //   id: userAddressOne._id.toHexString(),
-      //   userId: userOne._id.toHexString(),
-      //   streetName: userAddressOne.streetName,
-      //   buildingNumber: userAddressOne.buildingNumber,
-      //   postalCode: userAddressOne.postalCode,
-      //   city: updateBody.city,
-      //   state: userAddressOne.state,
-      //   country: userAddressOne.country,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

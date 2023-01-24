@@ -39,10 +39,6 @@ describe('Artist routes', () => {
         name: newArtist.name,
         country: newArtist.country,
       });
-
-      // const dbArtist = await Artist.findById(res.body.id);
-      // expect(dbArtist).toBeDefined();
-      // expect(dbArtist).toMatchObject({ labelId: newArtist.labelId, name: newArtist.name, country: newArtist.country });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -385,10 +381,6 @@ describe('Artist routes', () => {
         name: updateBody.name,
         country: artistOne.country,
       });
-
-      // const dbArtist = await Artist.findById(artistOne._id);
-      // expect(dbArtist).toBeDefined();
-      // expect(dbArtist).toMatchObject({ labelId: artistOne.labelId, name: updateBody.name, country: artistOne.country });
     });
 
     test('should return 401 error if access token is missing', async () => {

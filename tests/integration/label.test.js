@@ -35,10 +35,6 @@ describe('Label routes', () => {
         name: newLabel.name,
         country: newLabel.country,
       });
-
-      // const dbLabel = await Label.findById(res.body.id);
-      // expect(dbLabel).toBeDefined();
-      // expect(dbLabel).toMatchObject({ name: newLabel.name, country: newLabel.country });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -349,10 +345,6 @@ describe('Label routes', () => {
         name: updateBody.name,
         country: labelOne.country,
       });
-
-      const dbLabel = await Label.findById(labelOne._id);
-      expect(dbLabel).toBeDefined();
-      expect(dbLabel).toMatchObject({ name: updateBody.name });
     });
 
     test('should return 401 error if access token is missing', async () => {

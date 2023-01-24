@@ -43,10 +43,6 @@ describe('Record Genre routes', () => {
         recordId: newRecordGenre.recordId,
         genreId: newRecordGenre.genreId,
       });
-
-      // const dbRecordGenre = await RecordGenre.findById(res.body.id);
-      // expect(dbRecordGenre).toBeDefined();
-      // expect(dbRecordGenre).toMatchObject({ recordId: newRecordGenre.recordId, genreId: newRecordGenre.genreId });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -348,10 +344,6 @@ describe('Record Genre routes', () => {
         recordId: String(updateBody.recordId),
         genreId: String(recordGenreOne.genreId),
       });
-
-      // const dbRecordGenre = await RecordGenre.findById(recordGenreOne._id);
-      // expect(dbRecordGenre).toBeDefined();
-      // expect(dbRecordGenre).toMatchObject({ recordId: updateBody.recordId, genreId: recordGenreOne.genreId });
     });
 
     test('should return 401 error if access token is missing', async () => {

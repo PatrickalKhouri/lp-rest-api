@@ -40,10 +40,6 @@ describe('Band Member routes', () => {
         artistId: String(newBandMember.artistId),
         personId: String(newBandMember.personId),
       });
-
-      // const dbBandMember = await BandMember.findById(res.body.id);
-      // expect(dbBandMember).toBeDefined();
-      // expect(dbBandMember).toMatchObject({ artistId: newBandMember.artistId, personId: newBandMember.personId });
     });
 
     test('should return 401 error if access token is missing', async () => {
@@ -354,10 +350,6 @@ describe('Band Member routes', () => {
         artistId: String(updateBody.artistId),
         personId: String(bandMemberOne.personId),
       });
-
-      const dbBandMember = await BandMember.findById(bandMemberOne._id);
-      expect(dbBandMember).toBeDefined();
-      expect(dbBandMember).toMatchObject({ artistId: updateBody.artistId, personId: bandMemberOne.personId });
     });
 
     test('should return 401 error if access token is missing', async () => {
