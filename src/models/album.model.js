@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { albumFormatsString } = require('../config/albumFormat');
+const { CartItem, OrderItem } = require('./index');
 
 const albumSchema = mongoose.Schema({
 	userId: {
@@ -59,6 +60,12 @@ albumSchema.index({
 	year: 1,
 	new: 1,
   }, {unique: true})
+
+  albumSchema.pre('remove', async function(next) {
+	CartItem.remove({ albumId: this._id }).exec();
+	OrderItem.remove({ albumId: this._id }).exec();
+    next();
+})
 
 const Album = mongoose.model('Album', albumSchema);
 
