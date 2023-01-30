@@ -76,11 +76,11 @@ recordSchema.index({
 recordSchema.pre('remove', async function(next) {
     const albums = await Album.find({recordId: this._id});
     RecordGenre.remove({ recordId: this._id }).exec();
-        Album.remove({ recordId: this._id }).exec();
-        albums.forEach(async (album) => {
-            CartItem.remove({ albumId: album._id }).exec();
-            OrderItem.remove({ albumId: album._id }).exec();
-        })
+    Album.remove({ recordId: this._id }).exec();
+    albums.forEach(async (album) => {
+        CartItem.remove({ albumId: album._id }).exec();
+        OrderItem.remove({ albumId: album._id }).exec();
+    })
     next();
 });
 

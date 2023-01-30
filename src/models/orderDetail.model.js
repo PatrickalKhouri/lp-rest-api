@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
+const { OrderItem } = require('.');
 const { toJSON, paginate } = require('./plugins');
 
 const orderDetailSchema = mongoose.Schema({
@@ -25,6 +26,11 @@ const orderDetailSchema = mongoose.Schema({
     
 orderDetailSchema.plugin(toJSON);
 orderDetailSchema.plugin(paginate);
+
+orderDetailSchema.pre('remove', function(next) {
+    OrderItem.remove({ OrderDetailId: this._id }).exec();
+    next();
+  });
 
 const OrderDetail = mongoose.model('OrderDetail', orderDetailSchema);
 
