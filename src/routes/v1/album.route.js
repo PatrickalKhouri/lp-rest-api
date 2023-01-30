@@ -22,17 +22,17 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Albumes
- *   description: User Address management and retrieval
+ *   name: Albums
+ *   description: Ablum management and retrieval
  */
 
 /**
  * @swagger
- * /usersAddresses:
+ * /albums:
  *   post:
- *     summary: Create a user address
- *     description: Only admins can create for other users.
- *     tags: [Albumes]
+ *     summary: Creates an album
+ *     description: Only admins can create albums for other users.
+ *     tags: [Albums]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -43,42 +43,39 @@ module.exports = router;
  *             type: object
  *             required:
  *               - userId
- *               - streetName
- *               - buildingNumber
- *               - postalCode
- *               - city
- *               - state
- *               - country
+ *               - recordId
+ *               - description
+ *               - stock
+ *               - new
+ *               - price
+ *               - format
  *             properties:
  *               userId:
  *                 type: ObjectId,
- *               streetName:
+ *               recordId:
+ *                 type: ObjectId,
+ *               description:
  *                 type: string
- *               buildingNumber:
- *                 type: string
- *               apartmentNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
+ *               stock:
+ *                 type: number
+ *               new:
+ *                  type: boolean
+ *               year:
+ *                  type: number
+ *               price:
+ *                  type: number
+ *               format:
  *                  type: string
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '10'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               id: 63d82f4bc18419431a8e3fea
+ *               userId: 5ebac534954b54139806c112
+ *               recordId: 635854f8c2c2391300fa85bf
+ *               description: fake description
+ *               stock: 3
+ *               year: 2018
+ *               new: true
+ *               price: 150
+ *               format: Vinyl
  *     responses:
  *       "201":
  *         description: Created
@@ -94,9 +91,9 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   get:
- *     summary: Get all users addresses
- *     description: Only admins can retrieve all users addresses.
- *     tags: [Albumes]
+ *     summary: Get all albums
+ *     description: Only admins can retrieve albums.
+ *     tags: [Albums]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -104,22 +101,42 @@ module.exports = router;
  *         name: userId
  *         schema:
  *           type: string
- *         description: User Id of that address
+ *         description: User Id of that album
  *       - in: query
- *         name: city
+ *         name: recordId
  *         schema:
  *           type: string
- *         description: The city of the address
+ *         description: The record of the album
  *       - in: query
- *         name: state
+ *         name: description
  *         schema:
  *           type: string
- *         description: The state of the address
+ *         description: The description of the album
  *       - in: query
- *         name: country
+ *         name: stock
  *         schema:
- *           type: string
- *         description: The country of the address
+ *           type: number
+ *         description: The stock of the album
+ *       - in: query
+ *         name: new
+ *         schema:
+ *           type: boolean
+ *         description: If the album is new or used
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: number
+ *         description: The year of the album
+ *       - in: query
+ *         name: price
+ *         schema:
+ *           type: number
+ *         description: The price of the album
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: number
+ *         description: The format of the album
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -131,7 +148,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of user addreses
+ *         description: Maximum number of album
  *       - in: query
  *         name: page
  *         schema:
@@ -171,11 +188,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /Albumes/{id}:
+ * /Albums/{id}:
  *   get:
- *     summary: Get a user address
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [Albumes]
+ *     summary: Gets an album
+ *     description: Logged in users can fetch only their own albums. Only admins can fetch other users.
+ *     tags: [Albums]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -184,7 +201,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Address id
+ *         description: Album id
  *     responses:
  *       "200":
  *         description: OK
@@ -200,9 +217,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user address
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Albumes]
+ *     summary: Updates an album
+ *     description: Logged in users can only update their own albums. Only admins can update other users albums.
+ *     tags: [Albums]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -211,7 +228,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Address id
+ *         description: Album id
  *     requestBody:
  *       required: true
  *       content:
@@ -220,34 +237,31 @@ module.exports = router;
  *             type: object
  *             properties:
  *               userId:
- *                 type: objectId
- *                 description: only admins can update userId
- *               streetName:
+ *                 type: ObjectId,
+ *               recordId:
+ *                 type: ObjectId,
+ *               description:
  *                 type: string
- *               buildingNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
+ *               stock:
+ *                 type: number
+ *               new:
+ *                  type: boolean
+ *               year:
+ *                  type: number
+ *               price:
+ *                  type: number
+ *               format:
  *                  type: string
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '201A'
- *               complement: 'Block 2'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               id: 63d82f4bc18419431a8e3fea
+ *               userId: 5ebac534954b54139806c112
+ *               recordId: 635854f8c2c2391300fa85bf
+ *               description: fake description
+ *               stock: 3
+ *               year: 2018
+ *               new: true
+ *               price: 150
+ *               format: Vinyl
  *     responses:
  *       "200":
  *         description: OK
@@ -263,11 +277,10 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *       "500":
  *         $ref: '#/components/responses/InternalServerError'
- *
  *   delete:
- *     summary: Delete a user address
- *     description: Logged in users can delete only their user addresses. Only admins can delete other user addresses.
- *     tags: [Albumes]
+ *     summary: Deletes an album
+ *     description: Logged in users can delete only their albums. Only admins can delete other albums.
+ *     tags: [Albums]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -276,7 +289,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Address id
+ *         description: Album id
  *     responses:
  *       "200":
  *         description: No content

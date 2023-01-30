@@ -35,14 +35,14 @@ module.exports = router;
  * @swagger
  * tags:
  *   name: OrderDetails
- *   description: Order Detail management and retrieval
+ *   description: Order Details management and retrieval
  */
 
 /**
  * @swagger
- * /usersPayments:
+ * /orderDetails:
  *   post:
- *     summary: Creates as Order Detail
+ *     summary: Creates an Order Detail
  *     description: Only admins can create for other users.
  *     tags: [OrderDetails]
  *     security:
@@ -55,42 +55,19 @@ module.exports = router;
  *             type: object
  *             required:
  *               - userId
- *               - streetName
- *               - buildingNumber
- *               - postalCode
- *               - city
- *               - state
- *               - country
+ *               - userPaymentId
+ *               - total
  *             properties:
  *               userId:
  *                 type: ObjectId,
- *               streetName:
- *                 type: string
- *               buildingNumber:
- *                 type: string
- *               apartmentNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
+ *               userPaymentId:
+ *                 type: ObjectId
+ *               total:
+ *                 type: number
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '10'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               userId: 63d83e72afb88a9cf62f8a97
+ *               userPaymentId: 63d83e6a6d2b5d025f9a31fe
+ *               total: 10
  *     responses:
  *       "201":
  *         description: Created
@@ -106,8 +83,8 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   get:
- *     summary: Get all users Payments
- *     description: Only admins can retrieve all users Payments.
+ *     summary: Gets all Order Details
+ *     description: Only admins can retrieve all Order Details.
  *     tags: [OrderDetails]
  *     security:
  *       - bearerAuth: []
@@ -116,22 +93,17 @@ module.exports = router;
  *         name: userId
  *         schema:
  *           type: string
- *         description: User Id of that Payment
+ *         description: User Id of the order detail
  *       - in: query
- *         name: city
+ *         name: userPaymentId
  *         schema:
  *           type: string
- *         description: The city of the Payment
+ *         description: The User Payment Id of the order detail
  *       - in: query
- *         name: state
+ *         name: total
  *         schema:
  *           type: string
- *         description: The state of the Payment
- *       - in: query
- *         name: country
- *         schema:
- *           type: string
- *         description: The country of the Payment
+ *         description: the total of the order detail
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -143,7 +115,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of user addreses
+ *         description: Maximum number of Order Details
  *       - in: query
  *         name: page
  *         schema:
@@ -183,10 +155,10 @@ module.exports = router;
 
 /**
  * @swagger
- * /OrderDetails/{id}:
+ * /orderDetails/{id}:
  *   get:
- *     summary: Get a user Payment
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     summary: Gets an Order Details
+ *     description: Logged in users can fetch only their own order detail. Only admins can fetch other Order Details.
  *     tags: [OrderDetails]
  *     security:
  *       - bearerAuth: []
@@ -196,7 +168,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Payment id
+ *         description: order detail id
  *     responses:
  *       "200":
  *         description: OK
@@ -212,8 +184,8 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user Payment
- *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     summary: Update an order detail
+ *     description: Logged in users can update only their own order detail. Only admins can update other Order Details.
  *     tags: [OrderDetails]
  *     security:
  *       - bearerAuth: []
@@ -223,43 +195,28 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Payment id
+ *         description: order detail id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userId
+ *               - userPaymentId
+ *               - total
  *             properties:
  *               userId:
- *                 type: objectId
- *                 description: only admins can update userId
- *               streetName:
- *                 type: string
- *               buildingNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
+ *                 type: ObjectId,
+ *               userPaymentId:
+ *                 type: ObjectId
+ *               total:
+ *                 type: number
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '201A'
- *               complement: 'Block 2'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               userId: 63d83e72afb88a9cf62f8a97
+ *               userPaymentId: 63d83e6a6d2b5d025f9a31fe
+ *               total: 12
  *     responses:
  *       "200":
  *         description: OK
@@ -277,8 +234,8 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   delete:
- *     summary: Delete a user Payment
- *     description: Logged in users can delete only their user Payments. Only admins can delete other user Payments.
+ *     summary: Deletes a order detail
+ *     description: Logged in users can delete only their own order detail. Only admins can delete other Order Details.
  *     tags: [OrderDetails]
  *     security:
  *       - bearerAuth: []
@@ -288,7 +245,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Payment id
+ *         description: order detail id
  *     responses:
  *       "200":
  *         description: No content

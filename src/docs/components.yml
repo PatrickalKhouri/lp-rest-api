@@ -198,7 +198,7 @@ components:
           type: string
         genreId:
           type: string
-        example:
+      example:
           id: 6375490d72497a50f1f3de58
           recordId: 635854f8c2c2391300fa85bf
           genreId: 632f42f228914eff60e84388
@@ -211,7 +211,7 @@ components:
           type: string
         total:
           type: string
-        example:
+      example:
           id: 63d833f9f1968fc5af7ea3a0
           userId: 5ebac534954b54139806c112
           total: 230

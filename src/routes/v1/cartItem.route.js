@@ -22,17 +22,17 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: UserPayments
- *   description: User Payment management and retrieval
+ *   name: CartItems
+ *   description: Cart Items management and retrieval
  */
 
 /**
  * @swagger
- * /usersPayments:
+ * /cartItems:
  *   post:
- *     summary: Create a user Payment
+ *     summary: Creates a Cart Item
  *     description: Only admins can create for other users.
- *     tags: [UserPayments]
+ *     tags: [CartItems]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,50 +42,29 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - userId
- *               - streetName
- *               - buildingNumber
- *               - postalCode
- *               - city
- *               - state
- *               - country
+ *               - shoppingSessionId
+ *               - albumId
+ *               - quantity
  *             properties:
- *               userId:
+ *               shoppingSessionId:
  *                 type: ObjectId,
- *               streetName:
- *                 type: string
- *               buildingNumber:
- *                 type: string
+ *               albumId:
+ *                 type: ObjectId
+ *               quantity:
+ *                 type: number
  *               apartmentNumber:
  *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '10'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               shoppingSessionId: 63d83e72afb88a9cf62f8a97
+ *               albumId: 63d83e6a6d2b5d025f9a31fe
+ *               quantity: 10
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/UserPayment'
+ *                $ref: '#/components/schemas/CartItem'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -94,32 +73,27 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   get:
- *     summary: Get all users Payments
- *     description: Only admins can retrieve all users Payments.
- *     tags: [UserPayments]
+ *     summary: Gets all Cart Items
+ *     description: Only admins can retrieve all Cart Items.
+ *     tags: [CartItems]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: userId
+ *         name: shoppingSessionId
  *         schema:
  *           type: string
- *         description: User Id of that Payment
+ *         description: Shopping Session Id of the Cart Item
  *       - in: query
- *         name: city
+ *         name: albumId
  *         schema:
  *           type: string
- *         description: The city of the Payment
+ *         description: The Album Id of the Cart Item
  *       - in: query
- *         name: state
+ *         name: quantity
  *         schema:
  *           type: string
- *         description: The state of the Payment
- *       - in: query
- *         name: country
- *         schema:
- *           type: string
- *         description: The country of the Payment
+ *         description: the quantity of the cart item
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -131,7 +105,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of user addreses
+ *         description: Maximum number of cart items
  *       - in: query
  *         name: page
  *         schema:
@@ -150,7 +124,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/UserPayment'
+ *                     $ref: '#/components/schemas/CartItem'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -171,11 +145,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /userPayments/{id}:
+ * /cartItems/{id}:
  *   get:
- *     summary: Get a user Payment
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [UserPayments]
+ *     summary: Gets a Cart Items
+ *     description: Logged in users can fetch only their own cart item. Only admins can fetch other cart items.
+ *     tags: [CartItems]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -184,14 +158,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Payment id
+ *         description: Cart Item id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/UserPayment'
+ *                $ref: '#/components/schemas/CartItem'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -200,9 +174,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user Payment
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [UserPayments]
+ *     summary: Update a Cart Item
+ *     description: Logged in users can update only their own cart item. Only admins can update other cart items.
+ *     tags: [CartItems]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -211,50 +185,37 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Payment id
+ *         description: Cart Item id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - shoppingSessionId
+ *               - albumId
+ *               - quantity
  *             properties:
- *               userId:
- *                 type: objectId
- *                 description: only admins can update userId
- *               streetName:
+ *               shoppingSessionId:
+ *                 type: ObjectId,
+ *               albumId:
+ *                 type: ObjectId
+ *               quantity:
+ *                 type: number
+ *               apartmentNumber:
  *                 type: string
- *               buildingNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '201A'
- *               complement: 'Block 2'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               shoppingSessionId: 63d83e72afb88a9cf62f8a97
+ *               albumId: 63d83e6a6d2b5d025f9a31fe
+ *               quantity: 12
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/UserPayment'
+ *                $ref: '#/components/schemas/CartItem'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -265,9 +226,9 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   delete:
- *     summary: Delete a user Payment
- *     description: Logged in users can delete only their user Payments. Only admins can delete other user Payments.
- *     tags: [UserPayments]
+ *     summary: Deletes a Cart Item
+ *     description: Logged in users can delete only their own cart item. Only admins can delete other cart items.
+ *     tags: [CartItems]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -276,7 +237,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Payment id
+ *         description: Cart Item id
  *     responses:
  *       "200":
  *         description: No content
