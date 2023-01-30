@@ -1,4 +1,3 @@
-quando delete, como cascadeia num nosql?
 Atualizar erros no swagger (e na aplicação? talvez isso mude o erro 500 para 400 quando tiver itens duplicados) para os duplicados
 
 adicionar o id match nos getModelId (ver userAddressService)
