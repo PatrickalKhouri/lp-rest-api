@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
+const { CartItem } = require('.');
 const { toJSON, paginate } = require('./plugins');
 
 const shoppingSessionSchema = mongoose.Schema({
@@ -20,6 +21,11 @@ const shoppingSessionSchema = mongoose.Schema({
 
 shoppingSessionSchema.plugin(toJSON);
 shoppingSessionSchema.plugin(paginate);
+
+shoppingSessionSchema.pre('remove', async function(next) {
+  CartItem.remove({ shoppingSessionId: this._id }).exec();
+  next();
+});
 
 const ShoppingSession = mongoose.model('shoppingSession', shoppingSessionSchema);
 

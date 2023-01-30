@@ -43,16 +43,6 @@ describe('Cart Item routes', () => {
         shoppingSessionId: String(newCartItem.shoppingSessionId),
         quantity: Number(newCartItem.quantity),
       });
-
-      // const dbCartItem = await CartItem.findById(res.body.id);
-      // expect(dbCartItem).toBeDefined();
-      // expect(dbCartItem).toMatchObject({
-      //   albumId: newCartItem.albumId,
-      //   shoppingSessionId: newCartItem.albumId,
-      //   quantity: newCartItem.quantity,
-      //   createdAt: newCartItem.createdAt,
-      //   modifiedAt: newCartItem.modifiedAt,
-      // });
     });
 
     test('should return 401 error if access token is missing', async () => {

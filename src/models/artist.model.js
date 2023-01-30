@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
+const { BandMember } = require('./index');
 
 const artistSchema = mongoose.Schema({
     name: {
@@ -28,6 +29,10 @@ artistSchema.plugin(paginate);
 
 artistSchema.index({ name: 1, country: 1}, { unique: true })
 
+artistSchema.pre('remove', function(next) {
+    BandMember.remove({ artistId: this._id }).exec();
+    next();
+});
 const Artist = mongoose.model('Artist', artistSchema);
 
 module.exports = Artist;

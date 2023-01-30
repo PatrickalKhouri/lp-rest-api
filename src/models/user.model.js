@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const { UserAddress, Album, ShoppingSession, CartItem, UserPayment, OrderDetail, OrderItem } = require('.');
 
 const userSchema = mongoose.Schema(
   {
@@ -80,6 +81,27 @@ userSchema.pre('save', async function (next) {
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
   }
+  next();
+});
+
+userSchema.pre('remove', async function (next) {
+  UserAddress.remove({ userId: this._id }).exec();
+  Album.remove({ userId: this._id }).exec();
+
+  const shoppingSessions = await ShoppingSession.find({ userId: this._id });
+  ShoppingSession.remove({ userId: this._id }).exec();
+  shoppingSessions.forEach(async (shoppingSession) => {
+    CartItem.remove({ albumId: shoppingSession._id }).exec();
+  });
+  const userPayments = await UserPayment.find({ userId: this._id });
+  UserPayment.remove({ userId: this._id }).exec();
+  userPayments.forEach(async (userPayment) => {
+    const orderDetails = await OrderDetail.find({ userPaymentId: userPayment._id });
+    OrderDetail.remove({ userPaymentId: userPayment._id }).exec();
+    orderDetails.forEach(async (orderDetail) => {
+      OrderItem.remove({ orderDetailId: orderDetail._id }).exec();
+    });
+  });
   next();
 });
 
