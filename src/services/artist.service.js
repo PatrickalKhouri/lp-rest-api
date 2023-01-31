@@ -31,6 +31,9 @@ const queryArtists = async (filter, options) => {
  * @returns {Promise<Artist>}
  */
 const getArtistById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return Artist.findById(id);
+  }
   return Artist.findById(id);
 };
 

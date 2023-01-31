@@ -31,6 +31,9 @@ const queryGenres = async (filter, options) => {
  * @returns {Promise<Genre>}
  */
 const getGenreById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return Genre.findById(id);
+  }
   return Genre.findById(id);
 };
 

@@ -30,6 +30,9 @@ const queryRecordGenres = async (filter, options) => {
  * @returns {Promise<RecordGenre>}
  */
 const getRecordGenreById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return RecordGenre.findById(id);
+  }
   return RecordGenre.findById(id);
 };
 
