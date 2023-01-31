@@ -43,14 +43,14 @@ module.exports = router;
  * @swagger
  * tags:
  *   name: ShoppingSessions
- *   description: User Address management and retrieval
+ *   description: Shopping Session management and retrieval
  */
 
 /**
  * @swagger
- * /usersAddresses:
+ * /shoppingSessions:
  *   post:
- *     summary: Create a user address
+ *     summary: Creates an shopping session
  *     description: Only admins can create for other users.
  *     tags: [ShoppingSessions]
  *     security:
@@ -63,49 +63,22 @@ module.exports = router;
  *             type: object
  *             required:
  *               - userId
- *               - streetName
- *               - buildingNumber
- *               - postalCode
- *               - city
- *               - state
- *               - country
+ *               - total
  *             properties:
  *               userId:
  *                 type: ObjectId,
- *               streetName:
- *                 type: string
- *               buildingNumber:
- *                 type: string
- *               apartmentNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
+ *               total:
+ *                 type: number
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '10'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               userId: 63d83e72afb88a9cf62f8a97
+ *               total: 320
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/UserAddress'
+ *                $ref: '#/components/schemas/ShoppingSession'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -114,8 +87,8 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   get:
- *     summary: Get all users addresses
- *     description: Only admins can retrieve all users addresses.
+ *     summary: Gets all Shopping Session
+ *     description: Only admins can retrieve all Shopping Session.
  *     tags: [ShoppingSessions]
  *     security:
  *       - bearerAuth: []
@@ -124,22 +97,12 @@ module.exports = router;
  *         name: userId
  *         schema:
  *           type: string
- *         description: User Id of that address
+ *         description: User Id of the shopping session
  *       - in: query
- *         name: city
+ *         name: total
  *         schema:
  *           type: string
- *         description: The city of the address
- *       - in: query
- *         name: state
- *         schema:
- *           type: string
- *         description: The state of the address
- *       - in: query
- *         name: country
- *         schema:
- *           type: string
- *         description: The country of the address
+ *         description: the total of the shopping session
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -151,7 +114,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of user addreses
+ *         description: Maximum number of Shopping Session
  *       - in: query
  *         name: page
  *         schema:
@@ -170,7 +133,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/UserAddress'
+ *                     $ref: '#/components/schemas/ShoppingSession'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -191,10 +154,10 @@ module.exports = router;
 
 /**
  * @swagger
- * /ShoppingSessions/{id}:
+ * /shoppingSessions/{id}:
  *   get:
- *     summary: Get a user address
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     summary: Gets an Shopping Session
+ *     description: Logged in users can fetch only their own shopping session. Only admins can fetch other Shopping Session.
  *     tags: [ShoppingSessions]
  *     security:
  *       - bearerAuth: []
@@ -204,14 +167,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Address id
+ *         description: shopping session id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/UserAddress'
+ *                $ref: '#/components/schemas/ShoppingSession'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -220,8 +183,8 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user address
- *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     summary: Update an shopping session
+ *     description: Logged in users can update only their own shopping session. Only admins can update other Shopping Session.
  *     tags: [ShoppingSessions]
  *     security:
  *       - bearerAuth: []
@@ -231,50 +194,32 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Address id
+ *         description: shopping session id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userId
+ *               - total
  *             properties:
  *               userId:
- *                 type: objectId
- *                 description: only admins can update userId
- *               streetName:
- *                 type: string
- *               buildingNumber:
- *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
+ *                 type: ObjectId,
+ *               total:
+ *                 type: number
  *             example:
- *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '201A'
- *               complement: 'Block 2'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               userId: 63d83e72afb88a9cf62f8a97
+ *               userPaymentId: 63d83e6a6d2b5d025f9a31fe
+ *               total: 12
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/UserAddress'
+ *                $ref: '#/components/schemas/ShoppingSession'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -285,8 +230,8 @@ module.exports = router;
  *         $ref: '#/components/responses/InternalServerError'
  *
  *   delete:
- *     summary: Delete a user address
- *     description: Logged in users can delete only their user addresses. Only admins can delete other user addresses.
+ *     summary: Deletes a shopping session
+ *     description: Logged in users can delete only their own shopping session. Only admins can delete other Shopping Session.
  *     tags: [ShoppingSessions]
  *     security:
  *       - bearerAuth: []
@@ -296,7 +241,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User Address id
+ *         description: shopping session id
  *     responses:
  *       "200":
  *         description: No content
