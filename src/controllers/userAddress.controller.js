@@ -6,14 +6,14 @@ const catchAsync = require('../utils/catchAsync');
 const { userAddressService, tokenService, userService } = require('../services');
 
 const createUserAddress = catchAsync(async (req, res) => {
-  const bodyUserAddressUserId = req.body.userId;
-  const user = await userService.getUserById(bodyUserAddressUserId);
+  const { userId } = req.body;
+  const user = await userService.getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't create address for non existing user");
   }
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
-    if (req.body.userId !== String(currentUser._id)) {
+    if (userId !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to create a user address for another user');
     } else {
       try {

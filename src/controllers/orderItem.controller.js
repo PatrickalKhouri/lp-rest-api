@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { orderItemService, orderDetailService, albumService, tokenService, userService } = require('../services');
+const { orderItemService, orderDetailService, albumService, tokenService } = require('../services');
 
 const createOrderItem = catchAsync(async (req, res) => {
   const { albumId, orderDetailId } = req.body;

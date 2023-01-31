@@ -5,8 +5,8 @@ const catchAsync = require('../utils/catchAsync');
 const { artistService, labelService } = require('../services');
 
 const createArtist = catchAsync(async (req, res) => {
-  const bodyLabelId = req.body.labelId;
-  const label = await labelService.getLabelById(bodyLabelId);
+  const { labelId } = req.body;
+  const label = await labelService.getLabelById(labelId);
   if (!label) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
   } else {
@@ -32,8 +32,8 @@ const getArtist = catchAsync(async (req, res) => {
 
 const updateArtist = catchAsync(async (req, res) => {
   if (req.body.labelId) {
-    const bodyLabelId = req.body.labelId;
-    const label = await labelService.getLabelById(bodyLabelId);
+    const { labelId } = req.body;
+    const label = await labelService.getLabelById(labelId);
     if (!label) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Label not found');
     }
