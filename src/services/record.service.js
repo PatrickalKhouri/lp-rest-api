@@ -32,6 +32,9 @@ const queryRecords = async (filter, options) => {
  * @returns {Promise<Record>}
  */
 const getRecordById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return Record.findById(id);
+  }
   return Record.findById(id);
 };
 

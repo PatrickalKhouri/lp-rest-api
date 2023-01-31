@@ -31,6 +31,9 @@ const queryLabels = async (filter, options) => {
  * @returns {Promise<Label>}
  */
 const getLabelById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return Label.findById(id);
+  }
   return Label.findById(id);
 };
 

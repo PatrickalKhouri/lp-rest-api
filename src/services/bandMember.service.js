@@ -30,6 +30,9 @@ const queryBandMembers = async (filter, options) => {
  * @returns {Promise<BandMember>}
  */
 const getBandMemberById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return BandMember.findById(id);
+  }
   return BandMember.findById(id);
 };
 

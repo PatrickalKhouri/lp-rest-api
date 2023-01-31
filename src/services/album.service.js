@@ -32,6 +32,9 @@ const queryAlbums = async (filter, options) => {
  * @returns {Promise<Album>}
  */
 const getAlbumById = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return Album.findById(id);
+  }
   return Album.findById(id);
 };
 
