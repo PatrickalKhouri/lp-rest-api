@@ -1,5 +1,37 @@
 components:
   schemas:
+    Album:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        recordId:
+          type: string          
+        description:
+          type: string
+        stock:
+          type: number
+        year:
+          type: number
+        new:
+          type: boolean
+        price:
+          type: number
+        format:
+          type: string
+          enum: [CD, Tape, Vinyl]
+      example:
+        id: 63d82f4bc18419431a8e3fea
+        userId: 5ebac534954b54139806c112
+        recordId: 635854f8c2c2391300fa85bf
+        description: fake description
+        stock: 3
+        year: 2018
+        new: true
+        price: 150
+        format: Vinyl
     Artist:
       type: object
       properties:
@@ -30,24 +62,19 @@ components:
         id: 634094a0ff28121b15f08b98
         artistId: 63322dda8f9d0fe821b20b21
         personId: 632f4301b7018f1243894fed
-    User:
+    Cart Item:
       type: object
       properties:
         id:
           type: string
-        email:
+        albumId:
           type: string
-          format: email
-        name:
+        quantity:
           type: string
-        role:
-          type: string
-          enum: [user, admin]
       example:
-        id: 5ebac534954b54139806c112
-        email: fake@example.com
-        name: fake name
-        role: user
+        id: 63d83000ec1677600d39a066
+        albumId: 63d82f4bc18419431a8e3fea
+        quantity: 1
     Genre:
       type: object
       properties:
@@ -72,6 +99,38 @@ components:
           id: 632f42f74cca87148e193abb
           name: Sony
           country: Japan
+    Order Detail:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        userPaymentId:
+          type: string
+        total:
+          type: number
+      example:
+          id: 63d832ddf4a2313850f93def
+          userId: 5ebac534954b54139806c112
+          userPaymentId: 63d832fb5310810f13388b40
+          total: 620
+    Order Item:
+      type: object
+      properties:
+        id:
+          type: string
+        orderDetailId:
+          type: string
+        albumId:
+          type: string
+        quantity:
+          type: number
+      example:
+          id: 63d83351b2f31046094a5407
+          orderDetailId: 63d832ddf4a2313850f93def
+          albumId: 63d82f4bc18419431a8e3fea
+          quantity: 1
     Person:
       type: object
       properties:
@@ -83,7 +142,7 @@ components:
           type: date
         gender:
           type: string
-          enum: ['Female, Male, Other']
+          enum: [Female, Male, Other]
         alive:
           type: boolean
         nationality:
@@ -94,7 +153,7 @@ components:
           name: Kanye Omari West
           country: United States
           alive: true
-          dateOfBirth: '1977-06-8T00:00:00.002Z'
+          dateOfBirth: 1977-06-8T00:00:00.002Z
     Record:
       type: object
       properties:
@@ -119,7 +178,7 @@ components:
           type: number 
         type:
           type: string
-          enum: ['LP', 'EP', 'Single']   
+          enum: [LP, EP, Single]   
       example:
           id: 635854f8c2c2391300fa85bf
           artistId: 632f4301b7018f1243894fed
@@ -139,11 +198,42 @@ components:
           type: string
         genreId:
           type: string
-        example:
+      example:
           id: 6375490d72497a50f1f3de58
           recordId: 635854f8c2c2391300fa85bf
           genreId: 632f42f228914eff60e84388
-    UserAddress:
+    Shopping Session:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        total:
+          type: string
+      example:
+          id: 63d833f9f1968fc5af7ea3a0
+          userId: 5ebac534954b54139806c112
+          total: 230
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+      example:
+        id: 5ebac534954b54139806c112
+        email: fake@example.com
+        name: fake name
+        role: user
+    User Address:
       type: object
       properties:
         id:
@@ -180,6 +270,28 @@ components:
           city: 'Rio de Janeiro'
           state: 'RJ'
           country: Brazil
+    User Payment:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+          format: email
+        accountNumber:
+          type: string
+        paymentType:
+          type: string
+          enum: [Pix, Boleto, Cartão de Crédito, Cartão de Débito]
+        provider:
+          type: string
+          enum: [Visa, Master Card, American Express, Elo, Diners Club, Hipercard]
+      example:
+        id: 63d832fb5310810f13388b40
+        userId: 5ebac534954b54139806c112
+        accountNumber: 11111-111
+        paymentType: Cartão de Credito
+        provider: Visa
     Token:
       type: object
       properties:
@@ -191,7 +303,6 @@ components:
       example:
         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
         expires: 2020-05-12T16:18:04.793Z
-
     AuthTokens:
       type: object
       properties:

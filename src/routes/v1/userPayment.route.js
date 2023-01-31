@@ -55,42 +55,22 @@ module.exports = router;
  *             type: object
  *             required:
  *               - userId
- *               - streetName
- *               - buildingNumber
- *               - postalCode
- *               - city
- *               - state
- *               - country
+ *               - accountNumber
+ *               - paymentType
  *             properties:
  *               userId:
  *                 type: ObjectId,
- *               streetName:
+ *               accountNumber:
  *                 type: string
- *               buildingNumber:
+ *               paymentType:
  *                 type: string
- *               apartmentNumber:
+ *               provider:
  *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
  *             example:
  *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '10'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               accountNumber: '0000000-000'
+ *               paymentType: 'Cartão de Crédito'
+ *               provider: 'Visa'
  *     responses:
  *       "201":
  *         description: Created
@@ -118,20 +98,20 @@ module.exports = router;
  *           type: string
  *         description: User Id of that Payment
  *       - in: query
- *         name: city
+ *         name: accountNumber
  *         schema:
  *           type: string
- *         description: The city of the Payment
+ *         description: The account numbeer of the Payment
  *       - in: query
- *         name: state
+ *         name: paymentType
  *         schema:
  *           type: string
- *         description: The state of the Payment
+ *         description: The type of the Payment
  *       - in: query
- *         name: country
+ *         name: provider
  *         schema:
  *           type: string
- *         description: The country of the Payment
+ *         description: The provider of the Payment
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -230,36 +210,24 @@ module.exports = router;
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userId
+ *               - accountNumber
+ *               - paymentType
  *             properties:
  *               userId:
- *                 type: objectId
- *                 description: only admins can update userId
- *               streetName:
+ *                 type: ObjectId,
+ *               accountNumber:
  *                 type: string
- *               buildingNumber:
+ *               paymentType:
  *                 type: string
- *               complement:
- *                  type: string
- *               postalCode:
- *                  type: string
- *                  format: Brazilian postal code
- *               city:
- *                  type: string
- *               state:
- *                  type: string
- *                  description: Brazilian states UFs
- *               country:
- *                  type: string
+ *               provider:
+ *                 type: string
  *             example:
  *               userId: 507f191e810c19729de860ea
- *               streetName: 'Fake street name'
- *               buildingNumber: '10'
- *               apartmentNumber: '201A'
- *               complement: 'Block 2'
- *               postalCode: '22222-222'
- *               city: 'Rio de Janeiro'
- *               state: 'RJ'
- *               country: 'Brazil'
+ *               accountNumber: '0000000-000'
+ *               paymentType: 'Cartão de Crédito'
+ *               provider: 'Master-card'
  *     responses:
  *       "200":
  *         description: OK
