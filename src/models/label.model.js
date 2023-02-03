@@ -2,7 +2,13 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
-const { Artist, BandMember, Record, Album, CartItem, OrderItem} = require('./index');
+const { OrderItem } = require('./orderItem.model');
+const { CartItem } = require('./cartItem.model');
+const { Album } = require('./album.model');
+const { Record } = require('./record.model');
+const { BandMember } = require('./bandMember.model');
+const { Artist } = require('./artist.model');
+
 
 const labelSchema = mongoose.Schema({
     name: {

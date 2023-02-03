@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 const mongoose = require('mongoose');
-const { OrderItem } = require('.');
+const { OrderItem } = require('./orderItem.model');
 const { toJSON, paginate } = require('./plugins');
 
 const orderDetailSchema = mongoose.Schema({

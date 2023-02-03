@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { allMusicGenres } = require('../config/musicGenres');
-const { RecordGenre } = require('./index');
+const { RecordGenre } = require('./recordGenre.model');
 
 const genreSchema = mongoose.Schema({
     name: {

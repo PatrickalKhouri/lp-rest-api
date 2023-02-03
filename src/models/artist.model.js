@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
-const { BandMember } = require('./index');
+const { BandMember } = require('./bandMember.model');
 
 const artistSchema = mongoose.Schema({
     name: {
