@@ -3,7 +3,13 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
-const { UserAddress, Album, ShoppingSession, CartItem, UserPayment, OrderDetail, OrderItem } = require('./index');
+const { OrderItem } = require('./orderItem.model');
+const { CartItem } = require('./cartItem.model');
+const { Album } = require('./album.model');
+const { OrderDetail } = require('./orderDetail.model');
+const { ShoppingSession } = require('./shoppingSession.model');
+const { UserPayment } = require('./userPayment.model');
+const { UserAddress } = require('./userAddress.model');
 
 const userSchema = mongoose.Schema(
   {

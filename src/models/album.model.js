@@ -2,7 +2,9 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { albumFormatsString } = require('../config/albumFormat');
-const { CartItem, OrderItem } = require('./index');
+const { OrderItem } = require('./orderItem.model');
+const { CartItem } = require('./cartItem.model');
+
 
 const albumSchema = mongoose.Schema({
 	userId: {

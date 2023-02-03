@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { paymentStrings } = require('../config/paymentTypes');
 const { paymentProvidersStrings } = require('../config/paymentProviders');
-const { OrderDetail, OrderItem } = require('./index');
+const { OrderDetail } = require('./orderDetail.model');
+const { OrderItem } = require('./orderItem.model');
 
 const userPaymentSchema = mongoose.Schema({
   userId: {

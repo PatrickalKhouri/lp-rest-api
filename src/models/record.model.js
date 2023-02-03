@@ -4,7 +4,10 @@ const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 const { languages } = require('../config/languages');
 const { albumTypesString } = require('../config/albumTypes');
-const { RecordGenre, Album, CartItem, OrderItem } = require('./index');
+const { OrderItem } = require('./orderItem.model');
+const { CartItem } = require('./cartItem.model');
+const { Album } = require('./album.model');
+const { RecordGenre } = require('./recordGenre.model');
 
 const recordSchema = mongoose.Schema({
     artistId: {

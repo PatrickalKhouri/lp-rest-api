@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 const { countriesLong } = require('../config/countries');
 const { genders } = require('../config/genders');
-const { BandMember } = require('./index');
+const { BandMember } = require('./bandMember.model');
 
 const personSchema = mongoose.Schema({
     name: {
