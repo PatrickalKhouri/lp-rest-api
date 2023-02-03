@@ -34,9 +34,6 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  if (id.match(/^[0-9a-fA-F]{24}$/)) {
-    return User.findById(id);
-  }
   return User.findById(id);
 };
 

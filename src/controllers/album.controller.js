@@ -6,9 +6,9 @@ const catchAsync = require('../utils/catchAsync');
 const { albumService, recordService, userService, tokenService } = require('../services');
 
 const createAlbum = catchAsync(async (req, res) => {
-  const bodyAlbumUserId = req.body.userId;
-  const record = await recordService.getRecordById(req.body.recordId);
-  const user = await userService.getUserById(bodyAlbumUserId);
+  const { userId, recordId } = req.body;
+  const record = await recordService.getRecordById(recordId);
+  const user = await userService.getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can't create album for non existing user");
   }
@@ -17,7 +17,7 @@ const createAlbum = catchAsync(async (req, res) => {
   }
   const currentUser = await tokenService.getCurrentUserFromReq(req);
   if (currentUser.role !== 'admin') {
-    if (req.body.userId !== String(currentUser._id)) {
+    if (userId !== String(currentUser._id)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to create an album for another user');
     } else {
       try {
@@ -56,25 +56,27 @@ const getAlbum = catchAsync(async (req, res) => {
 
 const updateAlbum = catchAsync(async (req, res) => {
   const currentUser = await tokenService.getCurrentUserFromReq(req);
-  if (req.body.userId) {
-    const user = await userService.getUserById(req.body.userId);
+  const { albumId } = req.params;
+  const { userId, recordId } = req.body;
+  if (userId) {
+    const user = await userService.getUserById(userId);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User to update not found');
     }
   }
-  if (req.body.recordId) {
-    const record = await recordService.getRecordById(req.body.recordId);
+  if (recordId) {
+    const record = await recordService.getRecordById(recordId);
     if (!record) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Can't update an album for non existing record");
     }
   }
-  const albumToUpdate = await albumService.getAlbumById(req.params.albumId);
+  const albumToUpdate = await albumService.getAlbumById(albumId);
   if (currentUser.role !== 'admin') {
     if (String(currentUser._id) !== String(albumToUpdate.userId)) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Not allowed to update an album for another user');
     } else {
       try {
-        const album = await albumService.updateAlbumById(req.params.albumId, req.body);
+        const album = await albumService.updateAlbumById(albumId, req.body);
         res.send(album);
       } catch (e) {
         console.log(e);
@@ -83,7 +85,7 @@ const updateAlbum = catchAsync(async (req, res) => {
     }
   } else {
     try {
-      const album = await albumService.updateAlbumById(req.params.albumId, req.body);
+      const album = await albumService.updateAlbumById(albumId, req.body);
       res.send(album);
     } catch (e) {
       console.log(e);
