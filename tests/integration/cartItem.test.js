@@ -118,12 +118,6 @@ describe('Cart Item routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
-      // expect(res.body.results[0]).toEqual({
-      //   id: cartItemOne._id.toHexString(),
-      //   albumId: String(cartItemOne.albumId),
-      //   shoppingSessionId: String(cartItemOne.albumId),
-      //   quantity: Number(cartItemOne.quantity),
-      // });
     });
 
     test('should return 401 if access token is missing', async () => {
@@ -261,7 +255,9 @@ describe('Cart Item routes', () => {
       expect(res.body.results).toHaveLength(1);
       // expect(res.body.results[0].id).toBe(cartItemOne._id.toHexString());
     });
+  });
 
+  describe('GET /v1/cartItems/user/:userId', () => {
     test('should return 200 if user is trying to acess all of his cart items', async () => {
       await insertUsers([userOne, userTwo]);
       await insertLabels([labelOne, labelTwo]);
@@ -272,9 +268,8 @@ describe('Cart Item routes', () => {
       await insertCartItems([cartItemOne, cartItemTwo]);
 
       const res = await request(app)
-        .get(`/v1/cartItems`)
+        .get(`/v1/cartItems/user/${userOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .query({ userId: userOne._id })
         .send()
         .expect(httpStatus.OK);
 
@@ -300,9 +295,8 @@ describe('Cart Item routes', () => {
       await insertCartItems([cartItemOne, cartItemTwo]);
 
       await request(app)
-        .get(`/v1/cartItems`)
+        .get(`/v1/cartItems/${userOne._id}`)
         .set('Authorization', `Bearer ${userTwoAccessToken}`)
-        .query({ userId: userOne._id })
         .send()
         .expect(httpStatus.UNAUTHORIZED);
     });
