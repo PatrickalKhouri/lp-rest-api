@@ -42,14 +42,8 @@ const getShoppingSessions = catchAsync(async (req, res) => {
   if (currentUser.role === 'admin') {
     const result = await shoppingSessionService.queryShoppingSession(filter, options);
     res.send(result);
-  } else if (!filter.userId) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all shoppings sessions');
-  } else if (String(filter.userId) !== String(currentUser._id)) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'You can only get your shopping sessions');
   } else {
-    console.log('oi');
-    const result = await shoppingSessionService.queryShoppingSession(filter, options);
-    res.send(result);
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Not only admins can get all shopping sessions');
   }
 });
 

@@ -8,6 +8,7 @@ const { ShoppingSession } = require('../../src/models');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
 const { shoppingSessionOne, shoppingSessionTwo, insertShoppingSessions } = require('../fixtures/shoppingSession.fixture');
 const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { describe } = require('pm2');
 
 setupTestDB();
 
@@ -175,15 +176,16 @@ describe('Shopping Session routes', () => {
       // expect(res.body.results).toHaveLength(1);
       // expect(res.body.results[0].id).toBe(shoppingSessionOne._id.toHexString());
     });
+  });
 
+  describe('GET /v1/shoppingSessions/user/:userId', () => {
     test('should return 200 if user is trying to acess all of his shpping sessions', async () => {
       await insertUsers([userOne, userTwo]);
       await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
 
       const res = await request(app)
-        .get(`/v1/shoppingSessions`)
+        .get(`/v1/shoppingSessions/user/${userOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .query({ userId: userOne._id })
         .send()
         .expect(httpStatus.OK);
 
@@ -204,9 +206,8 @@ describe('Shopping Session routes', () => {
       await insertShoppingSessions([shoppingSessionOne, shoppingSessionTwo]);
 
       await request(app)
-        .get(`/v1/shoppingSessions`)
-        .set('Authorization', `Bearer ${userTwoAccessToken}`)
-        .query({ userId: userOne._id })
+        .get(`/v1/shoppingSessions/user/${userOne._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.UNAUTHORIZED);
     });
@@ -348,7 +349,7 @@ describe('Shopping Session routes', () => {
       const res = await request(app)
         .patch(`/v1/shoppingSessions/${shoppingSessionOne._id}`)
         .set('Authorization', `Bearer ${userOneAccessToken}`)
-        .send(updateBody) 
+        .send(updateBody)
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({

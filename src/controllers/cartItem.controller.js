@@ -47,16 +47,8 @@ const getCartItems = catchAsync(async (req, res) => {
   if (currentUser.role === 'admin') {
     const result = await cartItemService.queryCartItems(filter, options);
     res.send(result);
-  } else if (!filter.shoppingSessionId) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Only admins can get all user payments');
   } else {
-    const shoppingSession = await shoppingSessionService.getShoppingSessionById(filter.shoppingSessionId);
-    if (String(currentUser._id) === String(shoppingSession.userId)) {
-      const result = await cartItemService.queryCartItems(filter, options);
-      res.send(result);
-    } else {
-      throw new ApiError(httpStatus.UNAUTHORIZED, 'You can only get your own cart items');
-    }
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Not only admins can get all cart items');
   }
 });
 
