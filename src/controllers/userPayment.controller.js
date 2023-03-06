@@ -95,7 +95,6 @@ const updateUserPayment = catchAsync(async (req, res) => {
       const userPayment = await userPaymentService.updateUserPaymentById(req.params.userPaymentId, req.body);
       res.send(userPayment);
     } catch (e) {
-      console.log('oi');
       console.log(e);
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when creating user Payment');
     }
